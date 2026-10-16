@@ -142,7 +142,7 @@ function runCmd(c,a){
     case 'align':openMenu([['left','À esquerda'],['center','Centralizado'],['right','À direita'],['justify','Justificado']].map(x=>({label:x[1],act:()=>alignText(x[0])})),a);break;
     case 'valign':openMenu([['top','Em cima'],['middle','No meio'],['bottom','Embaixo']].map(x=>({label:x[1],act:()=>valignText(x[0])})),a);break;
     case 'ul':textCmd('insertUnorderedList');break;case 'ol':textCmd('insertOrderedList');break;
-    case 'bulletStyle':openMenu([{label:'Marcadores',sub:BULLETS.map(b=>({label:b[1]+'  '+b[2],act:()=>setListStyle(b[0],false)}))},{label:'Numeração',sub:NUMBERS.map(n=>({label:n[1],act:()=>setListStyle(n[0],true)}))}],a);break;
+    case 'bulletStyle':openMenu([{label:'Marcadores',sub:BULLETS.map(b=>({label:b[1]+'  '+b[2],act:()=>setListStyle(b[0],false)}))},{label:'Numeração',sub:NUMBERS.map(n=>({label:n[1],act:()=>setListStyle(n[0],true)}))},{sep:1},...markerItems().map(x=>x.act?Object.assign({},x,{act:()=>markerColorPop(a)}):x)],a);break;
     case 'indent':indent(1);break;case 'outdent':indent(-1);break;
     case 'lh':openMenu([1,1.15,1.25,1.5,2].map(v=>({label:'Linhas: '+String(v).replace('.',','),checked:e.lh===v,act:()=>setProp('lh',v,['box'])})).concat([{sep:1}],[0,.3,.6,1].map(v=>({label:'Parágrafos: '+String(v).replace('.',',')+' em',checked:(e.ps||0)===v,act:()=>setProp('ps',v,['box'])}))),a);break;
     case 'clear':clearFormat();break;

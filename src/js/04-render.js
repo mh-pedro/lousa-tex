@@ -320,13 +320,22 @@ function slideBgCss(n,s){
   if(s.bgImage){img=s.bgImage;fit=s.bgFit}else if(!s.bg&&t.bgImage){img=t.bgImage;fit=t.bgFit}
   n.style.backgroundColor=s.bg||t.bg;n.style.backgroundImage=img?'url("'+img+'")':'';n.style.backgroundSize=fit==='stretch'?'100% 100%':(fit||'cover');
 }
+const NUM_POS={br:'Inferior direito',bc:'Inferior central',bl:'Inferior esquerdo',tr:'Superior direito',tc:'Superior central',tl:'Superior esquerdo'};
+function styleSlnum(k,t){
+  const pos=t.numPos||'br',m=t.numBgOn?24:34,v=t.numBgOn?16:20;Object.assign(k.style,{left:'auto',right:'auto',top:'auto',bottom:'auto',transform:'',whiteSpace:'nowrap',lineHeight:'1.2'});
+  if(pos[0]==='b')k.style.bottom=v+'px';else k.style.top=v+'px';
+  if(pos[1]==='r')k.style.right=m+'px';else if(pos[1]==='l')k.style.left=m+'px';else{k.style.left='50%';k.style.transform='translateX(-50%)'}
+  k.style.fontSize=(+t.numSize||16)+'px';k.style.fontFamily=t.numFont?fontStack(t.numFont):'';k.style.fontWeight=t.numBold?'700':'';
+  k.style.color=t.numColor?resolveColor(t.numColor):(t.numBgOn?'#ffffff':resolveColor('muted'));
+  k.style.background=t.numBgOn?resolveColor(t.numBgColor||'accent'):'';k.style.padding=t.numBgOn?'.18em .7em':'';k.style.borderRadius=t.numBgOn?(t.numBgShape==='square'?'.25em':'999px'):'';
+}
 function renderSlideNode(s,i,mode){
   const n=document.createElement('div'),t=deck.theme;n.className='slide';
   n.style.width=W+'px';n.style.height=H+'px';slideBgCss(n,s);
   n.style.color=t.fg;n.style.fontFamily=fontStack(t.bodyFont);n.style.setProperty('--accent',t.accent);
   if(s!==deck.master&&!s.hideMaster)deck.master.els.forEach(e=>{const d=makeEl(e,false);d.classList.add('mst');d.removeAttribute('data-id');d.dataset.mid=e.id;n.appendChild(d)});
   s.els.forEach(e=>{const d=makeEl(e,mode==='edit');if(mode!=='edit'&&e.link)d.dataset.link=JSON.stringify(e.link);n.appendChild(d)});
-  if(t.showNumbers&&s!==deck.master&&i>0){const k=document.createElement('div');k.className='slnum';k.textContent=i+1;k.style.color=resolveColor('muted');n.appendChild(k)}
+  if(t.showNumbers&&s!==deck.master&&i>0){const k=document.createElement('div');k.className='slnum';k.textContent=t.numFormat==='nN'?(i+1)+' / '+deck.slides.length:String(i+1);styleSlnum(k,t);n.appendChild(k)}
   if(s!==deck.master&&i>=0){
     if(t.progress==='bar'){const b=document.createElement('div');b.className='progbar';b.style.width=((i+1)/deck.slides.length*100)+'%';b.style.background=t.accent;n.appendChild(b)}
     if(t.refFooter){const keys=slideCites(s);if(keys.length){const f=document.createElement('div');f.className='reffoot';f.style.color=resolveColor('muted');

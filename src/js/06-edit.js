@@ -147,6 +147,20 @@ function setListStyle(type,ordered){
   textEls().forEach(e=>{const has=textTargets(e).some(t=>(t.get()||'').indexOf('<'+tag.toLowerCase())>=0);if(!has)applyWhole(e,ordered?'insertOrderedList':'insertUnorderedList');
     transformHTML(e,h=>{const d=document.createElement('div');d.innerHTML=h;apply(d);return sanitizeHTML(d.innerHTML)})});commit();
 }
+/* tamanho e cor do marcador das listas */
+const MARK_SIZES=[['0.7','Pequeno'],['1','Normal'],['1.3','Grande'],['1.6','Muito grande']];
+function setListMarker(prop,val){
+  const apply=l=>{if(val)l.style.setProperty(prop,val);else l.style.removeProperty(prop)};
+  if(editId){restoreSel();const s=getSelection();let n=s.rangeCount?s.getRangeAt(0).startContainer:null;if(n&&n.nodeType===3)n=n.parentElement;
+    const tx=curTx();let lists=[];const l0=n&&n.closest?n.closest('ul,ol'):null;
+    if(l0&&tx&&tx.contains(l0)){let top=l0;while(top.parentElement&&top.parentElement.closest('ul,ol')&&tx.contains(top.parentElement))top=top.parentElement.closest('ul,ol');lists=[top].concat(Array.from(top.querySelectorAll('ul,ol')))}
+    else if(tx)lists=Array.from(tx.querySelectorAll('ul,ol'));
+    if(!lists.length){toast('Coloque o cursor numa lista.');return}lists.forEach(apply);afterEditChange();return}
+  const els=textEls();if(!els.length){toast('Selecione uma caixa com lista.');return}
+  els.forEach(e=>transformHTML(e,h=>{const d=document.createElement('div');d.innerHTML=h;d.querySelectorAll('ul,ol').forEach(apply);return sanitizeHTML(d.innerHTML)}));commit();
+}
+function markerColorPop(anchor){colorPop(anchor||toolbar,null,c=>setListMarker('--mk-c',c?resolveColor(c):''),{none:'Cor de destaque do tema (padrão)'})}
+const markerItems=()=>[{label:'Tamanho do marcador',icon:'ul',sub:MARK_SIZES.map(m=>({label:m[1],act:()=>setListMarker('--mk-s',m[0]==='1'?'':m[0]+'em')}))},{label:'Cor do marcador…',icon:'fill',act:()=>markerColorPop()}];
 function caretInMath(){
   const tx=curTx();if(!tx||!savedRange)return false;
   const r=document.createRange();r.setStart(tx,0);try{r.setEnd(savedRange.startContainer,savedRange.startOffset)}catch(e){return false}

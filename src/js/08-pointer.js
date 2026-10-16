@@ -5,6 +5,25 @@ function toSlide(ev){const r=frame.getBoundingClientRect();return{x:(ev.clientX-
 /* ================= snapping ================= */
 const gvEl=()=>overlay.querySelector('.guide.v'),ghEl=()=>overlay.querySelector('.guide.h2');
 function hideGuides(){if(overlay){gvEl().style.display='none';ghEl().style.display='none'}}
+/* indicadores: linha horizontal/vertical e mesmo tamanho */
+function axisSnap(a,q,on){
+  if(!on)return{q:q,ax:null};const dx=q.x-a.x,dy=q.y-a.y,L=Math.hypot(dx,dy);if(L<12)return{q:q,ax:null};
+  const tol=Math.max(4/scale,L*Math.tan(2.5*Math.PI/180));
+  if(Math.abs(dy)<=tol)return{q:{x:q.x,y:a.y},ax:'h'};if(Math.abs(dx)<=tol)return{q:{x:a.x,y:q.y},ax:'v'};return{q:q,ax:null};
+}
+function showAxisBadge(ax,a,q){const b=overlay&&overlay.querySelector('.axb');if(!b)return;if(!ax){b.hidden=true;return}
+  b.hidden=false;b.textContent=ax==='h'?'⟷ Horizontal':'↕ Vertical';b.style.left=((a.x+q.x)/2)+'px';b.style.top=((a.y+q.y)/2)+'px';b.classList.toggle('v',ax==='v')}
+function sizeMatch(id,w,h,useW,useH){
+  const th=6/scale;let mw=null,mh=null;
+  slide().els.forEach(o=>{if(o.id===id||o.type==='line'||(o.rot||0)%180)return;
+    if(useW&&Math.abs(o.w-w)<th&&(!mw||Math.abs(o.w-w)<Math.abs(mw.w-w)))mw=o;
+    if(useH&&Math.abs(o.h-h)<th&&(!mh||Math.abs(o.h-h)<Math.abs(mh.h-h)))mh=o});
+  return{mw:mw,mh:mh};
+}
+function showEqMarks(r,m){const c=overlay&&overlay.querySelector('.eqms');if(!c)return;if(!r||!m||(!m.mw&&!m.mh)){c.innerHTML='';return}
+  const wm=q=>'<div class="eqm w" style="left:'+q.x+'px;top:'+q.y+'px;width:'+q.w+'px"></div>',hm=q=>'<div class="eqm h" style="left:'+(q.x+q.w)+'px;top:'+q.y+'px;height:'+q.h+'px"></div>';
+  let h='';if(m.mw)h+=wm(r)+wm(m.mw);if(m.mh)h+=hm(r)+hm(m.mh);c.innerHTML=h}
+function clearIndicators(){if(!overlay)return;const c=overlay.querySelector('.eqms');if(c)c.innerHTML='';const b=overlay.querySelector('.axb');if(b)b.hidden=true}
 function snapMove(ids,b,nx,ny){
   if(prefs.snapGrid){const g=prefs.gridSize;nx=Math.round(nx/g)*g;ny=Math.round(ny/g)*g;hideGuides();return[nx,ny]}
   if(!prefs.snapObjects){hideGuides();return[nx,ny]}
@@ -62,7 +81,7 @@ stageWrap.addEventListener('pointerdown',ev=>{
     if(cropId)exitCrop();
     const id=e.id,members=groupMembers(id),was=selIds.includes(id),wasOnly=was&&selIds.length===1;
     const groupWhole=e.group&&members.length>1&&members.every(m=>selIds.includes(m))&&selIds.length===members.length;
-    const dupKey=(ev.ctrlKey||ev.metaKey)&&!ev.shiftKey;
+    const dupKey=ev.ctrlKey||ev.metaKey;
     if(dupKey){if(!was)select(Array.from(new Set(selIds.concat(members))));if(e.locked){ev.preventDefault();return}startMove(ev,p,id,false,false);drag.dup=true;drag.toggleOff=was?members:null;return}
     if(ev.shiftKey){
       if(e.type==='table'&&wasOnly&&ev.shiftKey){const c=cellAtPoint(e,ev.clientX,ev.clientY);if(c){if(!cellSel)cellSel={r0:c.r,c0:c.c,r1:c.r,c1:c.c};else{cellSel.r1=c.r;cellSel.c1=c.c}markCells();renderToolbar();ev.preventDefault();return}}
@@ -146,6 +165,8 @@ window.addEventListener('pointermove',ev=>{
         let L=c0.l+nl/F,R=c0.r+(o.w-nl-nw)/F,Tp=c0.t+nt/G,B=c0.b+(o.h-nt-nh)/G;
         if(L<0){nl-=L*F;nw+=L*F;L=0}if(R<0){nw+=R*F;R=0}if(Tp<0){nt-=Tp*G;nh+=Tp*G;Tp=0}if(B<0){nh+=B*G;B=0}
         if(1-L-R<.05||1-Tp-B<.05)return;e.crop={l:L,t:Tp,r:R,b:B}}
+      let eqm=null;if(!g.crop&&!keep&&!ev.altKey&&!((e.rot||0)%180)){eqm=sizeMatch(e.id,nw,nh,/[ew]/.test(dir),/[ns]/.test(dir));
+        if(eqm.mw){nw=eqm.mw.w;if(dir.includes('w'))nl=o.w-nw}if(eqm.mh){nh=eqm.mh.h;if(dir.includes('n'))nt=o.h-nh}}
       if(nw<12){if(dir.includes('w'))nl=o.w-12;nw=12}if(nh<12){if(dir.includes('n'))nt=o.h-12;nh=12}
       if(ctr){nl=(o.w-nw)/2;nt=(o.h-nh)/2}
       const dcx=nl+nw/2-o.w/2,dcy=nt+nh/2-o.h/2,cx=o.x+o.w/2+dcx*c-dcy*s,cy=o.y+o.h/2+dcx*s+dcy*c;
@@ -156,6 +177,7 @@ window.addEventListener('pointermove',ev=>{
         const dw=Math.ceil(tx.scrollWidth-tx.clientWidth);if(dw>1){e.w+=dw;if(dir.includes('w'))e.x-=dw;else if(ctr)e.x-=Math.round(dw/2)}
         if(dw>1)restyle(e,true);const need=Math.ceil(tx.offsetHeight);
         if(e.h<need){const dh=need-e.h;e.h=need;if(dir.includes('n'))e.y-=dh;else if(ctr)e.y-=Math.round(dh/2);restyle(e,true)}}}
+      showEqMarks(eqm&&{x:e.x,y:e.y,w:e.w,h:e.h},eqm&&{mw:eqm.mw&&e.w===eqm.mw.w?eqm.mw:null,mh:eqm.mh&&e.h===eqm.mh.h?eqm.mh:null});
       syncConnectors([e.id]);syncFormat();overlaySoon();if(editId)positionPreview();break;
     }
     case 'croppan':{
@@ -171,6 +193,7 @@ window.addEventListener('pointermove',ev=>{
     case 'pt':{
       g.moved=true;const e=g.e,k=g.which==='p1'?['x1','y1','a1']:['x2','y2','a2'],other=g.which==='p1'?{x:e.x2,y:e.y2}:{x:e.x1,y:e.y1};
       let q=ev.shiftKey?snapAngle(other,p):p;const near=ev.altKey?null:nearestConn(q,null);
+      let ax=null;if(!near&&!ev.shiftKey){const s=axisSnap(other,q,!ev.altKey);q=s.q;ax=s.ax}else if(ev.shiftKey){ax=Math.abs(q.y-other.y)<.5?'h':Math.abs(q.x-other.x)<.5?'v':null}showAxisBadge(ax,other,q);
       if(near){q={x:near.p[0],y:near.p[1]};g.att={id:near.t.id,side:near.side};showConnDots(near.t,near.side)}
       else{g.att=null;const ht=ev.altKey?null:hoverTarget(q,null);showConnDots(ht,null)}
       e[k[0]]=Math.round(q.x);e[k[1]]=Math.round(q.y);e[k[2]]=g.att;restyle(e,true);syncFormat();overlaySoon();break;
@@ -208,12 +231,17 @@ window.addEventListener('pointermove',ev=>{
     }
     case 'draw':{
       g.moved=true;let q=p;
-      if(tool&&tool.kind==='ink'){const l=g.pts[g.pts.length-1];if(Math.hypot(p.x-l[0],p.y-l[1])>=1.5)g.pts.push([p.x,p.y]);const ln=overlay.querySelector('.drawline');ln.hidden=false;
-        ln.firstChild.setAttribute('d',strokeD(g.pts));ln.firstChild.setAttribute('stroke-dasharray','none');ln.firstChild.setAttribute('stroke-width','4');g.p1=p;break}
-      if(tool&&tool.kind==='line'){const lp=overlay.querySelector('.drawline').firstChild;lp.setAttribute('stroke-dasharray','6 5');lp.setAttribute('stroke-width','2');if(ev.shiftKey)q=snapAngle(g.p0,p);const near=nearestConn(q,null);if(near){q={x:near.p[0],y:near.p[1]};showConnDots(near.t,near.side)}else showConnDots(null);
-        const ln=overlay.querySelector('.drawline');ln.hidden=false;ln.firstChild.setAttribute('d','M'+g.p0.x+' '+g.p0.y+'L'+q.x+' '+q.y)}
+      if(tool&&tool.kind==='ink'){const l=g.pts[g.pts.length-1];if(Math.hypot(p.x-l[0],p.y-l[1])>=1.5)g.pts.push([p.x,p.y]);const ln=overlay.querySelector('.drawline');ln.removeAttribute('hidden');
+        ln.firstChild.setAttribute('d',strokeD(g.pts));ln.firstChild.setAttribute('stroke-dasharray','none');ln.firstChild.setAttribute('stroke-width','4');ln.firstChild.setAttribute('stroke','#2a6dd4');g.p1=p;break}
+      if(tool&&tool.kind==='line'){const lp=overlay.querySelector('.drawline').firstChild;lp.setAttribute('stroke-dasharray','6 5');lp.setAttribute('stroke-width','2');if(ev.shiftKey)q=snapAngle(g.p0,p);const near=nearestConn(q,null);let ax=null;if(near){q={x:near.p[0],y:near.p[1]};showConnDots(near.t,near.side)}else{showConnDots(null);if(!ev.shiftKey){const s=axisSnap(g.p0,q,!ev.altKey);q=s.q;ax=s.ax}}
+        if(ev.shiftKey)ax=Math.abs(q.y-g.p0.y)<.5?'h':Math.abs(q.x-g.p0.x)<.5?'v':null;showAxisBadge(ax,g.p0,q);lp.setAttribute('stroke',ax?'#0f9fb5':'#2a6dd4');lp.setAttribute('stroke-dasharray',ax?'none':'6 5');
+        const ln=overlay.querySelector('.drawline');ln.removeAttribute('hidden');ln.firstChild.setAttribute('d','M'+g.p0.x+' '+g.p0.y+'L'+q.x+' '+q.y)}
       else{if(ev.shiftKey){const s=Math.max(Math.abs(p.x-g.p0.x),Math.abs(p.y-g.p0.y));q={x:g.p0.x+Math.sign(p.x-g.p0.x||1)*s,y:g.p0.y+Math.sign(p.y-g.p0.y||1)*s}}
-        const r=ev.altKey?rectFrom({x:2*g.p0.x-q.x,y:2*g.p0.y-q.y},q):rectFrom(g.p0,q),mq=overlay.querySelector('.mq');g.rect=r;mq.hidden=false;mq.classList.add('draw');Object.assign(mq.style,{left:r.x+'px',top:r.y+'px',width:r.w+'px',height:r.h+'px'})}
+        const r=ev.altKey?rectFrom({x:2*g.p0.x-q.x,y:2*g.p0.y-q.y},q):rectFrom(g.p0,q),mq=overlay.querySelector('.mq');
+        if(r.w>8&&r.h>8&&!ev.shiftKey){const m=sizeMatch(null,r.w,r.h,true,true);
+          if(m.mw){if(ev.altKey)r.x+= (r.w-m.mw.w)/2;else if(q.x<g.p0.x)r.x+=r.w-m.mw.w;r.w=m.mw.w}
+          if(m.mh){if(ev.altKey)r.y+=(r.h-m.mh.h)/2;else if(q.y<g.p0.y)r.y+=r.h-m.mh.h;r.h=m.mh.h}showEqMarks(r,m)}else showEqMarks(null);
+        g.rect=r;mq.hidden=false;mq.classList.add('draw');Object.assign(mq.style,{left:r.x+'px',top:r.y+'px',width:r.w+'px',height:r.h+'px'})}
       g.p1=q;break;
     }
     case 'guide':{
@@ -226,8 +254,8 @@ window.addEventListener('pointermove',ev=>{
 /* ================= pointer up ================= */
 function endDrag(ev){
   clearTimeout(lpTimer);lpTimer=null;
-  if(!drag)return;const g=drag;drag=null;hideGuides();showConnDots(null);
-  if(overlay){overlay.querySelector('.mq').hidden=true;overlay.querySelector('.drawline').hidden=true}
+  if(!drag)return;const g=drag;drag=null;hideGuides();clearIndicators();showConnDots(null);
+  if(overlay){overlay.querySelector('.mq').hidden=true;overlay.querySelector('.drawline').setAttribute('hidden','')}
   stageWrap.classList.remove('panning');
   switch(g.mode){
     case 'move':

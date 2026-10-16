@@ -6,7 +6,7 @@ function renderStage(){
   const s=slide(),n=renderSlideNode(s,masterMode?-1:cur,'edit');frame.appendChild(n);stageNode=n;
   overlay=document.createElement('div');overlay.id='overlay';overlay.style.width=W+'px';overlay.style.height=H+'px';
   overlay.innerHTML='<div class="gridbg"></div><div class="ugs"></div><div class="guide v"></div><div class="guide h2"></div><div class="cdots"></div><div class="cbs"></div>'+
-    '<div class="gbox" hidden>'+GHANDLES+'</div><div class="mq" hidden></div><svg class="drawline" width="'+W+'" height="'+H+'" hidden><path stroke="#2a6dd4" stroke-width="2" stroke-dasharray="6 5" fill="none"/></svg>';
+    '<div class="gbox" hidden>'+GHANDLES+'</div><div class="mq" hidden></div><div class="eqms"></div><div class="axb" hidden></div><svg class="drawline" width="'+W+'" height="'+H+'" hidden><path stroke="#2a6dd4" stroke-width="2" stroke-dasharray="6 5" fill="none"/></svg>';
   frame.appendChild(overlay);
   cellSel=null;selIds=selIds.filter(id=>byId(id));
   fit();markSel();drawGrid();drawGuides();

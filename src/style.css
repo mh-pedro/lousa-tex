@@ -113,7 +113,7 @@ button{font:inherit;color:inherit}
 .tx ul,.tx ol{margin:0;padding-left:1.15em}
 .tx ul ul,.tx ol ol,.tx ul ol,.tx ol ul{padding-left:1.1em}
 .tx li{margin:.16em 0 calc(.16em + var(--ps))}
-.tx li::marker{color:var(--accent)}
+.tx li::marker{color:var(--mk-c,var(--accent));font-size:var(--mk-s,1em)}
 .tx a{color:var(--accent);text-decoration:underline}
 .slide mjx-container[jax="SVG"][display="true"]{margin:.3em 0!important}
 .el.image .iw{position:absolute;inset:0;overflow:hidden}
@@ -456,3 +456,15 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 :root[data-theme="sepia"]{--bg:#e6dcc8;--panel:#f6efe1;--raise:#fffaf0;--bar:#eee4d1;--hover:#e3d7c0;--ink:#2e261c;--muted:#6b5d4a;--line:#d5c6aa;--accent:#a34e17;--accent-ink:#ffffff;--sel:#2b62b8;--sel-soft:rgba(43,98,184,.12);--sel-ink:#1f4b8e;--danger:#a61b10;--guide:#0f8a9c;--note:#d99a00;color-scheme:light}
 :root[data-theme="navy"]{--bg:#0e1522;--panel:#141d2c;--raise:#1b2638;--bar:#182233;--hover:#223045;--ink:#e2e8f1;--muted:#93a1b6;--line:#29384e;--accent:#e9a25c;--accent-ink:#1b130b;--sel:#78a9ff;--sel-soft:rgba(120,169,255,.16);--sel-ink:#b0cbff;--danger:#ff8f85;--guide:#3fd0e6;--note:#f6c445;color-scheme:dark}
 :root[data-theme="black"]{--bg:#000000;--panel:#0b0b0b;--raise:#161616;--bar:#101010;--hover:#222222;--ink:#f5f5f5;--muted:#b0b0b0;--line:#333333;--accent:#f2a65f;--accent-ink:#140c05;--sel:#86b6ff;--sel-soft:rgba(134,182,255,.18);--sel-ink:#c0d8ff;--danger:#ff9a90;--guide:#4fe0f5;--note:#ffd04d;color-scheme:dark}
+
+/* indicadores ao desenhar e redimensionar */
+#overlay .eqms{position:absolute;inset:0;pointer-events:none;z-index:9}
+#overlay .eqm{position:absolute;--t:calc(1.5px * var(--inv));--o:calc(9px * var(--inv))}
+#overlay .eqm.w{height:var(--t);background:#e0399a;transform:translateY(calc(-1 * var(--o)))}
+#overlay .eqm.w::before,#overlay .eqm.w::after{content:"";position:absolute;top:calc(-3px * var(--inv));width:var(--t);height:calc(7px * var(--inv));background:#e0399a}
+#overlay .eqm.w::before{left:0}#overlay .eqm.w::after{right:0}
+#overlay .eqm.h{width:var(--t);background:#e0399a;transform:translateX(var(--o))}
+#overlay .eqm.h::before,#overlay .eqm.h::after{content:"";position:absolute;left:calc(-3px * var(--inv));height:var(--t);width:calc(7px * var(--inv));background:#e0399a}
+#overlay .eqm.h::before{top:0}#overlay .eqm.h::after{bottom:0}
+#overlay .axb{position:absolute;z-index:10;pointer-events:none;transform:translate(-50%,calc(-100% - 10px * var(--inv))) scale(var(--inv));transform-origin:50% 100%;background:#0f9fb5;color:#fff;font:600 12px/1 var(--ui);padding:4px 8px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+#overlay .axb.v{transform:translate(calc(10px * var(--inv)),-50%) scale(var(--inv));transform-origin:0 50%}

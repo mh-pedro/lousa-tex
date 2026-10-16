@@ -250,7 +250,7 @@ async function exportPptx(){
         sl.addImage(Object.assign({},pos,{h:(e.type==='box'||e.type==='table'?Math.max(e.h,d.offsetHeight):e.h)*IN,data:png,rotate:e.rot||0}));
       }catch(err){console.warn('pptx',e.type,err)}
     }
-    if(t.showNumbers&&i>0)sl.addText(String(i+1),{x:(W-90)*IN,y:(H-48)*IN,w:70*IN,h:30*IN,fontSize:12,color:hexOf('muted'),align:'right'});
+    if(t.showNumbers&&i>0){const pos=t.numPos||'br',bw=120,bh=36,x=pos[1]==='r'?W-bw-24:pos[1]==='l'?24:(W-bw)/2,y=pos[0]==='b'?H-bh-14:14,o={x:x*IN,y:y*IN,w:bw*IN,h:bh*IN,fontSize:Math.round((+t.numSize||16)*.75),bold:!!t.numBold,color:(t.numColor?toHex(resolveColor(t.numColor)):(t.numBgOn?'#FFFFFF':toHex(resolveColor('muted')))).replace('#',''),align:pos[1]==='r'?'right':pos[1]==='l'?'left':'center',valign:'middle'};if(t.numFont)o.fontFace=t.numFont;sl.addText(t.numFormat==='nN'?(i+1)+' / '+deck.slides.length:String(i+1),o)}
     const cites=slideCites(s);if(t.refFooter&&cites.length)sl.addText(cites.map(k=>{const r=refByKey(k);return '['+citeNum(k)+'] '+(r?refShort(r):k)}).join('\n'),{x:30*IN,y:(H-30-cites.length*18)*IN,w:(W-200)*IN,h:(cites.length*18+10)*IN,fontSize:9,color:hexOf('muted'),valign:'bottom'});
     if(s.notes)sl.addNotes(s.notes);
   }

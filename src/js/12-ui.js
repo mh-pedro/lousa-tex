@@ -327,7 +327,7 @@ const MENUS={
       {label:'Aumentar recuo',sc:MOD+']',act:()=>indent(1)},{label:'Diminuir recuo',sc:MOD+'[',act:()=>indent(-1)},{sep:1},
       {label:'Em cima',act:()=>valignText('top')},{label:'No meio',act:()=>valignText('middle')},{label:'Embaixo',act:()=>valignText('bottom')}]},
     {label:'Espaçamento entre linhas e parágrafos',disabled:!has,sub:()=>[1,1.15,1.25,1.5,2].map(v=>({label:'Linhas: '+String(v).replace('.',','),checked:propOf('lh')===v,act:()=>setProp('lh',v,['box'])})).concat([{sep:1}],[0,.3,.6,1].map(v=>({label:'Entre parágrafos: '+String(v).replace('.',',')+' em',checked:(propOf('ps')||0)===v,act:()=>setProp('ps',v,['box'])})))},
-    {label:'Marcadores e numeração',disabled:!has,sub:[{label:'Lista com marcadores',sub:BULLETS.map(b=>({label:b[1]+'  '+b[2],act:()=>setListStyle(b[0],false)}))},{label:'Lista numerada',sub:NUMBERS.map(n=>({label:n[1],act:()=>setListStyle(n[0],true)}))},{sep:1},
+    {label:'Marcadores e numeração',disabled:!has,sub:[{label:'Lista com marcadores',sub:BULLETS.map(b=>({label:b[1]+'  '+b[2],act:()=>setListStyle(b[0],false)}))},{label:'Lista numerada',sub:NUMBERS.map(n=>({label:n[1],act:()=>setListStyle(n[0],true)}))},...markerItems(),{sep:1},
       {label:'Aumentar recuo',act:()=>indent(1)},{label:'Diminuir recuo',act:()=>indent(-1)}]},
     {label:'Direção do texto',disabled:!selBoxes().length,sub:[{label:'Da esquerda para a direita',checked:propOf('dir')!=='rtl',act:()=>setProp('dir','ltr',['box'])},{label:'Da direita para a esquerda',checked:propOf('dir')==='rtl',act:()=>setProp('dir','rtl',['box'])}]},
     {label:'Ajuste automático',disabled:!selBoxes().length,sub:fitItems},{sep:1},

@@ -33,7 +33,7 @@ function themePanel(){
     '<div class="sec"><div class="ih">Imagem de fundo do tema</div><div class="btns"><button type="button" class="btn small" data-act="themeBg">'+(t.bgImage?'Trocar imagem…':'Escolher imagem…')+'</button>'+(t.bgImage?'<button type="button" class="btn small" data-act="themeBgOff">Remover</button>':'')+'</div>'+
     (t.bgImage?'<label class="lab">Ajuste<select data-th="bgFit"><option value="cover"'+(t.bgFit==='cover'?' selected':'')+'>Preencher</option><option value="contain"'+(t.bgFit==='contain'?' selected':'')+'>Mostrar inteira</option><option value="stretch"'+(t.bgFit==='stretch'?' selected':'')+'>Esticar</option></select></label>':'')+'</div>'+
     '<div class="sec"><div class="ih">Slides</div><label class="chk"><input type="checkbox" data-th="showNumbers"'+(t.showNumbers?' checked':'')+'> Numerar slides (a partir do segundo)</label>'+
-    '<label class="chk"><input type="checkbox" data-th="progress" data-on="bar"'+(t.progress==='bar'?' checked':'')+'> Barra de progresso no rodapé</label>'+
+    (t.showNumbers?numberOpts(t):'')+'<label class="chk"><input type="checkbox" data-th="progress" data-on="bar"'+(t.progress==='bar'?' checked':'')+'> Barra de progresso no rodapé</label>'+
     '<label class="chk"><input type="checkbox" data-th="refFooter"'+(t.refFooter?' checked':'')+'> Referências citadas no rodapé do slide</label>'+
     '<label class="chk"><input type="checkbox" data-th="eqAuto"'+(t.eqAuto?' checked':'')+'> Numerar todas as equações destacadas $$…$$</label>'+
     '<div class="btns"><button type="button" class="btn small" data-act="bgAll">Usar o fundo do tema em todos</button><button type="button" class="btn small" data-act="master">Editar mestre</button><button type="button" class="btn small" data-act="size">Tamanho da página…</button></div></div>'+
@@ -180,6 +180,20 @@ function renderFindResults(){
   box.innerHTML=r.slice(0,200).map((x,i)=>{const a=Math.max(0,x.at-28),pre=x.text.slice(a,x.at),hit=x.text.slice(x.at,x.at+x.len),post=x.text.slice(x.at+x.len,x.at+x.len+40);
     return '<div class="fr'+(i===findState.idx?' on':'')+'" data-i="'+i+'"><small>Slide '+(x.si+1)+(x.notes?' · anotações':x.cell?' · tabela':'')+'</small><span>'+(a>0?'…':'')+esc(pre)+'<mark>'+esc(hit)+'</mark>'+esc(post)+'</span></div>'}).join('');
 }
+function numberOpts(t){
+  const sel=(k,opts,cur)=>'<select data-th="'+k+'">'+opts.map(o=>'<option value="'+o[0]+'"'+(String(cur)===String(o[0])?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select>';
+  const fonts=[['','Fonte do corpo']].concat(Object.keys(FONTS).map(f=>[f,f]));
+  const toHexSafe=v=>{try{return toHex(resolveColor(v))}catch(e){return '#888888'}};
+  return '<div class="numopts"><div class="g2"><label class="lab">Posição'+sel('numPos',Object.keys(NUM_POS).map(k=>[k,NUM_POS[k]]),t.numPos||'br')+'</label>'+
+    '<label class="lab">Formato'+sel('numFormat',[['n','3'],['nN','3 / 12']],t.numFormat||'n')+'</label>'+
+    '<label class="lab">Fonte'+sel('numFont',fonts,t.numFont||'')+'</label>'+
+    '<label class="lab">Tamanho (px)<input type="number" min="8" max="72" step="1" data-th="numSize" value="'+(+t.numSize||16)+'"></label>'+
+    '<label class="lab">Cor do número<input type="color" data-th="numColor" value="'+toHexSafe(t.numColor||(t.numBgOn?'#ffffff':'muted'))+'"></label>'+
+    '<label class="lab">Cor do fundo<input type="color" data-th="numBgColor" value="'+toHexSafe(t.numBgColor||'accent')+'"></label></div>'+
+    '<label class="chk"><input type="checkbox" data-th="numBgOn"'+(t.numBgOn?' checked':'')+'> Fundo atrás do número</label>'+
+    (t.numBgOn?'<label class="lab">Formato do fundo'+sel('numBgShape',[['round','Arredondado'],['square','Retangular']],t.numBgShape||'round')+'</label>':'')+
+    '<label class="chk"><input type="checkbox" data-th="numBold"'+(t.numBold?' checked':'')+'> Negrito</label></div>';
+}
 function keysPanel(){
   const k=[['F5','Apresentar deste slide'],['Shift+F5','Apresentar do início'],[MOD+ALT+'P','Visualização do apresentador'],['Enter ou duplo clique','Editar o texto da caixa ou célula'],['Esc','Sair da edição, do corte ou da seleção'],
     [MOD+'Shift+M','Equação em linha'],[MOD+'K','Link'],[MOD+'B / I / U','Negrito, itálico, sublinhado'],[MOD+'. / ,','Sobrescrito, subscrito'],[MOD+'Shift+> / <','Aumentar ou diminuir fonte'],
@@ -230,7 +244,7 @@ sideBody.addEventListener('input',ev=>{
     if(k==='url'||k==='title')selEls().forEach(e=>{if(e.type==='media')refreshEl(e)});
   }else if(t.dataset.cp){setCellProp(t.dataset.cp,t.value)}
   else if(t.dataset.ink){selEls().forEach(x=>{if(x.type!=='ink')return;if(t.dataset.ink==='color')x.strokes.forEach(s=>{s.c=t.value});else{if(!INKW.has(x))INKW.set(x,x.strokes.map(s=>s.w));const w0=INKW.get(x);x.strokes.forEach((s,i)=>{s.w=+(w0[i]*parseFloat(t.value)).toFixed(2)})}restyle(x)});commitSoon();thumbSoon()}
-  else if(t.dataset.th){deck.theme[t.dataset.th]=t.type==='checkbox'?(t.dataset.on?(t.checked?t.dataset.on:'none'):t.checked):t.value;invalidatePlan();rerenderSoon();commitSoon()}
+  else if(t.dataset.th){deck.theme[t.dataset.th]=t.type==='checkbox'?(t.dataset.on?(t.checked?t.dataset.on:'none'):t.checked):t.value;invalidatePlan();rerenderSoon();commitSoon();if(t.dataset.th==='showNumbers'||t.dataset.th==='numBgOn')renderSide()}
   else if(t.dataset.tk){const e=selEls()[0];if(!e||e.type!=='tikz')return;const k=t.dataset.tk;e[k]=t.type==='checkbox'?t.checked:t.value;if(k==='themeInk')restyle(e);commitSoon()}
   else if(t.dataset.tkpkg){const e=selEls()[0];if(!e||e.type!=='tikz')return;const n=t.dataset.tkpkg;e.pkgs=(e.pkgs||[]).filter(x=>x!==n);if(t.checked)e.pkgs.push(n);commitSoon()}
   else if(t.dataset.sl){const k=t.dataset.sl;let v=t.type==='checkbox'?t.checked:t.value;if(k==='transDur')v=clamp(parseFloat(v)||.5,.1,5);if(k==='transition'&&!v)v=null;

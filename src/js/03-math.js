@@ -21,7 +21,7 @@ function updatePreStatus(){const p=$('#preStatus');if(!p)return;
 /* ================= html sanitizer ================= */
 const TAGMAP={B:'b',STRONG:'b',I:'i',EM:'i',U:'u',S:'s',STRIKE:'s',DEL:'s',SUB:'sub',SUP:'sup',BR:'br',DIV:'div',P:'div',H1:'div',H2:'div',H3:'div',H4:'div',BLOCKQUOTE:'div',UL:'ul',OL:'ol',LI:'li',SPAN:'span',FONT:'span',A:'a'};
 const SPANSTY=['color','background-color','font-size','font-family','font-weight','font-style','text-decoration-line','vertical-align'];
-const BLOCKSTY=['text-align','margin-left'],LISTSTY=['list-style-type','margin-left'];
+const BLOCKSTY=['text-align','margin-left'],LISTSTY=['list-style-type','margin-left','--mk-c','--mk-s'];
 function safeHref(h){h=String(h||'').trim();return /^(https?:\/\/|mailto:|#slide:)/i.test(h)?h:null}
 function sanitizeHTML(html){
   const src=document.createElement('div');src.innerHTML=html;const out=document.createElement('div');
