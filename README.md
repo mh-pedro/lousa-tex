@@ -66,3 +66,16 @@ Quando houver uma nova versão, substitua só o `index.html` no repositório (**
 * Enquanto o app estiver em modo de teste no Google Cloud, só os usuários de teste conseguem conectar. Para uso próprio isso basta. Para abrir a qualquer conta Google, publique o app na tela de consentimento (o escopo `drive.file` não exige verificação de segurança, mas o Google pode pedir verificação da marca).
 * Diagramas TikZ baixam o TeX do jsDelivr na primeira compilação (cerca de 6 MB) e depois ficam no cache do navegador.
 * O ID do cliente e a chave de API não são senhas: eles aparecem para qualquer pessoa que abrir o site, e a proteção vem das restrições de origem configuradas acima.
+
+## Desenvolvimento
+
+O `index.html` é gerado a partir do código em `src/`:
+
+| Caminho | Conteúdo |
+|---|---|
+| `src/style.css` | Estilos da interface e dos slides |
+| `src/body.html` | Estrutura da página |
+| `src/js/*.js` | Código, em partes numeradas (juntadas em ordem alfabética) |
+| `build.py` | Junta tudo em `index.html` |
+
+Para gerar o site depois de editar: `python3 build.py`. Faça commit do `src/` e do `index.html` juntos.

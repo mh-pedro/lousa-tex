@@ -1,0 +1,104 @@
+<div id="app">
+  <header id="top">
+    <div class="titlebar">
+      <div class="mark" aria-hidden="true"><span>T<span>E</span>X</span></div>
+      <div class="titlecol">
+        <input id="deckTitle" aria-label="Título da apresentação" spellcheck="false">
+        <nav id="menubar" aria-label="Menus">
+          <button type="button" data-menu="arquivo">Arquivo</button>
+          <button type="button" data-menu="editar">Editar</button>
+          <button type="button" data-menu="exibir">Exibir</button>
+          <button type="button" data-menu="inserir">Inserir</button>
+          <button type="button" data-menu="formatar">Formatar</button>
+          <button type="button" data-menu="slide">Slide</button>
+          <button type="button" data-menu="organizar">Organizar</button>
+          <button type="button" data-menu="ferramentas">Ferramentas</button>
+          <button type="button" data-menu="ajuda">Ajuda</button>
+        </nav>
+      </div>
+      <span id="saveState">Salvo neste navegador</span>
+      <button type="button" class="hbtn" id="histBtn" title="Histórico de versões" aria-label="Histórico de versões"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10a6.5 6.5 0 1 0 2-4.7"/><path d="M3 3.5v3.3h3.3"/><path d="M10 6.5V10l2.5 1.6"/></svg></button>
+      <button type="button" class="hbtn" id="cmtBtn" title="Comentários" aria-label="Comentários"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3.5 4.5h13v9h-7l-4 3v-3h-2z"/></svg><span id="cmtCount"></span></button>
+      <div class="playgrp">
+        <button type="button" class="pbtn" id="bPlay" title="Apresentar deste slide (F5)"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5l9.5 5.5L4 13.5z"/></svg><span class="lbl">Apresentar</span></button>
+        <button type="button" class="pbtn chev" id="bPlayMenu" aria-label="Mais opções de apresentação"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5L8 10l3.5-3.5"/></svg></button>
+      </div>
+    </div>
+    <div id="toolbar" role="toolbar" aria-label="Ferramentas"></div>
+  </header>
+  <main id="main">
+    <aside id="rail" aria-label="Slides"><div id="thumbs"></div></aside>
+    <section id="center">
+      <div id="stageArea">
+        <canvas id="rulerH" class="ruler" aria-hidden="true"></canvas>
+        <canvas id="rulerV" class="ruler" aria-hidden="true"></canvas>
+        <div id="rulerC" class="ruler" aria-hidden="true"></div>
+        <div id="stageWrap" aria-label="Slide atual"><div id="stageInner"><div id="frame"></div></div></div>
+        <div id="masterBar" hidden><span>Editando o mestre: o que estiver aqui aparece em todos os slides</span><button type="button" id="masterClose">Fechar mestre</button></div>
+        <div id="gridView" hidden></div>
+      </div>
+      <div id="notesBar">
+        <textarea id="notes" placeholder="Clique para adicionar anotações do apresentador" aria-label="Anotações do apresentador" spellcheck="true" lang="pt-BR"></textarea>
+        <button type="button" id="dictBtn" hidden title="Ditar anotações" aria-label="Ditar anotações"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="7" y="2.5" width="6" height="10" rx="3"/><path d="M4.5 9.5a5.5 5.5 0 0 0 11 0M10 15v2.5"/></svg></button>
+      </div>
+    </section>
+    <aside id="side" hidden>
+      <div class="sidehead"><h2 id="sideTitle"></h2><button type="button" class="icobtn" id="sideClose" aria-label="Fechar painel">✕</button></div>
+      <div id="sideBody"></div>
+    </aside>
+  </main>
+</div>
+
+<div id="pop" hidden></div>
+<div id="pv" hidden><div class="pvl">Prévia do LaTeX</div><div id="pvBox"><div id="pvIn" class="tx"></div></div></div>
+<div id="preambleBox" aria-hidden="true"></div>
+<div id="tikzHost" aria-hidden="true"></div>
+<style id="tikzFonts"></style>
+<input type="file" id="imgFile" accept="image/*" hidden>
+<input type="file" id="deckFile" accept=".json,.lousa,application/json" hidden>
+<input type="file" id="bgFile" accept="image/*" hidden>
+<input type="file" id="mediaFile" accept="video/*,audio/*" hidden>
+
+<div id="pres" hidden>
+  <div id="pblack" hidden></div>
+  <div id="pnotes" hidden></div>
+  <div id="pcaps" hidden></div>
+  <div id="pgoto" hidden></div>
+  <div id="pcount"></div>
+  <div id="pbar" class="ptools" role="toolbar" aria-label="Ferramentas da apresentação"></div>
+</div>
+<div id="presenter" hidden>
+  <div class="pr-top">
+    <span class="pr-clock" id="prClock">00:00</span>
+    <span class="pr-timer"><span id="prTimer">00:00</span><button type="button" class="pr-btn" id="prPause">Pausar</button><button type="button" class="pr-btn" id="prReset">Zerar</button></span>
+    <span style="flex:1"></span>
+    <button type="button" class="pr-btn" id="prBlack">Tela preta</button>
+    <button type="button" class="pr-btn" id="prAud">Abrir janela da plateia</button>
+    <button type="button" class="pr-btn" id="prEnd">Encerrar</button>
+  </div>
+  <div class="pr-cur" id="prCur"></div>
+  <div class="pr-side">
+    <div class="pr-lab">Próximo</div>
+    <div class="pr-next" id="prNext"></div>
+    <div class="pr-notes" id="prNotes"></div>
+  </div>
+  <div class="pr-bottom">
+    <button type="button" class="pr-btn" id="prPrev">◀ Anterior</button>
+    <button type="button" class="pr-btn" id="prNextBtn">Próximo ▶</button>
+    <select id="prGo" aria-label="Ir para o slide"></select>
+    <button type="button" class="pr-btn" id="prFontDown">A−</button>
+    <button type="button" class="pr-btn" id="prFontUp">A+</button>
+    <span class="ptools inline" id="prTools" role="toolbar" aria-label="Ferramentas de anotação"></span>
+    <span class="pr-count" id="prCount"></span>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="mbox" id="mbox" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="mhead"><h2 id="mTitle"></h2><button type="button" class="icobtn" id="mClose" aria-label="Fechar">✕</button></div>
+    <div class="mbody" id="mBody"></div>
+  </div>
+</div>
+<div id="toast" role="status" hidden></div>
+<div id="print"></div>
+<style id="dynStyle"></style>
