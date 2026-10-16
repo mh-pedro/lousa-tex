@@ -37,7 +37,7 @@ As fórmulas não viram imagem: continuam texto LaTeX que você pode editar a qu
 | **Diagramas** | TikZ compilado no próprio navegador, com modelos de Feynman (tikz-feynman), pgfplots, tikz-cd e 3D |
 | **Ciência** | Gráficos de funções com legendas em LaTeX, citações do INSPIRE-HEP ou BibTeX, numeração automática de equações, blocos no estilo Beamer, sumário automático |
 | **Apresentação** | Tela cheia, visualização do apresentador com cronômetro e anotações, laser com rastro, caneta, marca-texto, texto sobre o slide, lupa, câmera, gravação em vídeo |
-| **Exportação** | LaTeX Beamer, PowerPoint (.pptx), PDF pela impressão, arquivo próprio `.lousa.json` |
+| **Exportação** | LaTeX Beamer, PowerPoint (.pptx), PDF pela impressão, arquivo próprio `.lousa` |
 | **Armazenamento** | Salvamento automático no navegador, histórico de versões e Google Drive (opcional) |
 
 ---
