@@ -190,6 +190,8 @@ function numberOpts(t){
     '<label class="lab">Tamanho (px)<input type="number" min="8" max="72" step="1" data-th="numSize" value="'+(+t.numSize||16)+'"></label>'+
     '<label class="lab">Cor do número<input type="color" data-th="numColor" value="'+toHexSafe(t.numColor||(t.numBgOn?'#ffffff':'muted'))+'"></label>'+
     '<label class="lab">Cor do fundo<input type="color" data-th="numBgColor" value="'+toHexSafe(t.numBgColor||'accent')+'"></label></div>'+
+    '<label class="chk"><input type="checkbox" data-th="numAuto"'+(t.numAuto!==false?' checked':'')+'> Cor automática conforme o fundo do slide</label>'+
+    '<p class="hint">Para trocar a cor só num slide: clique com o botão direito no slide › Número do slide.</p>'+
     '<label class="chk"><input type="checkbox" data-th="numBgOn"'+(t.numBgOn?' checked':'')+'> Fundo atrás do número</label>'+
     (t.numBgOn?'<label class="lab">Formato do fundo'+sel('numBgShape',[['round','Arredondado'],['square','Retangular']],t.numBgShape||'round')+'</label>':'')+
     '<label class="chk"><input type="checkbox" data-th="numBold"'+(t.numBold?' checked':'')+'> Negrito</label></div>';

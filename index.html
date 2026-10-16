@@ -1399,13 +1399,20 @@ function slideBgCss(n,s){
   n.style.backgroundColor=s.bg||t.bg;n.style.backgroundImage=img?'url("'+img+'")':'';n.style.backgroundSize=fit==='stretch'?'100% 100%':(fit||'cover');
 }
 const NUM_POS={br:'Inferior direito',bc:'Inferior central',bl:'Inferior esquerdo',tr:'Superior direito',tc:'Superior central',tl:'Superior esquerdo'};
-function styleSlnum(k,t){
+const isDarkCss=c=>{const h=toHex(resolveColor(c));if(!/^#[0-9a-f]{6}/i.test(h))return false;const v=hexRgb(h).map(x=>{x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)});return .2126*v[0]+.7152*v[1]+.0722*v[2]<.36};
+function slnumColors(t,s){
+  const n=(s&&s.num)||{},bgOn=!!t.numBgOn;let color,bg=bgOn?resolveColor(n.bg||t.numBgColor||'accent'):'';
+  if(n.color)color=resolveColor(n.color);
+  else if(t.numAuto!==false&&!bgOn&&s&&!s.bgImage&&!(!s.bg&&t.bgImage)){const dark=isDarkCss(s.bg||t.bg),base=t.numColor?resolveColor(t.numColor):resolveColor('muted'),bd=isDarkCss(base);color=dark===bd?(dark?'#ffffff':'#3c4043'):base}
+  else color=t.numColor?resolveColor(t.numColor):(bgOn?'#ffffff':resolveColor('muted'));
+  return{color:color,bg:bg};
+}
+function styleSlnum(k,t,s){
   const pos=t.numPos||'br',m=t.numBgOn?24:34,v=t.numBgOn?16:20;Object.assign(k.style,{left:'auto',right:'auto',top:'auto',bottom:'auto',transform:'',whiteSpace:'nowrap',lineHeight:'1.2'});
   if(pos[0]==='b')k.style.bottom=v+'px';else k.style.top=v+'px';
   if(pos[1]==='r')k.style.right=m+'px';else if(pos[1]==='l')k.style.left=m+'px';else{k.style.left='50%';k.style.transform='translateX(-50%)'}
   k.style.fontSize=(+t.numSize||16)+'px';k.style.fontFamily=t.numFont?fontStack(t.numFont):'';k.style.fontWeight=t.numBold?'700':'';
-  k.style.color=t.numColor?resolveColor(t.numColor):(t.numBgOn?'#ffffff':resolveColor('muted'));
-  k.style.background=t.numBgOn?resolveColor(t.numBgColor||'accent'):'';k.style.padding=t.numBgOn?'.18em .7em':'';k.style.borderRadius=t.numBgOn?(t.numBgShape==='square'?'.25em':'999px'):'';
+  const nc=slnumColors(t,s);k.style.color=nc.color;k.style.background=nc.bg;k.style.padding=t.numBgOn?'.18em .7em':'';k.style.borderRadius=t.numBgOn?(t.numBgShape==='square'?'.25em':'999px'):'';
 }
 function renderSlideNode(s,i,mode){
   const n=document.createElement('div'),t=deck.theme;n.className='slide';
@@ -1413,7 +1420,7 @@ function renderSlideNode(s,i,mode){
   n.style.color=t.fg;n.style.fontFamily=fontStack(t.bodyFont);n.style.setProperty('--accent',t.accent);
   if(s!==deck.master&&!s.hideMaster)deck.master.els.forEach(e=>{const d=makeEl(e,false);d.classList.add('mst');d.removeAttribute('data-id');d.dataset.mid=e.id;n.appendChild(d)});
   s.els.forEach(e=>{const d=makeEl(e,mode==='edit');if(mode!=='edit'&&e.link)d.dataset.link=JSON.stringify(e.link);n.appendChild(d)});
-  if(t.showNumbers&&s!==deck.master&&i>0){const k=document.createElement('div');k.className='slnum';k.textContent=t.numFormat==='nN'?(i+1)+' / '+deck.slides.length:String(i+1);styleSlnum(k,t);n.appendChild(k)}
+  if(t.showNumbers&&s!==deck.master&&i>0&&!(s.num&&s.num.hide)){const k=document.createElement('div');k.className='slnum';k.textContent=t.numFormat==='nN'?(i+1)+' / '+deck.slides.length:String(i+1);styleSlnum(k,t,s);n.appendChild(k)}
   if(s!==deck.master&&i>=0){
     if(t.progress==='bar'){const b=document.createElement('div');b.className='progbar';b.style.width=((i+1)/deck.slides.length*100)+'%';b.style.background=t.accent;n.appendChild(b)}
     if(t.refFooter){const keys=slideCites(s);if(keys.length){const f=document.createElement('div');f.className='reffoot';f.style.color=resolveColor('muted');
@@ -3570,6 +3577,7 @@ const MENUS={
     {label:'Ignorar slide',checked:one&&one.skip,act:toggleSkip,disabled:masterMode},{sep:1},
     {label:'Mover slide',disabled:masterMode,sub:[{label:'Para cima',act:()=>moveSlides('up')},{label:'Para baixo',act:()=>moveSlides('down')},{label:'Para o início',act:()=>moveSlides('top')},{label:'Para o fim',act:()=>moveSlides('end')}]},{sep:1},
     {label:'Alterar plano de fundo',sub:[{label:'Cor…',act:()=>colorPop(toolbar,slide().bg,c=>c?setSlideBg(c):resetSlideBg(),{none:'Usar o fundo do tema'})},{label:'Imagem…',act:()=>pickBgImage('slide')},{label:'Redefinir',act:resetSlideBg}]},
+    {label:'Número do slide',icon:'hash',disabled:masterMode||!deck.theme.showNumbers,hint:deck.theme.showNumbers?'':'Ligue a numeração no painel Tema',sub:numberItems},
     {label:'Aplicar layout',disabled:masterMode,sub:()=>layoutItems(applyLayout)},{label:'Redefinir slide',act:resetSlide,disabled:masterMode},{sep:1},
     {label:'Transição…',act:()=>openSide('anim')},{sep:1},
     {label:'Editar tema e preâmbulo LaTeX…',act:()=>openSide('theme')},{label:'Editar mestre',checked:masterMode,act:()=>masterMode?exitMaster():enterMaster()},
@@ -3604,9 +3612,20 @@ function elCtxItems(){const els=selEls(),one=els.length===1?els[0]:null;return[
   els.length>1?{label:'Agrupar',act:groupSel}:null,els.some(e=>e.group)?{label:'Desagrupar',act:ungroupSel}:null,
   {label:els.every(e=>e.locked)?'Desbloquear':'Bloquear posição',act:lockSel},{sep:1},
   {label:'Copiar formatação',act:startPainter},{label:'Animar',act:()=>{animateSel();openSide('anim',true)}},{label:'Opções de formato…',act:()=>openSide('format',true)}]}
+function setSlideNum(k,v){const ids=slideSel.size?Array.from(slideSel):[slide().id];deck.slides.forEach(s=>{if(!ids.includes(s.id))return;s.num=Object.assign({},s.num);if(v==null||v==='')delete s.num[k];else s.num[k]=v;if(!Object.keys(s.num).length)delete s.num});rerenderAll();commit()}
+function numSameBg(){const s=slide(),key=(s.bg||'')+'|'+(s.bgImage||''),src=Object.assign({},s.num);delete src.hide;let n=0;
+  deck.slides.forEach(o=>{if(o===s||((o.bg||'')+'|'+(o.bgImage||''))!==key)return;o.num=Object.assign({},o.num,src);['color','bg'].forEach(k=>{if(!src[k])delete o.num[k]});if(!Object.keys(o.num).length)delete o.num;n++});
+  rerenderAll();commit();toast(n?'Cores do número aplicadas a mais '+n+' slide'+(n>1?'s':'')+' com o mesmo fundo.':'Nenhum outro slide com o mesmo fundo.')}
+const numberItems=()=>{const s=slide(),n=(s&&s.num)||{},t=deck.theme;return[
+  {label:'Cor do número neste slide…',icon:'hash',act:()=>colorPop(toolbar,n.color,c=>setSlideNum('color',c?resolveColor(c):''),{none:'Usar a cor do tema'})},
+  {label:'Cor do fundo do número neste slide…',icon:'fill',disabled:!t.numBgOn,hint:t.numBgOn?'':'Ligue "Fundo atrás do número" no painel Tema',act:()=>colorPop(toolbar,n.bg,c=>setSlideNum('bg',c?resolveColor(c):''),{none:'Usar a cor do tema'})},
+  {label:'Usar estas cores nos slides com o mesmo fundo',icon:'dup',act:numSameBg},
+  {label:'Ocultar o número neste slide',icon:'eyeoff',checked:!!n.hide,act:()=>setSlideNum('hide',n.hide?'':true)},{sep:1},
+  {label:'Cor automática conforme o fundo',checked:t.numAuto!==false,act:()=>{t.numAuto=t.numAuto===false;rerenderAll();commit();if(sideMode==='theme')renderSide()}},
+  {label:'Opções de numeração no tema…',icon:'theme',act:()=>openSide('theme',true)}]};
 function slideBgCtxItems(){return[{label:'Colar',sc:MOD+'V',act:pasteFromMenu},{sep:1},
   {label:'Alterar plano de fundo',sub:[{label:'Cor…',act:()=>colorPop(toolbar,slide().bg,c=>c?setSlideBg(c):resetSlideBg(),{none:'Usar o fundo do tema'})},{label:'Imagem…',act:()=>pickBgImage('slide')},{label:'Redefinir',act:resetSlideBg}]},
-  {label:'Aplicar layout',sub:()=>layoutItems(applyLayout),disabled:masterMode},{label:'Transição…',act:()=>openSide('anim')},{label:'Editar tema…',act:()=>openSide('theme')},{sep:1},
+  {label:'Número do slide',icon:'hash',disabled:masterMode||!deck.theme.showNumbers,hint:deck.theme.showNumbers?'':'Ligue a numeração no painel Tema',sub:numberItems},{label:'Aplicar layout',sub:()=>layoutItems(applyLayout),disabled:masterMode},{label:'Transição…',act:()=>openSide('anim')},{label:'Editar tema…',act:()=>openSide('theme')},{sep:1},
   {label:'Comentário no slide',act:startComment},{label:'Novo slide',sc:MOD+'M',act:()=>addSlide()}]}
 function slideCtxItems(){const s=deck.slides[cur];return[
   {label:'Novo slide',sc:MOD+'M',act:()=>addSlide()},{label:'Novo slide com layout',sub:()=>layoutItems(addSlide)},{label:'Duplicar slide',act:dupSlides},{label:'Excluir slide',act:delSlides},
@@ -3614,7 +3633,7 @@ function slideCtxItems(){const s=deck.slides[cur];return[
   {label:'Recortar',act:()=>copySlides(null,true)},{label:'Copiar',act:()=>copySlides(null)},{label:'Colar',act:()=>clipSlides&&pasteSlides(clipSlides),disabled:!clipSlides},{sep:1},
   {label:'Mover para cima',act:()=>moveSlides('up'),disabled:cur===0},{label:'Mover para baixo',act:()=>moveSlides('down'),disabled:cur>=deck.slides.length-1},
   {label:'Mover para o início',act:()=>moveSlides('top')},{label:'Mover para o fim',act:()=>moveSlides('end')},{sep:1},
-  {label:'Aplicar layout',sub:()=>layoutItems(applyLayout)},{label:'Alterar plano de fundo…',act:()=>colorPop(toolbar,slide().bg,c=>c?setSlideBg(c):resetSlideBg(),{none:'Usar o fundo do tema'})},
+  {label:'Número do slide',icon:'hash',disabled:!deck.theme.showNumbers,sub:numberItems},{label:'Aplicar layout',sub:()=>layoutItems(applyLayout)},{label:'Alterar plano de fundo…',act:()=>colorPop(toolbar,slide().bg,c=>c?setSlideBg(c):resetSlideBg(),{none:'Usar o fundo do tema'})},
   {label:'Transição…',act:()=>openSide('anim')},{label:'Comentário no slide',act:()=>{select([]);startComment()}}]}
 function alignText(v){const e=tbl();if(e){setCellProp('align',v);return}if(editId){const x=editEl();x.align=v;styleEl(elDom(x),x);commitSoon();renderToolbar();return}setProp('align',v,['box']);renderToolbar()}
 function valignText(v){const e=tbl();if(e){setCellProp('valign',v);return}setProp('valign',v,['box'])}
@@ -4090,6 +4109,8 @@ function numberOpts(t){
     '<label class="lab">Tamanho (px)<input type="number" min="8" max="72" step="1" data-th="numSize" value="'+(+t.numSize||16)+'"></label>'+
     '<label class="lab">Cor do número<input type="color" data-th="numColor" value="'+toHexSafe(t.numColor||(t.numBgOn?'#ffffff':'muted'))+'"></label>'+
     '<label class="lab">Cor do fundo<input type="color" data-th="numBgColor" value="'+toHexSafe(t.numBgColor||'accent')+'"></label></div>'+
+    '<label class="chk"><input type="checkbox" data-th="numAuto"'+(t.numAuto!==false?' checked':'')+'> Cor automática conforme o fundo do slide</label>'+
+    '<p class="hint">Para trocar a cor só num slide: clique com o botão direito no slide › Número do slide.</p>'+
     '<label class="chk"><input type="checkbox" data-th="numBgOn"'+(t.numBgOn?' checked':'')+'> Fundo atrás do número</label>'+
     (t.numBgOn?'<label class="lab">Formato do fundo'+sel('numBgShape',[['round','Arredondado'],['square','Retangular']],t.numBgShape||'round')+'</label>':'')+
     '<label class="chk"><input type="checkbox" data-th="numBold"'+(t.numBold?' checked':'')+'> Negrito</label></div>';
@@ -4608,7 +4629,7 @@ async function exportPptx(){
         sl.addImage(Object.assign({},pos,{h:(e.type==='box'||e.type==='table'?Math.max(e.h,d.offsetHeight):e.h)*IN,data:png,rotate:e.rot||0}));
       }catch(err){console.warn('pptx',e.type,err)}
     }
-    if(t.showNumbers&&i>0){const pos=t.numPos||'br',bw=120,bh=36,x=pos[1]==='r'?W-bw-24:pos[1]==='l'?24:(W-bw)/2,y=pos[0]==='b'?H-bh-14:14,o={x:x*IN,y:y*IN,w:bw*IN,h:bh*IN,fontSize:Math.round((+t.numSize||16)*.75),bold:!!t.numBold,color:(t.numColor?toHex(resolveColor(t.numColor)):(t.numBgOn?'#FFFFFF':toHex(resolveColor('muted')))).replace('#',''),align:pos[1]==='r'?'right':pos[1]==='l'?'left':'center',valign:'middle'};if(t.numFont)o.fontFace=t.numFont;sl.addText(t.numFormat==='nN'?(i+1)+' / '+deck.slides.length:String(i+1),o)}
+    if(t.showNumbers&&i>0&&!(s.num&&s.num.hide)){const pos=t.numPos||'br',bw=120,bh=36,x=pos[1]==='r'?W-bw-24:pos[1]==='l'?24:(W-bw)/2,y=pos[0]==='b'?H-bh-14:14,o={x:x*IN,y:y*IN,w:bw*IN,h:bh*IN,fontSize:Math.round((+t.numSize||16)*.75),bold:!!t.numBold,color:toHex(slnumColors(t,s).color).replace('#',''),align:pos[1]==='r'?'right':pos[1]==='l'?'left':'center',valign:'middle'};if(t.numFont)o.fontFace=t.numFont;sl.addText(t.numFormat==='nN'?(i+1)+' / '+deck.slides.length:String(i+1),o)}
     const cites=slideCites(s);if(t.refFooter&&cites.length)sl.addText(cites.map(k=>{const r=refByKey(k);return '['+citeNum(k)+'] '+(r?refShort(r):k)}).join('\n'),{x:30*IN,y:(H-30-cites.length*18)*IN,w:(W-200)*IN,h:(cites.length*18+10)*IN,fontSize:9,color:hexOf('muted'),valign:'bottom'});
     if(s.notes)sl.addNotes(s.notes);
   }

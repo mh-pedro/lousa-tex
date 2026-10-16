@@ -339,6 +339,7 @@ const MENUS={
     {label:'Ignorar slide',checked:one&&one.skip,act:toggleSkip,disabled:masterMode},{sep:1},
     {label:'Mover slide',disabled:masterMode,sub:[{label:'Para cima',act:()=>moveSlides('up')},{label:'Para baixo',act:()=>moveSlides('down')},{label:'Para o início',act:()=>moveSlides('top')},{label:'Para o fim',act:()=>moveSlides('end')}]},{sep:1},
     {label:'Alterar plano de fundo',sub:[{label:'Cor…',act:()=>colorPop(toolbar,slide().bg,c=>c?setSlideBg(c):resetSlideBg(),{none:'Usar o fundo do tema'})},{label:'Imagem…',act:()=>pickBgImage('slide')},{label:'Redefinir',act:resetSlideBg}]},
+    {label:'Número do slide',icon:'hash',disabled:masterMode||!deck.theme.showNumbers,hint:deck.theme.showNumbers?'':'Ligue a numeração no painel Tema',sub:numberItems},
     {label:'Aplicar layout',disabled:masterMode,sub:()=>layoutItems(applyLayout)},{label:'Redefinir slide',act:resetSlide,disabled:masterMode},{sep:1},
     {label:'Transição…',act:()=>openSide('anim')},{sep:1},
     {label:'Editar tema e preâmbulo LaTeX…',act:()=>openSide('theme')},{label:'Editar mestre',checked:masterMode,act:()=>masterMode?exitMaster():enterMaster()},
@@ -373,9 +374,20 @@ function elCtxItems(){const els=selEls(),one=els.length===1?els[0]:null;return[
   els.length>1?{label:'Agrupar',act:groupSel}:null,els.some(e=>e.group)?{label:'Desagrupar',act:ungroupSel}:null,
   {label:els.every(e=>e.locked)?'Desbloquear':'Bloquear posição',act:lockSel},{sep:1},
   {label:'Copiar formatação',act:startPainter},{label:'Animar',act:()=>{animateSel();openSide('anim',true)}},{label:'Opções de formato…',act:()=>openSide('format',true)}]}
+function setSlideNum(k,v){const ids=slideSel.size?Array.from(slideSel):[slide().id];deck.slides.forEach(s=>{if(!ids.includes(s.id))return;s.num=Object.assign({},s.num);if(v==null||v==='')delete s.num[k];else s.num[k]=v;if(!Object.keys(s.num).length)delete s.num});rerenderAll();commit()}
+function numSameBg(){const s=slide(),key=(s.bg||'')+'|'+(s.bgImage||''),src=Object.assign({},s.num);delete src.hide;let n=0;
+  deck.slides.forEach(o=>{if(o===s||((o.bg||'')+'|'+(o.bgImage||''))!==key)return;o.num=Object.assign({},o.num,src);['color','bg'].forEach(k=>{if(!src[k])delete o.num[k]});if(!Object.keys(o.num).length)delete o.num;n++});
+  rerenderAll();commit();toast(n?'Cores do número aplicadas a mais '+n+' slide'+(n>1?'s':'')+' com o mesmo fundo.':'Nenhum outro slide com o mesmo fundo.')}
+const numberItems=()=>{const s=slide(),n=(s&&s.num)||{},t=deck.theme;return[
+  {label:'Cor do número neste slide…',icon:'hash',act:()=>colorPop(toolbar,n.color,c=>setSlideNum('color',c?resolveColor(c):''),{none:'Usar a cor do tema'})},
+  {label:'Cor do fundo do número neste slide…',icon:'fill',disabled:!t.numBgOn,hint:t.numBgOn?'':'Ligue "Fundo atrás do número" no painel Tema',act:()=>colorPop(toolbar,n.bg,c=>setSlideNum('bg',c?resolveColor(c):''),{none:'Usar a cor do tema'})},
+  {label:'Usar estas cores nos slides com o mesmo fundo',icon:'dup',act:numSameBg},
+  {label:'Ocultar o número neste slide',icon:'eyeoff',checked:!!n.hide,act:()=>setSlideNum('hide',n.hide?'':true)},{sep:1},
+  {label:'Cor automática conforme o fundo',checked:t.numAuto!==false,act:()=>{t.numAuto=t.numAuto===false;rerenderAll();commit();if(sideMode==='theme')renderSide()}},
+  {label:'Opções de numeração no tema…',icon:'theme',act:()=>openSide('theme',true)}]};
 function slideBgCtxItems(){return[{label:'Colar',sc:MOD+'V',act:pasteFromMenu},{sep:1},
   {label:'Alterar plano de fundo',sub:[{label:'Cor…',act:()=>colorPop(toolbar,slide().bg,c=>c?setSlideBg(c):resetSlideBg(),{none:'Usar o fundo do tema'})},{label:'Imagem…',act:()=>pickBgImage('slide')},{label:'Redefinir',act:resetSlideBg}]},
-  {label:'Aplicar layout',sub:()=>layoutItems(applyLayout),disabled:masterMode},{label:'Transição…',act:()=>openSide('anim')},{label:'Editar tema…',act:()=>openSide('theme')},{sep:1},
+  {label:'Número do slide',icon:'hash',disabled:masterMode||!deck.theme.showNumbers,hint:deck.theme.showNumbers?'':'Ligue a numeração no painel Tema',sub:numberItems},{label:'Aplicar layout',sub:()=>layoutItems(applyLayout),disabled:masterMode},{label:'Transição…',act:()=>openSide('anim')},{label:'Editar tema…',act:()=>openSide('theme')},{sep:1},
   {label:'Comentário no slide',act:startComment},{label:'Novo slide',sc:MOD+'M',act:()=>addSlide()}]}
 function slideCtxItems(){const s=deck.slides[cur];return[
   {label:'Novo slide',sc:MOD+'M',act:()=>addSlide()},{label:'Novo slide com layout',sub:()=>layoutItems(addSlide)},{label:'Duplicar slide',act:dupSlides},{label:'Excluir slide',act:delSlides},
@@ -383,7 +395,7 @@ function slideCtxItems(){const s=deck.slides[cur];return[
   {label:'Recortar',act:()=>copySlides(null,true)},{label:'Copiar',act:()=>copySlides(null)},{label:'Colar',act:()=>clipSlides&&pasteSlides(clipSlides),disabled:!clipSlides},{sep:1},
   {label:'Mover para cima',act:()=>moveSlides('up'),disabled:cur===0},{label:'Mover para baixo',act:()=>moveSlides('down'),disabled:cur>=deck.slides.length-1},
   {label:'Mover para o início',act:()=>moveSlides('top')},{label:'Mover para o fim',act:()=>moveSlides('end')},{sep:1},
-  {label:'Aplicar layout',sub:()=>layoutItems(applyLayout)},{label:'Alterar plano de fundo…',act:()=>colorPop(toolbar,slide().bg,c=>c?setSlideBg(c):resetSlideBg(),{none:'Usar o fundo do tema'})},
+  {label:'Número do slide',icon:'hash',disabled:!deck.theme.showNumbers,sub:numberItems},{label:'Aplicar layout',sub:()=>layoutItems(applyLayout)},{label:'Alterar plano de fundo…',act:()=>colorPop(toolbar,slide().bg,c=>c?setSlideBg(c):resetSlideBg(),{none:'Usar o fundo do tema'})},
   {label:'Transição…',act:()=>openSide('anim')},{label:'Comentário no slide',act:()=>{select([]);startComment()}}]}
 function alignText(v){const e=tbl();if(e){setCellProp('align',v);return}if(editId){const x=editEl();x.align=v;styleEl(elDom(x),x);commitSoon();renderToolbar();return}setProp('align',v,['box']);renderToolbar()}
 function valignText(v){const e=tbl();if(e){setCellProp('valign',v);return}setProp('valign',v,['box'])}
