@@ -90,6 +90,7 @@ function focusThumb(){const t=thumbsEl.children[cur];if(t)t.focus()}
 
 /* ================= start ================= */
 function initialDeck(){
+  if(window.__LOUSA_DECK&&Array.isArray(window.__LOUSA_DECK.slides)){const d=window.__LOUSA_DECK;window.__LOUSA_DECK=null;if(!d.id)d.id=uid();return d}
   const id=lsGet(KEY_CUR);if(id){const d=loadDeckById(id);if(d&&Array.isArray(d.slides)&&d.slides.length)return d}
   const l=libList();if(l[0]){const d=loadDeckById(l[0].id);if(d)return d}
   for(const k of [KEY_OLD2,KEY_OLD1]){try{const s=lsGet(k);if(s){const d=JSON.parse(s);if(d&&Array.isArray(d.slides)&&d.slides.length)return d}}catch(e){}}
@@ -103,3 +104,4 @@ window.mathReady.then(()=>{if(window.__mjFailed)toast('O MathJax não carregou. 
 driveBoot();
 planSig=planSignature();
 setupLaunchQueue();
+if(window.__LOUSA_FROM_FILE){FS.fromFile=true;FS.deckId=deck.id;FS.name=decodeURIComponent(location.pathname.split('/').pop()||'');setSaveState('Aberto de '+FS.name);toast('Apresentação aberta do arquivo. Ctrl+S salva de volta nele.')}

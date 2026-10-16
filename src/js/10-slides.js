@@ -112,7 +112,9 @@ function openDeck(d,msg){
 function newDeck(){openDeck({version:3,id:uid(),title:'Apresentação sem título',size:Object.assign({},deck.size),theme:Object.assign({},deck.theme),preamble:deck.preamble,slides:[makeSlide('title')]},'Nova apresentação criada.')}
 function copyDeck(src){const d=JSON.parse(JSON.stringify(src||deck));d.id=uid();d.title='Cópia de '+(d.title||'apresentação');d.comments=[];openDeck(d,'Cópia criada e aberta.')}
 function deleteDeckFromLib(id){lsDel(KEY_DECK+id);lsDel(KEY_VER+id);libSave(libList().filter(x=>x.id!==id))}
-function parseDeckText(text){let d;try{d=JSON.parse(text)}catch(e){return null}return d&&Array.isArray(d.slides)?d:null}
+function parseDeckText(text){let d;text=String(text||'');
+  if(/^\s*</.test(text)){const m=/<script type="application\/json" id="lousa-deck">([\s\S]*?)<\/script>/.exec(text);if(!m)return null;text=m[1]}
+  try{d=JSON.parse(text)}catch(e){return null}return d&&Array.isArray(d.slides)?d:null}
 $('#deckFile').addEventListener('change',ev=>{const f=ev.target.files[0];ev.target.value='';if(!f)return;const fr=new FileReader();
   fr.onload=()=>{const d=parseDeckText(fr.result);if(!d){toast('Não reconheci esse arquivo como uma apresentação do Lousa TeX.');return}
     if(deckFileMode==='import'){importSource=normalize(d);openImportModal(true)}else{d.id=uid();openDeck(d,'Apresentação aberta.')}};fr.readAsText(f)});

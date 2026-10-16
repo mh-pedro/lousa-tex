@@ -37,7 +37,7 @@ As fórmulas não viram imagem: continuam texto LaTeX que você pode editar a qu
 | **Diagramas** | TikZ compilado no próprio navegador, com modelos de Feynman (tikz-feynman), pgfplots, tikz-cd e 3D |
 | **Ciência** | Gráficos de funções com legendas em LaTeX, citações do INSPIRE-HEP ou BibTeX, numeração automática de equações, blocos no estilo Beamer, sumário automático |
 | **Apresentação** | Tela cheia, visualização do apresentador com cronômetro e anotações, laser com rastro, caneta, marca-texto, texto sobre o slide, lupa, câmera, gravação em vídeo |
-| **Exportação** | LaTeX Beamer, PowerPoint (.pptx), PDF pela impressão, arquivo próprio `.lousa` |
+| **Exportação** | LaTeX Beamer, PowerPoint (.pptx), PDF pela impressão, arquivo próprio `.lousa.html` (abre com duplo clique) |
 | **Armazenamento** | Salvamento automático no navegador, histórico de versões e Google Drive (opcional) |
 
 ---
@@ -206,22 +206,23 @@ As anotações feitas durante a apresentação podem ser salvas nos slides ao te
 | Ação | Onde |
 |---|---|
 | Salvar no navegador | Automático, enquanto você edita |
-| Salvar no computador | **Arquivo › Salvar no computador** (`Ctrl+S`). No Chrome e no Edge, depois da primeira vez as mudanças vão direto para o mesmo arquivo `.lousa` |
+| Salvar no computador | **Arquivo › Salvar no computador** (`Ctrl+S`): gera `nome.lousa.html`, que abre com duplo clique |
 | Salvar como | **Arquivo › Salvar como…** (`Ctrl+Shift+S`) |
-| Abrir um arquivo `.lousa` | **Arquivo › Abrir arquivo do computador…**, ou duplo clique no arquivo com o app instalado (veja abaixo) |
+| Abrir um arquivo salvo | Duplo clique no `.lousa.html`, ou **Arquivo › Abrir arquivo do computador…** (aceita `.lousa.html`, `.lousa` e `.lousa.json`) |
 | Abrir outra apresentação | **Arquivo › Abrir** (`Ctrl+O`) |
 | Histórico de versões | **Arquivo › Histórico de versões** (`Ctrl+Alt+Shift+H`) |
 | LaTeX Beamer | **Arquivo › Fazer download › LaTeX Beamer (.tex)** (equações, TikZ, citações e pacotes incluídos) |
 | PowerPoint | **Arquivo › Fazer download › PowerPoint (.pptx)** |
 | PDF | **Arquivo › Imprimir** (`Ctrl+P`) e escolha "Salvar como PDF" |
 
-### Abrir arquivos `.lousa` com duplo clique
+### Abrir com duplo clique
 
-1. No **Chrome** ou no **Edge** do computador, abra o site e use **Arquivo › Instalar como aplicativo…** (ou o ícone de instalar na barra de endereço).
-2. O Lousa TeX ganha janela e ícone próprios, como um programa.
-3. Clique com o botão direito num arquivo `.lousa` › **Abrir com** › **Lousa TeX** e marque para usar sempre.
+`Ctrl+S` salva a apresentação como **`nome.lousa.html`**. Como todo sistema abre arquivos `.html` no navegador, um **duplo clique** nesse arquivo abre a apresentação direto no Lousa TeX, pronta para continuar editando. Funciona no Windows, no Mac e no Linux, em qualquer navegador.
 
-A partir daí, um duplo clique no arquivo abre a apresentação pronta para editar, e `Ctrl+S` grava de volta no mesmo arquivo. Firefox e Safari não oferecem esse recurso; neles, use **Arquivo › Abrir arquivo do computador…**. Arquivos antigos `.lousa.json` continuam abrindo pelo menu.
+- O arquivo guarda a apresentação inteira (textos, LaTeX, imagens, diagramas). Ao ser aberto, ele carrega a versão mais recente do Lousa TeX pela internet.
+- No **Chrome** e no **Edge**, depois do primeiro `Ctrl+S` as mudanças vão sozinhas para o mesmo arquivo. Na primeira vez, escolha o próprio arquivo para substituí-lo.
+- No **Firefox** e no **Safari**, `Ctrl+S` baixa uma cópia atualizada do arquivo.
+- Também dá para mandar o arquivo por e-mail: quem receber abre com duplo clique, sem instalar nada.
 
 > ⚠️ **Importante:** as apresentações ficam guardadas **no navegador** onde foram criadas. Se você limpar os dados do navegador ou trocar de computador, elas não vão junto. Salve no computador (`Ctrl+S`) ou use o Google Drive.
 
@@ -349,7 +350,7 @@ O site é um único `index.html`, gerado a partir do código em `src/`:
 | `src/js/*.js` | Código, em partes numeradas e juntadas em ordem alfabética |
 | `build.py` | Junta tudo em `index.html` |
 | `config.js` | Configuração do Google Drive, lida pelo site ao carregar |
-| `manifest.webmanifest`, `sw.js`, `icons/` | Instalação como aplicativo e abertura de arquivos `.lousa` |
+| `manifest.webmanifest`, `sw.js`, `icons/` | Instalação como aplicativo (opcional) |
 
 Depois de editar algo em `src/`, rode:
 
