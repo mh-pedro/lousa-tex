@@ -14,10 +14,11 @@ pop.addEventListener('mousedown',ev=>{if(!ev.target.closest('input,select,textar
 let menuHoverT=null;
 function buildMenu(items){
   const m=document.createElement('div');m.className='menu';m.setAttribute('role','menu');
-  items.forEach(it=>{
+  const icons=items.map(it=>it&&!it.sep?menuIcon(it):'');if(icons.some(Boolean))m.classList.add('icons');
+  items.forEach((it,ix)=>{
     if(!it)return;if(it.sep){if(m.lastChild&&!m.lastChild.classList.contains('msep'))m.insertAdjacentHTML('beforeend','<div class="msep"></div>');return}
     const d=document.createElement('div');d.className='mi'+(it.disabled?' dis':'');d.setAttribute('role','menuitem');
-    d.innerHTML='<span class="ck">'+(it.checked?'✓':'')+'</span><span class="ml"></span>'+(it.sc?'<span class="sc">'+esc(it.sc)+'</span>':'')+(it.sub?'<span class="chev">›</span>':'');
+    d.innerHTML='<span class="ck">'+(it.checked?'✓':'')+'</span><span class="mic">'+icons[ix]+'</span><span class="ml"></span>'+(it.sc?'<span class="sc">'+esc(it.sc)+'</span>':'')+(it.sub?'<span class="chev">›</span>':'');
     d.querySelector('.ml').textContent=it.label;if(it.font)d.querySelector('.ml').style.fontFamily=fontStack(it.font);if(it.hint)d.title=it.hint;
     if(it.sub){m.classList.add('has-sub');d.appendChild(buildMenu(typeof it.sub==='function'?it.sub():it.sub));d.addEventListener('click',ev=>{if(ev.target.closest('.mi')!==d)return;ev.stopPropagation();d.classList.add('open')})}
     else d.addEventListener('click',ev=>{ev.stopPropagation();closePop();if(it.act)it.act()});
@@ -253,7 +254,7 @@ const lineItems=()=>[{label:'Linha',act:()=>setTool({kind:'line',arrow:false})},
   {label:'Conector angular',act:()=>setTool({kind:'line',arrow:true,route:'elbow'})},{label:'Conector curvo',act:()=>setTool({kind:'line',arrow:true,route:'curve'})},{label:'Rabisco (à mão livre)',act:()=>setTool({kind:'ink'})}];
 const layoutItems=fn=>Object.keys(LAYOUTS).map(k=>({label:LAYOUTS[k].name,act:()=>fn(k)}));
 const orderItems=()=>[{label:'Trazer para a frente',sc:MOD+'Shift+↑',act:()=>order('front')},{label:'Avançar',sc:MOD+'↑',act:()=>order('forward')},{label:'Recuar',sc:MOD+'↓',act:()=>order('backward')},{label:'Enviar para trás',sc:MOD+'Shift+↓',act:()=>order('back')}];
-const alignItems=()=>[['left','À esquerda'],['center','Ao centro'],['right','À direita'],['top','Em cima'],['middle','No meio'],['bottom','Embaixo']].map(a=>({label:a[1],act:()=>alignSel(a[0])}));
+const alignItems=()=>[['left','À esquerda','oL'],['center','Ao centro','oC'],['right','À direita','oR'],['top','Em cima','oT'],['middle','No meio','oM'],['bottom','Embaixo','oB']].map(a=>({label:a[1],icon:a[2],act:()=>alignSel(a[0])}));
 const rotateItems=()=>[{label:'Girar 90° no sentido horário',act:()=>rotateSel(90)},{label:'Girar 90° no sentido anti-horário',act:()=>rotateSel(-90)},{sep:1},
   {label:'Virar horizontalmente',act:()=>flipSel('h')},{label:'Virar verticalmente',act:()=>flipSel('v')},{sep:1},{label:'Remover rotação',act:()=>{selEls().forEach(e=>{if(e.type!=='line'){e.rot=0;restyle(e)}});commit();thumbSoon()}}];
 const tableItems=()=>{const on=!!tbl();return[

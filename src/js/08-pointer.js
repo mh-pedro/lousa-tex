@@ -152,6 +152,10 @@ window.addEventListener('pointermove',ev=>{
       e.w=Math.round(nw);e.h=Math.round(nh);e.x=Math.round(cx-nw/2);e.y=Math.round(cy-nh/2);
       if(e.type==='table'&&g.rowH0&&dir.match(/[ns]/)){const k=nh/o.h;e.rowH=g.rowH0.map(v=>Math.max(20,Math.round(v*k)))}
       if(e.type==='table')styleEl(g.d,e),fitTable(e,g.d,false);else restyle(e,true);
+      if(e.type==='box'&&e.fit==='grow'&&!e.shape){const tx=g.d.querySelector('.tx');if(tx){
+        const dw=Math.ceil(tx.scrollWidth-tx.clientWidth);if(dw>1){e.w+=dw;if(dir.includes('w'))e.x-=dw;else if(ctr)e.x-=Math.round(dw/2)}
+        if(dw>1)restyle(e,true);const need=Math.ceil(tx.offsetHeight);
+        if(e.h<need){const dh=need-e.h;e.h=need;if(dir.includes('n'))e.y-=dh;else if(ctr)e.y-=Math.round(dh/2);restyle(e,true)}}}
       syncConnectors([e.id]);syncFormat();overlaySoon();if(editId)positionPreview();break;
     }
     case 'croppan':{
@@ -236,6 +240,7 @@ function endDrag(ev){
       }
       break;
     case 'resize':case 'rot':case 'pt':case 'gresize':case 'croppan':
+      if(g.moved&&g.items)g.items.forEach(it=>{if(it.e.type==='box'){const d=elDom(it.e);if(d)fitEl(it.e,d,true)}});
       if(g.moved){if(g.e&&(g.e.type==='box'||g.e.type==='table'))fitEl(g.e,g.d,true);if(g.e&&g.e.type==='chart')restyle(g.e);commit();thumbSoon()}break;
     case 'colrz':case 'rowrz':if(g.moved){refreshEl(g.e);commit()}break;
     case 'cells':

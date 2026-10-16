@@ -123,13 +123,13 @@ function tableEl(rows,cols,o){
 function chartEl(kind,o){return Object.assign({id:uid(),type:'chart',x:320,y:150,w:640,h:420},BASE,{kind:kind||'bar',title:'',xTitle:'',yTitle:'',legend:true,grid:true,logY:false,logX:false,size:18,colors:null,fns:'sin(x)/x | $\\operatorname{sinc}(x)$\ncos(x)*exp(-x^2/40) | $\\cos x\\; e^{-x^2/40}$',xMin:'-12',xMax:'12',yMin:'',yMax:'',samples:400,
   data:'Categoria\tSérie 1\tSérie 2\nA\t4\t2,5\nB\t3\t4,4\nC\t5\t1,8\nD\t2\t3,1'},o)}
 function mediaEl(o){return Object.assign({id:uid(),type:'media',x:320,y:150,w:640,h:360},BASE,{kind:'video',url:'',src:'',title:'',start:0,end:0,autoplay:false,muted:false,loop:false},o)}
-function T44(){return box({role:'title',x:80,y:36,w:1120,h:100,size:44,bold:true,valign:'middle',font:'title',fit:'shrink'})}
+function T44(){return box({role:'title',x:80,y:36,w:1120,h:100,size:44,bold:true,valign:'middle',font:'title',fit:'grow'})}
 const LAYOUTS={
-  title:{name:'Slide de título',els:()=>[box({role:'title',x:100,y:200,w:1080,h:150,size:60,bold:true,align:'center',valign:'bottom',font:'title',fit:'shrink'}),box({role:'subtitle',x:100,y:370,w:1080,h:80,size:28,align:'center',color:'muted',fit:'shrink'})]},
-  titleBody:{name:'Título e corpo',els:()=>[T44(),box({role:'body',x:80,y:156,w:1120,h:500,size:28,fit:'shrink'})]},
-  twoCol:{name:'Duas colunas',els:()=>[T44(),box({role:'body',x:80,y:156,w:540,h:500,size:26,fit:'shrink'}),box({role:'body2',x:660,y:156,w:540,h:500,size:26,fit:'shrink'})]},
-  equation:{name:'Equação em destaque',els:()=>[T44(),box({role:'eq',x:140,y:210,w:1000,h:200,size:40,align:'center',valign:'middle',fit:'shrink'}),box({role:'body',x:140,y:450,w:1000,h:160,size:26,align:'center',fit:'shrink'})]},
-  section:{name:'Cabeçalho de seção',els:()=>[box({role:'title',x:100,y:240,w:1080,h:130,size:54,bold:true,align:'center',valign:'bottom',font:'title',fit:'shrink'}),box({role:'subtitle',x:100,y:384,w:1080,h:70,size:26,align:'center',color:'muted',fit:'shrink'})]},
+  title:{name:'Slide de título',els:()=>[box({role:'title',x:100,y:200,w:1080,h:150,size:60,bold:true,align:'center',valign:'bottom',font:'title',fit:'grow'}),box({role:'subtitle',x:100,y:370,w:1080,h:80,size:28,align:'center',color:'muted',fit:'grow'})]},
+  titleBody:{name:'Título e corpo',els:()=>[T44(),box({role:'body',x:80,y:156,w:1120,h:500,size:28,fit:'grow'})]},
+  twoCol:{name:'Duas colunas',els:()=>[T44(),box({role:'body',x:80,y:156,w:540,h:500,size:26,fit:'grow'}),box({role:'body2',x:660,y:156,w:540,h:500,size:26,fit:'grow'})]},
+  equation:{name:'Equação em destaque',els:()=>[T44(),box({role:'eq',x:140,y:210,w:1000,h:200,size:40,align:'center',valign:'middle',fit:'grow'}),box({role:'body',x:140,y:450,w:1000,h:160,size:26,align:'center',fit:'grow'})]},
+  section:{name:'Cabeçalho de seção',els:()=>[box({role:'title',x:100,y:240,w:1080,h:130,size:54,bold:true,align:'center',valign:'bottom',font:'title',fit:'grow'}),box({role:'subtitle',x:100,y:384,w:1080,h:70,size:26,align:'center',color:'muted',fit:'grow'})]},
   titleOnly:{name:'Apenas título',els:()=>[T44()]},
   blank:{name:'Em branco',els:()=>[]}
 };
@@ -247,6 +247,7 @@ function normalize(d){
   if(!TRANSITIONS[d.theme.transition])d.theme.transition='none';
   d.preamble=typeof d.preamble==='string'?d.preamble:'';
   d.packages=Array.isArray(d.packages)?d.packages.filter(p=>TEXPKG[p]):[];
+  if((d.fitV||0)<2){[d.master].concat(d.slides||[]).forEach(sl=>{if(sl&&Array.isArray(sl.els))sl.els.forEach(e=>{if(e&&e.type==='box'&&e.fit==='shrink')e.fit='grow'})});d.fitV=2}
   d.texPkgs=Array.isArray(d.texPkgs)?d.texPkgs.filter(p=>p&&p.id&&p.name):[];d.texPkgs.forEach(p=>{p.code=String(p.code||'');if(p.math==null)p.math=true;if(p.mathCode==null)pkgPrepare(p)});
   d.texFonts=d.texFonts&&typeof d.texFonts==='object'?d.texFonts:{};
   d.refs=Array.isArray(d.refs)?d.refs.filter(r=>r&&r.key):[];
