@@ -41,7 +41,7 @@ async function saveToFile(saveAs){
   const nm=(FS.fromFile&&FS.name)||slug(deck.title)+'.lousa.html';
   if(!fsApi()){saveFile(nm,deckFileHtml(),'text/html');return}
   let h=!saveAs&&fileLinked()?FS.handle:null;
-  if(!h){try{h=await window.showSaveFilePicker({suggestedName:nm,types:HTML_TYPES})}catch(e){return}}
+  if(!h){try{h=await window.showSaveFilePicker({id:'lousa-arquivos',suggestedName:nm,types:HTML_TYPES})}catch(e){return}}
   if(!await filePerm(h,true)){toast('Sem permissão para gravar nesse arquivo. Use Arquivo › Salvar como…');return}
   try{await writeFile(h);FS.handle=h;FS.deckId=deck.id;FS.name=h.name;FS.canWrite=true;fileStatus();FS.fromFile=false;toast('Salvo em '+h.name+'. As próximas mudanças vão direto para esse arquivo; um duplo clique nele abre a apresentação.')}
   catch(e){toast('Não consegui gravar: '+(e.message||e))}
@@ -52,7 +52,7 @@ const fileSaveSoon=debounce(()=>{
 },1500);
 async function openFileSmart(){
   if(!fsApi()){openFilePicker('open');return}
-  let hs;try{hs=await window.showOpenFilePicker({types:LOUSA_TYPES,multiple:false})}catch(e){return}
+  let hs;try{hs=await window.showOpenFilePicker({id:'lousa-arquivos',types:LOUSA_TYPES,multiple:false})}catch(e){return}
   if(hs&&hs[0])openFromHandle(hs[0]);
 }
 /* abrir pelo sistema (duplo clique no arquivo, com o app instalado) */

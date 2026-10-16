@@ -28,7 +28,7 @@ function slug(t){return(t||'apresentacao').normalize('NFD').replace(/[̀-ͯ]/g,'
 function fmtNum(v){if(!isFinite(v))return '';const a=Math.abs(v);if(a!==0&&(a>=1e5||a<1e-3))return v.toExponential(1).replace('e+','e');return String(+v.toFixed(6)).replace('.',',')}
 function num(s){if(s==null||s==='')return NaN;return parseFloat(String(s).replace(/\s/g,'').replace(',','.'))}
 let toastT;
-function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},3800)}
+function toast(m,ms){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},ms||3800)}
 function saveFile(name,text,mime){
   if(standalone){
     const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:mime||'text/plain;charset=utf-8'}));a.download=name;

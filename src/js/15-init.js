@@ -104,4 +104,4 @@ window.mathReady.then(()=>{if(window.__mjFailed)toast('O MathJax não carregou. 
 driveBoot();
 planSig=planSignature();
 setupLaunchQueue();
-if(window.__LOUSA_FROM_FILE){FS.fromFile=true;FS.deckId=deck.id;FS.name=decodeURIComponent(location.pathname.split('/').pop()||'');setSaveState('Aberto de '+FS.name);toast('Apresentação aberta do arquivo. Ctrl+S salva de volta nele.')}
+if(window.__LOUSA_FROM_FILE){FS.fromFile=true;FS.deckId=deck.id;FS.name=decodeURIComponent(location.pathname.split('/').pop()||'');setSaveState('Aberto de '+FS.name);toast('Apresentação aberta do arquivo. No primeiro Ctrl+S, escolha este mesmo arquivo para substituir; depois as mudanças vão direto para ele.',7000)}
