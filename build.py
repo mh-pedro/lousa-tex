@@ -34,6 +34,9 @@ window.MathJax={{
 '''
 wrap=lambda s:'<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'+s+'\n</html>\n'
 import os
-out=wrap(page(MJ)).replace('<title>Lousa TeX</title>','<title>Lousa TeX</title>\n<script src="config.js"></script>',1)
+HEAD_SITE='<title>Lousa TeX</title>\n<link rel="manifest" href="manifest.webmanifest">\n<meta name="theme-color" content="#b25c1c">\n<link rel="icon" href="icons/icon-192.png">\n<script src="config.js"></script>'
+out=wrap(page(MJ)).replace('<title>Lousa TeX</title>',HEAD_SITE,1)
 open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'index.html'),'w').write(out)
 print('index.html gerado,',len(out),'bytes')
+if len(sys.argv)>2 and sys.argv[1]=='--artifact':
+    open(sys.argv[2],'w').write(page(MJ));print('versão para o Claude gerada em',sys.argv[2])

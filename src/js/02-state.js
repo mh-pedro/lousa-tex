@@ -70,7 +70,7 @@ let driveHook=()=>{};
 function commit(){
   commitSoon.cancel();const s=JSON.stringify(deck);if(hist[hi]===s)return;
   hist.length=hi+1;hist.push(s);if(hist.length>200)hist.shift();hi=hist.length-1;invalidatePlan();refreshPlanSoon();
-  setSaveState('Salvando…');saveSoon();undoUI();driveHook();if(typeof pasteboardSoon==='function')pasteboardSoon();
+  setSaveState('Salvando…');saveSoon();undoUI();driveHook();if(typeof pasteboardSoon==='function')pasteboardSoon();if(typeof fileSaveSoon==='function')fileSaveSoon();
 }
 const commitSoon=debounce(commit,450);
 function undoUI(){const u=toolbar.querySelector('[data-cmd="undo"]'),r=toolbar.querySelector('[data-cmd="redo"]');if(u)u.disabled=hi<=0;if(r)r.disabled=hi>=hist.length-1}

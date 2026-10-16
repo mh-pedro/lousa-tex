@@ -141,7 +141,7 @@ function libraryModal(){
       (x.id!==deck.id?'<button type="button" class="btn small" data-a="open">Abrir</button>':'')+'<button type="button" class="btn small" data-a="copy">Fazer cópia</button>'+(x.id!==deck.id?'<button type="button" class="btn small" data-a="del">Excluir</button>':'')+'</div>').join(''):'<p class="hint">Nenhuma apresentação salva ainda.</p>')+'</div>',
     {wide:true,mount:b=>b.addEventListener('click',ev=>{const a=ev.target.closest('[data-a]');if(!a)return;const row=a.closest('.li'),id=row&&row.dataset.id;
       switch(a.dataset.a){
-        case 'new':newDeck();break;case 'file':closeModal();openFilePicker('open');break;case 'paste':pasteContentModal();break;
+        case 'new':newDeck();break;case 'file':closeModal();openFileSmart();break;case 'paste':pasteContentModal();break;
         case 'open':{const d=loadDeckById(id);if(d)openDeck(d,'Apresentação aberta.');else toast('Não encontrei essa apresentação.');break}
         case 'copy':{const d=id===deck.id?deck:loadDeckById(id);if(d)copyDeck(d);break}
         case 'del':if(a.dataset.sure){deleteDeckFromLib(id);row.remove();toast('Apresentação excluída deste navegador.')}else{a.dataset.sure='1';a.textContent='Confirmar exclusão';a.classList.add('danger')}break;
@@ -263,12 +263,13 @@ const tableItems=()=>{const on=!!tbl();return[
   {label:'Bordas das células selecionadas',disabled:!on,sub:[{label:'Todas as bordas',act:()=>setCellBorders('all')},{label:'Só as bordas externas',act:()=>setCellBorders('outer')},{label:'Só as bordas internas',act:()=>setCellBorders('inner')},{label:'Sem bordas',act:()=>setCellBorders('none')}]},{sep:1},
   {label:'Distribuir linhas',act:()=>tableOp('distRows'),disabled:!on},{label:'Distribuir colunas',act:()=>tableOp('distCols'),disabled:!on},{sep:1},
   {label:'Linha de cabeçalho',checked:on&&tbl().header,act:()=>tableOp('header'),disabled:!on},{label:'Linhas alternadas',checked:on&&tbl().band,act:()=>tableOp('band'),disabled:!on}]};
-const exportItems=()=>[{label:'Lousa TeX (.lousa.json)',act:exportJSON},{label:'LaTeX Beamer (.tex)',act:exportBeamer},{label:'PowerPoint (.pptx)',act:exportPptx,disabled:!standalone,hint:standalone?'':'Disponível na versão local (arquivo .html)'},{label:'Texto simples (.txt)',act:exportText},
+const exportItems=()=>[{label:'Lousa TeX (.lousa)',act:exportJSON},{label:'LaTeX Beamer (.tex)',act:exportBeamer},{label:'PowerPoint (.pptx)',act:exportPptx,disabled:!standalone,hint:standalone?'':'Disponível na versão local (arquivo .html)'},{label:'Texto simples (.txt)',act:exportText},
   {label:'PDF',act:printModal,disabled:!standalone,hint:standalone?'':'Disponível na versão local (arquivo .html)'}];
 const fitItems=()=>[['none','Não ajustar automaticamente'],['shrink','Reduzir o texto ao transbordar'],['grow','Redimensionar a forma para caber o texto']].map(f=>({label:f[1],checked:propOf('fit')===f[0],act:()=>setProp('fit',f[0],['box'])}));
 const MENUS={
   arquivo:()=>[
-    {label:'Nova apresentação',act:newDeck},{label:'Abrir…',sc:MOD+'O',act:libraryModal},{label:'Abrir arquivo do computador…',act:()=>openFilePicker('open')},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
+    {label:'Nova apresentação',act:newDeck},{label:'Abrir…',sc:MOD+'O',act:libraryModal},{label:'Abrir arquivo do computador…',act:openFileSmart},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
+    {label:'Salvar no computador',sc:MOD+'S',act:()=>saveToFile(false)},{label:'Salvar como…',sc:MOD+'Shift+S',act:()=>saveToFile(true)},{label:'Instalar como aplicativo…',act:installApp},{sep:1},
     {label:'Fazer uma cópia',act:()=>copyDeck()},{label:'Renomear',act:()=>{const t=$('#deckTitle');t.focus();t.select()}},{sep:1},
     {label:'Histórico de versões',sub:[{label:'Ver histórico de versões',act:versionsModal},{label:'Nomear a versão atual',act:versionsModal}]},{sep:1},
     {label:'Fazer download',sub:exportItems},{label:'Copiar ou colar conteúdo…',act:pasteContentModal},

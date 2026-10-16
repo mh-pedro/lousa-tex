@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Lousa TeX</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#b25c1c">
+<link rel="icon" href="icons/icon-192.png">
 <script src="config.js"></script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -959,7 +962,7 @@ let driveHook=()=>{};
 function commit(){
   commitSoon.cancel();const s=JSON.stringify(deck);if(hist[hi]===s)return;
   hist.length=hi+1;hist.push(s);if(hist.length>200)hist.shift();hi=hist.length-1;invalidatePlan();refreshPlanSoon();
-  setSaveState('Salvando…');saveSoon();undoUI();driveHook();if(typeof pasteboardSoon==='function')pasteboardSoon();
+  setSaveState('Salvando…');saveSoon();undoUI();driveHook();if(typeof pasteboardSoon==='function')pasteboardSoon();if(typeof fileSaveSoon==='function')fileSaveSoon();
 }
 const commitSoon=debounce(commit,450);
 function undoUI(){const u=toolbar.querySelector('[data-cmd="undo"]'),r=toolbar.querySelector('[data-cmd="redo"]');if(u)u.disabled=hi<=0;if(r)r.disabled=hi>=hist.length-1}
@@ -2626,6 +2629,7 @@ function gotoResult(i){const res=findState.results[i];if(!res)return;findState.i
 /* ================= library and versions ================= */
 function openDeck(d,msg){
   if(editId)exitEdit(true);commitSoon.flush();saveSoon.flush();
+  FS.handle=null;FS.deckId=null;
   try{d=normalize(d)}catch(e){toast('Não reconheci esse conteúdo como uma apresentação do Lousa TeX.');return}
   deck=d;cur=0;selIds=[];masterMode=false;slideSel.clear();slideSel.add(deck.slides[0].id);setSizeGlobals();
   $('#deckTitle').value=deck.title;applyPreamble();rerenderAll();renderToolbar();renderSide();updateCommentCount();resetHistory();saveDeckNow();addVersion('',true);
@@ -2730,7 +2734,7 @@ function exportText(){
 }
 function htmlText(html){const d=document.createElement('div');d.innerHTML=html;d.querySelectorAll('li').forEach(li=>li.insertAdjacentText('afterbegin','• '));
   return Array.from(d.querySelectorAll(':scope > div, li')).map(n=>n.tagName==='LI'?n.textContent:n.textContent).filter(t=>t.trim()).join('\n')||d.textContent}
-function exportJSON(){if(editId)exitEdit();commitSoon.flush();saveFile(slug(deck.title)+'.lousa.json',JSON.stringify(deck),'application/json')}
+function exportJSON(){if(editId)exitEdit();commitSoon.flush();saveFile(slug(deck.title)+'.lousa',JSON.stringify(deck),'application/json')}
 function printDeck(withNotes){
   if(editId)exitEdit();thumbSoon.flush();
   chain.then(()=>{const p=$('#print');p.innerHTML='';
@@ -3292,7 +3296,7 @@ function libraryModal(){
       (x.id!==deck.id?'<button type="button" class="btn small" data-a="open">Abrir</button>':'')+'<button type="button" class="btn small" data-a="copy">Fazer cópia</button>'+(x.id!==deck.id?'<button type="button" class="btn small" data-a="del">Excluir</button>':'')+'</div>').join(''):'<p class="hint">Nenhuma apresentação salva ainda.</p>')+'</div>',
     {wide:true,mount:b=>b.addEventListener('click',ev=>{const a=ev.target.closest('[data-a]');if(!a)return;const row=a.closest('.li'),id=row&&row.dataset.id;
       switch(a.dataset.a){
-        case 'new':newDeck();break;case 'file':closeModal();openFilePicker('open');break;case 'paste':pasteContentModal();break;
+        case 'new':newDeck();break;case 'file':closeModal();openFileSmart();break;case 'paste':pasteContentModal();break;
         case 'open':{const d=loadDeckById(id);if(d)openDeck(d,'Apresentação aberta.');else toast('Não encontrei essa apresentação.');break}
         case 'copy':{const d=id===deck.id?deck:loadDeckById(id);if(d)copyDeck(d);break}
         case 'del':if(a.dataset.sure){deleteDeckFromLib(id);row.remove();toast('Apresentação excluída deste navegador.')}else{a.dataset.sure='1';a.textContent='Confirmar exclusão';a.classList.add('danger')}break;
@@ -3414,12 +3418,13 @@ const tableItems=()=>{const on=!!tbl();return[
   {label:'Bordas das células selecionadas',disabled:!on,sub:[{label:'Todas as bordas',act:()=>setCellBorders('all')},{label:'Só as bordas externas',act:()=>setCellBorders('outer')},{label:'Só as bordas internas',act:()=>setCellBorders('inner')},{label:'Sem bordas',act:()=>setCellBorders('none')}]},{sep:1},
   {label:'Distribuir linhas',act:()=>tableOp('distRows'),disabled:!on},{label:'Distribuir colunas',act:()=>tableOp('distCols'),disabled:!on},{sep:1},
   {label:'Linha de cabeçalho',checked:on&&tbl().header,act:()=>tableOp('header'),disabled:!on},{label:'Linhas alternadas',checked:on&&tbl().band,act:()=>tableOp('band'),disabled:!on}]};
-const exportItems=()=>[{label:'Lousa TeX (.lousa.json)',act:exportJSON},{label:'LaTeX Beamer (.tex)',act:exportBeamer},{label:'PowerPoint (.pptx)',act:exportPptx,disabled:!standalone,hint:standalone?'':'Disponível na versão local (arquivo .html)'},{label:'Texto simples (.txt)',act:exportText},
+const exportItems=()=>[{label:'Lousa TeX (.lousa)',act:exportJSON},{label:'LaTeX Beamer (.tex)',act:exportBeamer},{label:'PowerPoint (.pptx)',act:exportPptx,disabled:!standalone,hint:standalone?'':'Disponível na versão local (arquivo .html)'},{label:'Texto simples (.txt)',act:exportText},
   {label:'PDF',act:printModal,disabled:!standalone,hint:standalone?'':'Disponível na versão local (arquivo .html)'}];
 const fitItems=()=>[['none','Não ajustar automaticamente'],['shrink','Reduzir o texto ao transbordar'],['grow','Redimensionar a forma para caber o texto']].map(f=>({label:f[1],checked:propOf('fit')===f[0],act:()=>setProp('fit',f[0],['box'])}));
 const MENUS={
   arquivo:()=>[
-    {label:'Nova apresentação',act:newDeck},{label:'Abrir…',sc:MOD+'O',act:libraryModal},{label:'Abrir arquivo do computador…',act:()=>openFilePicker('open')},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
+    {label:'Nova apresentação',act:newDeck},{label:'Abrir…',sc:MOD+'O',act:libraryModal},{label:'Abrir arquivo do computador…',act:openFileSmart},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
+    {label:'Salvar no computador',sc:MOD+'S',act:()=>saveToFile(false)},{label:'Salvar como…',sc:MOD+'Shift+S',act:()=>saveToFile(true)},{label:'Instalar como aplicativo…',act:installApp},{sep:1},
     {label:'Fazer uma cópia',act:()=>copyDeck()},{label:'Renomear',act:()=>{const t=$('#deckTitle');t.focus();t.select()}},{sep:1},
     {label:'Histórico de versões',sub:[{label:'Ver histórico de versões',act:versionsModal},{label:'Nomear a versão atual',act:versionsModal}]},{sep:1},
     {label:'Fazer download',sub:exportItems},{label:'Copiar ou colar conteúdo…',act:pasteContentModal},
@@ -4592,6 +4597,70 @@ function pkgModal(){
     }});
 }
 
+/* ================= arquivo .lousa no computador =================
+   Com o Lousa TeX instalado como aplicativo (Chrome ou Edge), um duplo clique num arquivo .lousa abre
+   a apresentação direto no programa. Quando o navegador oferece acesso a arquivos (File System Access),
+   Ctrl+S grava no mesmo arquivo e as mudanças seguintes são salvas nele automaticamente. */
+const FS={handle:null,deckId:null,name:'',canWrite:false,busy:null};
+const LOUSA_EXT='.lousa';
+const fsApi=()=>standalone&&window.isSecureContext&&'showSaveFilePicker' in window&&'showOpenFilePicker' in window;
+const LOUSA_TYPES=[{description:'Apresentação do Lousa TeX',accept:{'application/json':['.lousa','.json']}}];
+const fileLinked=()=>!!(FS.handle&&FS.deckId===deck.id);
+function fileStatus(){if(fileLinked())setSaveState((FS.canWrite?'Salvo em ':'Aberto de ')+FS.name)}
+async function filePerm(h,ask){
+  try{const o={mode:'readwrite'};if(await h.queryPermission(o)==='granted')return true;return ask?(await h.requestPermission(o))==='granted':false}catch(e){return false}
+}
+async function openFromHandle(h){
+  try{const f=await h.getFile();const d=parseDeckText(await f.text());
+    if(!d){toast('Não reconheci '+f.name+' como uma apresentação do Lousa TeX.');return}
+    if(!d.id)d.id=uid();openDeck(d,'Arquivo '+f.name+' aberto.');
+    FS.handle=h;FS.deckId=deck.id;FS.name=f.name;FS.canWrite=await filePerm(h,false);fileStatus();
+  }catch(e){toast('Não consegui abrir o arquivo: '+(e.message||e))}
+}
+async function writeFile(h){
+  const data=JSON.stringify(deck);const w=await h.createWritable();await w.write(data);await w.close();
+}
+async function saveToFile(saveAs){
+  if(editId)exitEdit();commitSoon.flush();
+  if(!fsApi()){exportJSON();return}
+  let h=!saveAs&&fileLinked()?FS.handle:null;
+  if(!h){try{h=await window.showSaveFilePicker({suggestedName:slug(deck.title)+LOUSA_EXT,types:LOUSA_TYPES})}catch(e){return}}
+  if(!await filePerm(h,true)){toast('Sem permissão para gravar nesse arquivo. Use Arquivo › Salvar como…');return}
+  try{await writeFile(h);FS.handle=h;FS.deckId=deck.id;FS.name=h.name;FS.canWrite=true;fileStatus();toast('Salvo em '+h.name+'. As próximas mudanças vão direto para esse arquivo.')}
+  catch(e){toast('Não consegui gravar: '+(e.message||e))}
+}
+const fileSaveSoon=debounce(()=>{
+  if(!fileLinked()||!FS.canWrite)return;
+  FS.busy=(FS.busy||Promise.resolve()).then(()=>writeFile(FS.handle)).then(fileStatus).catch(()=>{FS.canWrite=false;setSaveState('Não salvo no arquivo');toast('Não consegui gravar em '+FS.name+'. Use Ctrl+S para tentar de novo.')});
+},1500);
+async function openFileSmart(){
+  if(!fsApi()){openFilePicker('open');return}
+  let hs;try{hs=await window.showOpenFilePicker({types:LOUSA_TYPES,multiple:false})}catch(e){return}
+  if(hs&&hs[0])openFromHandle(hs[0]);
+}
+/* abrir pelo sistema (duplo clique no arquivo, com o app instalado) */
+function setupLaunchQueue(){
+  if(!('launchQueue' in window))return;
+  window.launchQueue.setConsumer(p=>{if(p&&p.files&&p.files.length)openFromHandle(p.files[0])});
+}
+/* instalar como aplicativo */
+let installEvt=null;
+window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();installEvt=ev});
+window.addEventListener('appinstalled',()=>{installEvt=null;toast('Lousa TeX instalado. Agora os arquivos .lousa abrem com duplo clique.')});
+const isInstalled=()=>window.matchMedia&&(matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: window-controls-overlay)').matches);
+function installApp(){
+  if(installEvt){const e=installEvt;installEvt=null;e.prompt();return}
+  openModal('Instalar o Lousa TeX',
+    (isInstalled()?'<p class="hint">O Lousa TeX já está aberto como aplicativo.</p>':'')+
+    '<p class="hint">Instalado, o Lousa TeX ganha janela própria e ícone, e os arquivos <code>.lousa</code> passam a abrir com duplo clique.</p>'+
+    '<ol class="hint"><li><b>Chrome ou Edge no computador:</b> clique no ícone de instalar na barra de endereço (um monitor com seta) ou no menu ⋮ › <i>Transmitir, salvar e compartilhar</i> › <i>Instalar página como app</i>.</li>'+
+    '<li>Depois, clique com o botão direito num arquivo <code>.lousa</code> › <i>Abrir com</i> › <b>Lousa TeX</b>, e marque para usar sempre.</li></ol>'+
+    '<p class="hint">Firefox e Safari não permitem abrir arquivos com duplo clique em apps da web. Neles, use Arquivo › Abrir arquivo do computador.</p>'+
+    (location.protocol==='file:'?'<p class="hint err">Este arquivo foi aberto do computador. A instalação só funciona pelo site publicado.</p>':''));
+}
+/* service worker: permite instalar e abrir mesmo com a conexão instável */
+if(standalone&&'serviceWorker' in navigator&&location.protocol==='https:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+
 /* ================= keyboard ================= */
 document.addEventListener('keydown',ev=>{
   if(P.on){if(P.presenter&&ev.target.closest&&ev.target.closest('select'))return;presKey(ev);return}
@@ -4605,7 +4674,7 @@ document.addEventListener('keydown',ev=>{
   if(mod&&alt&&lk==='p'){ev.preventDefault();startPres(cur,true);return}
   if(alt&&(k==='/'||ev.code==='Slash')&&!mod){ev.preventDefault();cmdPalette();return}
   if(mod&&(k==='/'||ev.code==='Slash')){ev.preventDefault();openSide('keys');return}
-  if(mod&&lk==='s'){ev.preventDefault();commitSoon.flush();saveSoon.flush();if(driveIdOf()&&driveOn()){driveSave().then(()=>toast('Salvo no Google Drive.')).catch(driveErr)}else if(standalone)exportJSON();else toast('Salvo automaticamente neste navegador.');return}
+  if(mod&&lk==='s'){ev.preventDefault();commitSoon.flush();saveSoon.flush();if(driveIdOf()&&driveOn()){driveSave().then(()=>toast('Salvo no Google Drive.')).catch(driveErr)}else if(standalone)saveToFile(ev.shiftKey);else toast('Salvo automaticamente neste navegador.');return}
   if(mod&&lk==='o'){ev.preventDefault();libraryModal();return}
   if(mod&&lk==='p'&&!alt){ev.preventDefault();if(standalone)printModal();else toast('Imprimir e PDF estão disponíveis na versão local.');return}
   if(mod&&alt&&ev.shiftKey&&lk==='h'){ev.preventDefault();versionsModal();return}
@@ -4696,6 +4765,7 @@ saveDeckNow();addVersion('',false);
 window.mathReady.then(()=>{if(window.__mjFailed)toast('O MathJax não carregou. Verifique a conexão; o LaTeX aparece como texto.')});
 driveBoot();
 planSig=planSignature();
+setupLaunchQueue();
 
 })();
 </script>

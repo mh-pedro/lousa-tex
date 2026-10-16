@@ -205,14 +205,25 @@ As anotações feitas durante a apresentação podem ser salvas nos slides ao te
 
 | Ação | Onde |
 |---|---|
-| Salvar | Automático, no navegador. `Ctrl+S` baixa o arquivo `.lousa.json` |
+| Salvar no navegador | Automático, enquanto você edita |
+| Salvar no computador | **Arquivo › Salvar no computador** (`Ctrl+S`). No Chrome e no Edge, depois da primeira vez as mudanças vão direto para o mesmo arquivo `.lousa` |
+| Salvar como | **Arquivo › Salvar como…** (`Ctrl+Shift+S`) |
+| Abrir um arquivo `.lousa` | **Arquivo › Abrir arquivo do computador…**, ou duplo clique no arquivo com o app instalado (veja abaixo) |
 | Abrir outra apresentação | **Arquivo › Abrir** (`Ctrl+O`) |
 | Histórico de versões | **Arquivo › Histórico de versões** (`Ctrl+Alt+Shift+H`) |
 | LaTeX Beamer | **Arquivo › Fazer download › LaTeX Beamer (.tex)** (equações, TikZ, citações e pacotes incluídos) |
 | PowerPoint | **Arquivo › Fazer download › PowerPoint (.pptx)** |
 | PDF | **Arquivo › Imprimir** (`Ctrl+P`) e escolha "Salvar como PDF" |
 
-> ⚠️ **Importante:** as apresentações ficam guardadas **no navegador** onde foram criadas. Se você limpar os dados do navegador ou trocar de computador, elas não vão junto. Baixe o `.lousa.json` de vez em quando ou use o Google Drive.
+### Abrir arquivos `.lousa` com duplo clique
+
+1. No **Chrome** ou no **Edge** do computador, abra o site e use **Arquivo › Instalar como aplicativo…** (ou o ícone de instalar na barra de endereço).
+2. O Lousa TeX ganha janela e ícone próprios, como um programa.
+3. Clique com o botão direito num arquivo `.lousa` › **Abrir com** › **Lousa TeX** e marque para usar sempre.
+
+A partir daí, um duplo clique no arquivo abre a apresentação pronta para editar, e `Ctrl+S` grava de volta no mesmo arquivo. Firefox e Safari não oferecem esse recurso; neles, use **Arquivo › Abrir arquivo do computador…**. Arquivos antigos `.lousa.json` continuam abrindo pelo menu.
+
+> ⚠️ **Importante:** as apresentações ficam guardadas **no navegador** onde foram criadas. Se você limpar os dados do navegador ou trocar de computador, elas não vão junto. Salve no computador (`Ctrl+S`) ou use o Google Drive.
 
 ---
 
@@ -338,6 +349,7 @@ O site é um único `index.html`, gerado a partir do código em `src/`:
 | `src/js/*.js` | Código, em partes numeradas e juntadas em ordem alfabética |
 | `build.py` | Junta tudo em `index.html` |
 | `config.js` | Configuração do Google Drive, lida pelo site ao carregar |
+| `manifest.webmanifest`, `sw.js`, `icons/` | Instalação como aplicativo e abertura de arquivos `.lousa` |
 
 Depois de editar algo em `src/`, rode:
 

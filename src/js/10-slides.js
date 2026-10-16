@@ -103,6 +103,7 @@ function gotoResult(i){const res=findState.results[i];if(!res)return;findState.i
 /* ================= library and versions ================= */
 function openDeck(d,msg){
   if(editId)exitEdit(true);commitSoon.flush();saveSoon.flush();
+  FS.handle=null;FS.deckId=null;
   try{d=normalize(d)}catch(e){toast('Não reconheci esse conteúdo como uma apresentação do Lousa TeX.');return}
   deck=d;cur=0;selIds=[];masterMode=false;slideSel.clear();slideSel.add(deck.slides[0].id);setSizeGlobals();
   $('#deckTitle').value=deck.title;applyPreamble();rerenderAll();renderToolbar();renderSide();updateCommentCount();resetHistory();saveDeckNow();addVersion('',true);
@@ -207,7 +208,7 @@ function exportText(){
 }
 function htmlText(html){const d=document.createElement('div');d.innerHTML=html;d.querySelectorAll('li').forEach(li=>li.insertAdjacentText('afterbegin','• '));
   return Array.from(d.querySelectorAll(':scope > div, li')).map(n=>n.tagName==='LI'?n.textContent:n.textContent).filter(t=>t.trim()).join('\n')||d.textContent}
-function exportJSON(){if(editId)exitEdit();commitSoon.flush();saveFile(slug(deck.title)+'.lousa.json',JSON.stringify(deck),'application/json')}
+function exportJSON(){if(editId)exitEdit();commitSoon.flush();saveFile(slug(deck.title)+'.lousa',JSON.stringify(deck),'application/json')}
 function printDeck(withNotes){
   if(editId)exitEdit();thumbSoon.flush();
   chain.then(()=>{const p=$('#print');p.innerHTML='';

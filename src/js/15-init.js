@@ -11,7 +11,7 @@ document.addEventListener('keydown',ev=>{
   if(mod&&alt&&lk==='p'){ev.preventDefault();startPres(cur,true);return}
   if(alt&&(k==='/'||ev.code==='Slash')&&!mod){ev.preventDefault();cmdPalette();return}
   if(mod&&(k==='/'||ev.code==='Slash')){ev.preventDefault();openSide('keys');return}
-  if(mod&&lk==='s'){ev.preventDefault();commitSoon.flush();saveSoon.flush();if(driveIdOf()&&driveOn()){driveSave().then(()=>toast('Salvo no Google Drive.')).catch(driveErr)}else if(standalone)exportJSON();else toast('Salvo automaticamente neste navegador.');return}
+  if(mod&&lk==='s'){ev.preventDefault();commitSoon.flush();saveSoon.flush();if(driveIdOf()&&driveOn()){driveSave().then(()=>toast('Salvo no Google Drive.')).catch(driveErr)}else if(standalone)saveToFile(ev.shiftKey);else toast('Salvo automaticamente neste navegador.');return}
   if(mod&&lk==='o'){ev.preventDefault();libraryModal();return}
   if(mod&&lk==='p'&&!alt){ev.preventDefault();if(standalone)printModal();else toast('Imprimir e PDF estão disponíveis na versão local.');return}
   if(mod&&alt&&ev.shiftKey&&lk==='h'){ev.preventDefault();versionsModal();return}
@@ -102,3 +102,4 @@ saveDeckNow();addVersion('',false);
 window.mathReady.then(()=>{if(window.__mjFailed)toast('O MathJax não carregou. Verifique a conexão; o LaTeX aparece como texto.')});
 driveBoot();
 planSig=planSignature();
+setupLaunchQueue();
