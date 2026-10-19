@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacidade · Lousa TeX</title>
+<link rel="icon" href="icons/icon-192.png">
+<style>
+:root{--bg:#f6f7f5;--ink:#1d2320;--muted:#5a655f;--accent:#b25c1c;--line:#d8ddd6}
+@media (prefers-color-scheme:dark){:root{--bg:#141816;--ink:#e6ebe7;--muted:#9aa59e;--accent:#e29b52;--line:#2e3632}}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:48px 20px 64px}
+h1{font:700 32px/1.2 Georgia,serif;margin:0 0 6px}
+h2{font:600 19px/1.3 system-ui,sans-serif;margin:32px 0 8px}
+p,li{color:var(--ink)}
+.sub{color:var(--muted);margin:0 0 28px}
+a{color:var(--accent)}
+code{font-size:.9em;background:color-mix(in srgb,var(--line) 60%,transparent);padding:1px 5px;border-radius:4px}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:15px}
+</style>
+</head>
+<body>
+<main>
+<h1>Política de privacidade</h1>
+<p class="sub">Lousa TeX · <a href="./">mh-pedro.github.io/lousa-tex</a> · atualizada em 19 de outubro de 2026</p>
+
+<p>O Lousa TeX é um editor de apresentações que funciona inteiramente no seu navegador. Não existe servidor do Lousa TeX recebendo, guardando ou analisando o que você cria.</p>
+
+<h2>Onde ficam as suas apresentações</h2>
+<ul>
+<li><b>No seu navegador</b>, salvas automaticamente no armazenamento local do próprio navegador. Só você, naquele navegador, tem acesso.</li>
+<li><b>No seu computador</b>, quando você salva um arquivo <code>.lousa.html</code> ou <code>.lousa</code>.</li>
+<li><b>No seu Google Drive</b>, se você escolher conectar a sua conta Google.</li>
+</ul>
+
+<h2>Google Drive</h2>
+<p>Ao conectar o Google Drive, o Lousa TeX pede apenas a permissão <code>drive.file</code>. Com ela, o programa só consegue ver e alterar os arquivos que ele mesmo criou ou que você abriu pelo seletor de arquivos do Google. O restante do seu Drive fica inacessível ao programa.</p>
+<p>A comunicação acontece diretamente entre o seu navegador e o Google. O token de acesso fica apenas na memória do navegador durante o uso e não é enviado a nenhum outro lugar. Você pode desconectar a qualquer momento pelo menu Arquivo › Google Drive › Desconectar a conta, ou revogar o acesso em <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</p>
+<p>O uso de informações recebidas das APIs do Google segue a <a href="https://developers.google.com/terms/api-services-user-data-policy">Política de dados do usuário dos serviços de API do Google</a>, incluindo os requisitos de uso limitado.</p>
+
+<h2>Serviços externos usados pela página</h2>
+<p>Para funcionar, a página carrega bibliotecas de redes de distribuição públicas (cdnjs, jsDelivr) e fontes do Google Fonts, e consulta o INSPIRE-HEP quando você busca uma referência bibliográfica. Esses serviços recebem os pedidos técnicos normais de qualquer site (como o endereço IP), mas nenhum conteúdo das suas apresentações.</p>
+
+<h2>Dados coletados</h2>
+<p>Nenhum. O Lousa TeX não usa cookies de rastreamento, análise de uso nem publicidade, e não vende nem compartilha dados.</p>
+
+<h2>Contato</h2>
+<p>Pedro Henrique Morais · <a href="https://github.com/mh-pedro/lousa-tex">github.com/mh-pedro/lousa-tex</a></p>
+
+<footer>Código aberto em <a href="https://github.com/mh-pedro/lousa-tex">GitHub</a>.</footer>
+</main>
+</body>
+</html>
