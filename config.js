@@ -5,8 +5,8 @@
    endereço que você autorizou. */
 window.LOUSA_CONFIG = {
   drive: {
-    clientId: '',   // termina em .apps.googleusercontent.com
+    clientId: '161474325729-a0f1vg9eo0l0tr9vdavf8ij0i8i7iamj.apps.googleusercontent.com',
     apiKey: '',     // começa com AIza
-    appId: ''       // número do projeto (só dígitos)
+    appId: '161474325729'
   }
 };
