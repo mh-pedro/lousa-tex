@@ -484,6 +484,117 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 #overlay .axb{position:absolute;z-index:10;pointer-events:none;transform:translate(-50%,calc(-100% - 10px * var(--inv))) scale(var(--inv));transform-origin:50% 100%;background:#0f9fb5;color:#fff;font:600 12px/1 var(--ui);padding:4px 8px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.25)}
 #overlay .axb.v{transform:translate(calc(10px * var(--inv)),-50%) scale(var(--inv));transform-origin:0 50%}
 
+/* ================= página inicial ================= */
+#landing{position:fixed;inset:0;z-index:200;overflow-y:auto;overflow-x:hidden;background:#121715;color:#e7ece8;font-family:'IBM Plex Sans',system-ui,sans-serif;padding-bottom:64px;-webkit-user-select:text;user-select:text;color-scheme:dark}
+#landing a{color:#e8a866}#landing a:hover{color:#f5c897}
+.ld-bg{position:absolute;left:0;right:0;top:0;min-height:100%;height:1960px;pointer-events:none;color:#dfe7e2;opacity:.1;font-family:'STIX Two Text',serif;font-style:italic;z-index:0}
+.ld-m{position:absolute;white-space:nowrap}.ld-m sub,.ld-m sup{font-size:.6em}
+.ld-d{position:absolute;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ld-head{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:22px 48px;max-width:1360px;margin:0 auto;box-sizing:border-box}
+.ld-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#f2f5f2!important;font:600 22px/1 'STIX Two Text',serif}
+.ld-logo{width:40px;height:40px;border-radius:10px;background:#b25c1c;display:inline-flex;align-items:center;justify-content:center;font:600 17px/1 'STIX Two Text',serif;color:#fff;letter-spacing:-1px;flex:none}
+.ld-logo span{position:relative;top:4px}
+.ld-logo.sm{width:22px;height:22px;border-radius:6px;font-size:10px}.ld-logo.sm span{top:2px}
+.ld-head nav{display:flex;align-items:center;gap:28px;flex-wrap:wrap;font-size:15px}
+#landing .ld-head nav a{color:#b8c3bc;text-decoration:none}#landing .ld-head nav a:hover{color:#fff}
+.ld-hero{position:relative;z-index:1;text-align:center;padding:56px 24px 0;max-width:860px;margin:0 auto}
+.ld-hero h1{margin:0;font:600 clamp(38px,6vw,60px)/1.05 'STIX Two Text',serif;letter-spacing:-.5px;color:#f4f7f4}
+.ld-hero h1 span{color:#e8a866}
+.ld-lead{margin:20px auto 0;font-size:19px;line-height:1.55;color:#b8c3bc;max-width:620px}
+.ld-cta{margin-top:32px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.ld-btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:52px;padding:0 26px;border-radius:12px;font:600 16px/1 'IBM Plex Sans',sans-serif;cursor:pointer}
+.ld-google{border:0;background:#f4f7f4;color:#121715}.ld-google:hover{background:#fff}
+.ld-ghost{border:1.5px solid #4a5650;background:transparent;color:#e7ece8;font-weight:500}.ld-ghost:hover{border-color:#8f9c94}
+.ld-btn:focus-visible{outline:3px solid #e8a866;outline-offset:2px}
+.ld-btn[disabled]{opacity:.6;cursor:progress}
+.ld-note{margin:14px 0 0;font-size:14px;color:#8f9c94}
+.ld-sec{position:relative;z-index:1;padding:88px 48px 0;max-width:1360px;margin:0 auto;box-sizing:border-box}
+.ld-sec h2{margin:0 0 8px;text-align:center;font:600 34px/1.2 'STIX Two Text',serif;color:#f4f7f4}
+.ld-sub{margin:0 0 36px;text-align:center;font-size:16px;color:#8f9c94}
+.ld-row{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:center}
+.ld-col{flex:1 1 520px;min-width:0;max-width:600px;margin:0}
+.ld-col figcaption{margin:0 0 12px;font-size:14px;font-weight:600;color:#e8a866;letter-spacing:.3px;text-transform:uppercase}
+.ld-arrow svg{fill:none;stroke:#e8a866;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;display:block}
+.ld-win{background:#f8f9f6;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45);color:#1b211e}
+.ld-wt{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid #dfe4dc;white-space:nowrap;overflow:hidden}
+.ld-wt b{font-size:12.5px;font-weight:500}.ld-wt i{font-style:normal;font-size:11.5px;color:#5a655f;margin-left:8px;word-spacing:6px}
+.ld-wtb{display:flex;gap:6px;padding:7px 12px;background:#eef1ec}
+.ld-wtb span{width:18px;height:14px;border-radius:3px;background:#d3d8d0}.ld-wtb span.w{width:56px}.ld-wtb em{width:1px;height:14px;background:#c3c9c0}
+.ld-wb{display:flex}
+.ld-th{width:58px;padding:10px 8px;display:flex;flex-direction:column;gap:8px;border-right:1px solid #dfe4dc;box-sizing:border-box;flex:none}
+.ld-th span{height:26px;border-radius:3px;border:1px solid #d3d8d0;background:#fff}.ld-th span.on{border:2px solid #b25c1c}
+.ld-st{flex:1;min-width:0;padding:18px;background:#e8ebe7}
+.ld-slide{position:relative;background:#fff;aspect-ratio:16/9;box-shadow:0 2px 8px rgba(0,0,0,.12);padding:18px 22px;box-sizing:border-box;font-family:'STIX Two Text',serif;color:#1b211e}
+.ld-stt{font-size:20px;font-weight:600}
+.ld-box{position:relative;margin-top:14px;border:1.5px solid transparent;padding:8px 10px;font-size:14.5px;line-height:1.6}
+.ld-box.sel{border-color:#2a6dd4}
+.ld-box .h{position:absolute;width:8px;height:8px;background:#fff;border:1.5px solid #2a6dd4;box-sizing:border-box}
+.ld-box .tl{left:-5px;top:-5px}.ld-box .tr{right:-5px;top:-5px}.ld-box .bl{left:-5px;bottom:-5px}.ld-box .br{right:-5px;bottom:-5px}
+.ld-code{font:13px/1.6 'IBM Plex Mono',monospace;color:#2b3330;overflow-wrap:anywhere}.ld-code b{color:#b25c1c;font-weight:400}
+.ld-caret{display:inline-block;width:1.5px;height:15px;background:#1b211e;vertical-align:middle;margin-left:1px;animation:ldBlink 1s steps(1) infinite}
+@keyframes ldBlink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.ld-caret{animation:none}}
+.ld-prev{position:absolute;left:34%;top:70%;background:#fff;border:1px solid #d3d8d0;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.18);padding:6px 14px 8px;font-style:italic;font-size:17px}
+.ld-prev small{display:block;font:600 9.5px/1.2 'IBM Plex Sans',sans-serif;color:#5a655f;letter-spacing:.4px;margin-bottom:2px}
+.ld-fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.8em;line-height:1.15}
+.ld-fr>span:first-child{border-bottom:1.3px solid currentColor;padding:0 3px}
+.ld-fr sup,.ld-eq sup{font-size:.6em}
+.ld-eq{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:6px;font-style:italic;font-size:22px}
+.ld-eq small{font-style:normal;font-size:.65em;color:#3a4440}
+.ld-codewin{background:#0c100e;border:1px solid #27302b;border-radius:12px;overflow:hidden}
+.ld-ch{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #27302b;font:500 13px/1 'IBM Plex Mono',monospace;color:#8f9c94}
+.ld-ch .dot{width:10px;height:10px;border-radius:50%;background:#3a4540}.ld-ch .k{margin-left:auto;color:#e8a866}
+.ld-codewin pre{margin:0;padding:16px 20px;font:14px/1.75 'IBM Plex Mono',monospace;color:#cdd6d0;white-space:pre-wrap;overflow-x:auto}
+.ld-codewin pre b{color:#7fb3e6;font-weight:400}.ld-codewin pre em{color:#e8a866;font-style:normal}
+.ld-slidewin{background:#e8ebe7;border-radius:12px;padding:18px;box-sizing:border-box;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.ld-slide.fy{display:flex;flex-direction:column}
+.ld-slide.fy svg{flex:1;width:100%;min-height:0;fill:none;stroke:#1b211e;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ld-slide.fy svg text{font:italic 18px 'STIX Two Text',serif;fill:#1b211e;stroke:none}
+.ld-chips{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:64px 24px 0;max-width:900px;margin:0 auto}
+.ld-chips span{border:1px solid #2f3a35;border-radius:999px;padding:9px 16px;font-size:14px;color:#b8c3bc}
+.ld-end{position:relative;z-index:1;text-align:center;padding:72px 24px 0}
+.ld-end>p:first-child{margin:0 0 18px;font:600 28px/1.3 'STIX Two Text',serif;color:#f4f7f4}
+.ld-foot{margin:28px 0 0;font-size:13px;color:#6f7c74}
+@media (max-width:700px){.ld-head,.ld-sec{padding-left:20px;padding-right:20px}.ld-arrow{transform:rotate(90deg)}.ld-th{display:none}.ld-bg{display:none}}
+.gstart{display:flex;flex-direction:column;gap:10px;margin-top:14px}.gstart .btn{justify-content:center;min-height:44px}
+
+/* ================= tela de arquivos ================= */
+#home{position:fixed;inset:0;z-index:190;overflow-y:auto;background:var(--panel);color:var(--ink);font-family:var(--ui)}
+.hm-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 24px;background:var(--panel);border-bottom:1px solid var(--line)}
+.hm-brand{display:flex;align-items:center;gap:10px;border:0;background:none;color:var(--ink);font:600 21px/1 var(--brand);cursor:pointer;padding:4px;border-radius:10px}
+.hm-brand:hover{background:var(--hover)}
+.hm-search{flex:1 1 320px;max-width:680px;display:flex;align-items:center;gap:10px;background:var(--bar);border-radius:999px;padding:0 16px;height:46px;color:var(--muted)}
+.hm-search:focus-within{background:var(--raise);box-shadow:0 1px 6px rgba(0,0,0,.18)}
+.hm-search input{flex:1;border:0;background:none;font:15px var(--ui);color:var(--ink);outline:none;min-width:0}
+.hm-acc{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.hm-acc .btn{min-height:38px}
+.hm-band{background:var(--bar);padding:18px 0 26px}
+.hm-wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.hm-wrap h2{font:500 16px/1.3 var(--ui);margin:6px 0 14px;color:var(--ink)}
+.hm-new{display:flex;gap:18px;flex-wrap:wrap}
+.hm-tpl{display:flex;flex-direction:column;gap:8px;align-items:flex-start;border:0;background:none;padding:0;cursor:pointer;color:var(--ink);font:500 14px var(--ui)}
+.hm-tplbox{width:180px;height:101px;border-radius:6px;border:1px solid var(--line);background:#fff;color:#5a655f;display:grid;place-items:center;transition:border-color .12s}
+.hm-tpl:hover .hm-tplbox,.hm-tpl:focus-visible .hm-tplbox{border-color:var(--accent)}
+.hm-tplbox.ex{place-items:start;align-content:start;padding:12px 14px;box-sizing:border-box;text-align:left;font-family:'STIX Two Text',serif;color:#1b211e}
+.hm-tplbox.ex b{font-size:13px}.hm-tplbox.ex i{font-size:12px;margin-top:10px}.hm-tplbox.ex sub{font-size:.65em}
+.hm-sec{padding:26px 0 8px}
+.hm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}
+.hm-card{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;background:var(--raise);overflow:hidden;cursor:pointer;text-align:left;padding:0;color:var(--ink);font:inherit}
+.hm-card:hover,.hm-card:focus-visible{border-color:var(--accent);box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.hm-th{position:relative;aspect-ratio:16/9;background:#fff;overflow:hidden;border-bottom:1px solid var(--line)}
+.hm-th .slide{transform:scale(var(--k));pointer-events:none}
+.hm-th.ph{display:grid;place-items:center;background:var(--bar)}
+.hm-meta{display:flex;align-items:center;gap:8px;padding:10px 12px}
+.hm-meta div{flex:1;min-width:0}
+.hm-meta b{display:block;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-meta small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.hm-meta svg{flex:none}
+.hm-del{position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:0;background:var(--raise);color:var(--muted);display:none;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.hm-card:hover .hm-del,.hm-del:focus-visible{display:grid}
+.hm-del:hover{color:var(--danger)}
+.hm-empty{padding:18px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.hm-badge{font-size:11px;padding:2px 7px;border-radius:999px;background:var(--sel-soft);color:var(--sel-ink);margin-left:6px;vertical-align:middle}
+
 </style>
 <script>
 window.mathReady=new Promise(function(r){window.__mjResolve=r});
@@ -600,6 +711,115 @@ window.MathJax={
 <div id="toast" role="status" hidden></div>
 <div id="print"></div>
 <style id="dynStyle"></style>
+<section id="landing" hidden aria-label="Página inicial do Lousa TeX">
+  <div class="ld-bg" aria-hidden="true">
+    <div class="ld-m" style="left:3%;top:150px;font-size:26px;transform:rotate(-4deg)">G<sub>μν</sub> + Λg<sub>μν</sub> = 8πG T<sub>μν</sub></div>
+    <div class="ld-m" style="left:4%;top:230px;font-size:22px;transform:rotate(3deg)">(iγ<sup>μ</sup>∂<sub>μ</sub> − m)ψ = 0</div>
+    <svg class="ld-d" style="left:3%;top:320px;width:170px;height:180px" viewBox="0 0 200 210"><path d="M100 200 L100 10"/><path d="M94 18 L100 8 L106 18"/><path d="M10 105 L190 105"/><path d="M30 35 L170 175"/><path d="M170 35 L30 175"/><ellipse cx="100" cy="35" rx="70" ry="13"/><ellipse cx="100" cy="175" rx="70" ry="13" stroke-dasharray="6 7"/></svg>
+    <svg class="ld-d" style="right:3%;top:130px;width:250px;height:150px" viewBox="0 0 320 190"><path d="M24 24 L100 95"/><path d="M24 166 L100 95"/><path d="M220 95 L296 24"/><path d="M220 95 L296 166"/><path d="M100 95 q7.5 -13 15 0 t15 0 t15 0 t15 0 t15 0 t15 0 t15 0 t15 0"/></svg>
+    <div class="ld-m" style="right:3%;top:330px;font-size:22px;transform:rotate(2deg)">E<sup>2</sup> = p<sup>2</sup> + m<sup>2</sup> + ξ p<sup>3</sup>/M<sub>Pl</sub></div>
+    <div class="ld-m" style="right:5%;top:410px;font-size:24px;transform:rotate(-3deg)">∮<sub>∂Σ</sub> ω = ∫<sub>Σ</sub> dω</div>
+    <div class="ld-m" style="left:6%;top:1230px;font-size:28px;transform:rotate(-2deg)">Z = ∫ 𝒟φ e<sup>iS[φ]/ħ</sup></div>
+    <div class="ld-m" style="right:6%;top:1236px;font-size:24px;transform:rotate(2deg)">P(ν<sub>μ</sub>→ν<sub>e</sub>) = sin<sup>2</sup>2θ sin<sup>2</sup>(Δm<sup>2</sup>L/4E)</div>
+    <svg class="ld-d" style="left:4%;bottom:60px;width:200px;height:120px" viewBox="0 0 170 100"><path d="M10 90 H160 M10 90 V8"/><path d="M10 82 C 50 80, 80 60, 100 40 S 140 12, 160 10"/></svg>
+    <div class="ld-m" style="right:5%;bottom:90px;font-size:26px;transform:rotate(-2deg)">∇ · E = ρ/ε<sub>0</sub></div>
+  </div>
+  <header class="ld-head">
+    <a href="#" class="ld-brand" data-ld="stay"><span class="ld-logo">T<span>E</span>X</span><span>Lousa TeX</span></a>
+    <nav aria-label="Principal"><a href="#ld-como">Como funciona</a><a href="https://github.com/mh-pedro/lousa-tex#readme" target="_blank" rel="noopener">Guia</a><a href="https://github.com/mh-pedro/lousa-tex" target="_blank" rel="noopener">GitHub</a></nav>
+  </header>
+  <div class="ld-hero">
+    <h1>Você escreve o LaTeX. <span>O slide fica pronto.</span></h1>
+    <p class="ld-lead">Um editor de apresentações como o Google Apresentações, com fórmulas, diagramas TikZ e citações de verdade. Tudo continua editável.</p>
+    <div class="ld-cta">
+      <button type="button" class="ld-btn ld-google" data-ld="google"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><path d="M11 11h7"/></svg>Entrar com Google</button>
+      <button type="button" class="ld-btn ld-ghost" data-ld="local">Começar sem conta</button>
+    </div>
+    <p class="ld-note">Com Google, salva no seu Drive. Sem conta, salva neste navegador. <a href="#" data-ld="file">Abrir um .lousa.html</a><span class="ld-resume" hidden> · <a href="#" data-ld="resume">Continuar “<b></b>”</a></span></p>
+  </div>
+  <section id="ld-como" class="ld-sec">
+    <h2>Digite como no LaTeX, veja como no slide</h2>
+    <p class="ld-sub">A mesma caixa de texto, antes e depois.</p>
+    <div class="ld-row">
+      <figure class="ld-col">
+        <figcaption>1 · Enquanto você digita</figcaption>
+        <div class="ld-win" aria-hidden="true">
+          <div class="ld-wt"><span class="ld-logo sm">T<span>E</span>X</span><b>Aula 7 · Espalhamento</b><i>Arquivo  Editar  Inserir  Formatar</i></div>
+          <div class="ld-wtb"><span></span><span></span><span></span><em></em><span class="w"></span><span></span><span></span></div>
+          <div class="ld-wb"><div class="ld-th"><span class="on"></span><span></span><span></span></div>
+            <div class="ld-st"><div class="ld-slide"><div class="ld-stt">Seção de choque</div>
+              <div class="ld-box sel"><i class="h tl"></i><i class="h tr"></i><i class="h bl"></i><i class="h br"></i><div>A seção de choque total é</div><div class="ld-code"><b>$$</b>\sigma = \frac{4\pi\alpha^2}{3s}<b>$$</b><span class="ld-caret"></span></div></div>
+              <div class="ld-prev"><small>PRÉVIA</small>σ = <span class="ld-fr"><span>4πα<sup>2</sup></span><span>3s</span></span></div>
+            </div></div></div>
+        </div>
+      </figure>
+      <div class="ld-arrow" aria-hidden="true"><svg width="52" height="28" viewBox="0 0 56 28"><path d="M4 14 H50 M40 5 L50 14 L40 23"/></svg></div>
+      <figure class="ld-col">
+        <figcaption>2 · Ao sair da caixa</figcaption>
+        <div class="ld-win" aria-hidden="true">
+          <div class="ld-wt"><span class="ld-logo sm">T<span>E</span>X</span><b>Aula 7 · Espalhamento</b><i>Arquivo  Editar  Inserir  Formatar</i></div>
+          <div class="ld-wtb"><span></span><span></span><span></span><em></em><span class="w"></span><span></span><span></span></div>
+          <div class="ld-wb"><div class="ld-th"><span class="on"></span><span></span><span></span></div>
+            <div class="ld-st"><div class="ld-slide"><div class="ld-stt">Seção de choque</div>
+              <div class="ld-box"><div>A seção de choque total é</div><div class="ld-eq"><span>σ = <span class="ld-fr"><span>4πα<sup>2</sup></span><span>3s</span></span></span><small>(1)</small></div></div>
+            </div></div></div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section class="ld-sec">
+    <h2>TikZ compilado no navegador</h2>
+    <p class="ld-sub">Sem instalar nada. O diagrama entra no slide e continua editável.</p>
+    <div class="ld-row">
+      <div class="ld-col ld-codewin" aria-label="Exemplo de código TikZ">
+        <div class="ld-ch"><span class="dot"></span>Código TikZ<span class="k">Ctrl+Enter compila</span></div>
+<pre><b>\feynmandiagram</b> [horizontal=a to b] {
+  i1 [particle=<em>\(e^-\)</em>] -- [fermion] a
+     -- [fermion] i2 [particle=<em>\(e^+\)</em>],
+  a -- [photon, edge label=<em>\(\gamma\)</em>] b,
+  f1 [particle=<em>\(\mu^-\)</em>] -- [anti fermion] b
+     -- [anti fermion] f2 [particle=<em>\(\mu^+\)</em>],
+};</pre>
+      </div>
+      <div class="ld-arrow" aria-hidden="true"><svg width="52" height="28" viewBox="0 0 56 28"><path d="M4 14 H50 M40 5 L50 14 L40 23"/></svg></div>
+      <div class="ld-col ld-slidewin">
+        <div class="ld-slide fy"><div class="ld-stt">e⁺e⁻ → μ⁺μ⁻</div>
+          <svg role="img" aria-label="Diagrama de Feynman: elétron e pósitron viram múon e antimúon por um fóton" viewBox="0 0 320 190"><path d="M24 24 L100 95"/><path d="M24 166 L100 95"/><path d="M220 95 L296 24"/><path d="M220 95 L296 166"/><path d="M56 46 L66 63 L48 60"/><path d="M68 134 L57 128 L66 116"/><path d="M252 54 L262 54 L258 66"/><path d="M262 146 L252 146 L258 134"/><path d="M100 95 q7.5 -13 15 0 t15 0 t15 0 t15 0 t15 0 t15 0 t15 0 t15 0"/><text x="4" y="22">e⁻</text><text x="4" y="184">e⁺</text><text x="292" y="20">μ⁻</text><text x="292" y="184">μ⁺</text><text x="152" y="76">γ</text></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="ld-chips"><span>tikz-feynman</span><span>pgfplots</span><span>tikz-cd</span><span>physics</span><span>\cite e INSPIRE-HEP</span><span>modo apresentador</span><span>exporta Beamer e PowerPoint</span></div>
+  <section class="ld-end">
+    <p>Pronto para a próxima aula?</p>
+    <div class="ld-cta">
+      <button type="button" class="ld-btn ld-google" data-ld="google"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><path d="M11 11h7"/></svg>Entrar com Google</button>
+      <button type="button" class="ld-btn ld-ghost" data-ld="local">Começar sem conta</button>
+    </div>
+    <p class="ld-foot">Código aberto · <a href="https://github.com/mh-pedro/lousa-tex" target="_blank" rel="noopener">GitHub</a> · <a href="privacidade.html" target="_blank" rel="noopener">Privacidade</a></p>
+  </section>
+</section>
+<section id="home" hidden aria-label="Minhas apresentações">
+  <header class="hm-head">
+    <button type="button" class="hm-brand" data-hm="landing" title="Sobre o Lousa TeX"><span class="ld-logo">T<span>E</span>X</span><span>Lousa TeX</span></button>
+    <label class="hm-search"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l4 4"/></svg><input id="hmQ" type="search" placeholder="Pesquisar apresentações" aria-label="Pesquisar apresentações"></label>
+    <div class="hm-acc" id="hmAcc"></div>
+  </header>
+  <div class="hm-band">
+    <div class="hm-wrap">
+      <h2>Começar uma nova apresentação</h2>
+      <div class="hm-new">
+        <button type="button" class="hm-tpl" data-hm="new"><span class="hm-tplbox"><svg aria-hidden="true" width="44" height="44" viewBox="0 0 20 20" fill="none" stroke="#b25c1c" stroke-width="1.6" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg></span><span>Em branco</span></button>
+        <button type="button" class="hm-tpl" data-hm="sample"><span class="hm-tplbox ex"><b>Relação de dispersão</b><i>E² = p² + m² + ξ p³/M<sub>Pl</sub></i></span><span>Exemplo com LaTeX</span></button>
+        <button type="button" class="hm-tpl" data-hm="file"><span class="hm-tplbox"><svg aria-hidden="true" width="40" height="40" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13V3M6.5 6.5L10 3l3.5 3.5M3.5 13v3.5h13V13"/></svg></span><span>Abrir do computador</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="hm-wrap">
+    <section class="hm-sec" id="hmDriveSec"><h2>No seu Google Drive</h2><div id="hmDrive"></div></section>
+    <section class="hm-sec"><h2>Neste navegador</h2><div id="hmLocal"></div></section>
+  </div>
+</section>
 
 <script>
 (function(){
@@ -2555,7 +2775,7 @@ function pasteSlides(json){
 document.addEventListener('copy',ev=>{if(P.on||isTyping(ev.target))return;if(inThumbs(ev.target)||(!selIds.length&&document.activeElement&&inThumbs(document.activeElement))){copySlides(ev);return}if(editId)return;copySel(false,ev)});
 document.addEventListener('cut',ev=>{if(P.on||isTyping(ev.target))return;if(inThumbs(ev.target)){copySlides(ev,true);return}if(editId)return;copySel(true,ev)});
 document.addEventListener('paste',ev=>{
-  if(P.on||!$('#modal').hidden)return;
+  if(P.on||!$('#modal').hidden||!$('#landing').hidden||!$('#home').hidden)return;
   const cd=ev.clipboardData;const items=cd?Array.from(cd.items):[];
   const t=cd?cd.getData('text/plain'):'';
   const imgs=t.indexOf('LOUSATEX')===0?null:clipImages(cd);void items;
@@ -3507,7 +3727,7 @@ const exportItems=()=>[{label:'Lousa TeX (.lousa)',act:exportJSON},{label:'LaTeX
 const fitItems=()=>[['none','Não ajustar automaticamente'],['shrink','Reduzir o texto ao transbordar'],['grow','Redimensionar a forma para caber o texto']].map(f=>({label:f[1],checked:propOf('fit')===f[0],act:()=>setProp('fit',f[0],['box'])}));
 const MENUS={
   arquivo:()=>[
-    {label:'Nova apresentação',act:newDeck},{label:'Abrir…',sc:MOD+'O',act:libraryModal},{label:'Abrir arquivo do computador…',act:openFileSmart},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
+    {label:'Nova apresentação',act:newDeck},{label:'Minhas apresentações',act:showHome},{label:'Abrir…',sc:MOD+'O',act:libraryModal},{label:'Abrir arquivo do computador…',act:openFileSmart},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
     {label:'Salvar no computador',sc:MOD+'S',act:()=>saveToFile(false)},{label:'Salvar como…',sc:MOD+'Shift+S',act:()=>saveToFile(true)},{label:'Instalar como aplicativo…',act:installApp},{sep:1},
     {label:'Fazer uma cópia',act:()=>copyDeck()},{label:'Renomear',act:()=>{const t=$('#deckTitle');t.focus();t.select()}},{sep:1},
     {label:'Histórico de versões',sub:[{label:'Ver histórico de versões',act:versionsModal},{label:'Nomear a versão atual',act:versionsModal}]},{sep:1},
@@ -3597,7 +3817,7 @@ const MENUS={
     {label:'Pacotes LaTeX…',act:pkgModal},{sep:1},
     {label:'Localizar e substituir',sc:MOD+'H',act:()=>openSide('find',true)},{label:'Preferências…',act:prefsModal}],
   ajuda:()=>[
-    {label:'Pesquisar nos menus',sc:ALT+'/',act:cmdPalette},{label:'Atalhos de teclado',sc:MOD+'/',act:()=>openSide('keys')},{label:'Guia rápido',act:()=>openSide('help')},{sep:1},{label:'Sobre o Lousa TeX',act:aboutModal}]
+    {label:'Pesquisar nos menus',sc:ALT+'/',act:cmdPalette},{label:'Atalhos de teclado',sc:MOD+'/',act:()=>openSide('keys')},{label:'Guia rápido',act:()=>openSide('help')},{sep:1},{label:'Página inicial',act:showLanding},{label:'Sobre o Lousa TeX',act:aboutModal}]
 };
 const maskItems=()=>[{label:'Sem máscara',act:()=>setProp('mask',null,['image'])}].concat(['ellipse','round','triangle','diamond','hexagon','star','heart','pentagon'].map(k=>({label:SHAPES[k],act:()=>setProp('mask',k,['image'])})));
 function elCtxItems(){const els=selEls(),one=els.length===1?els[0]:null;return[
@@ -3748,7 +3968,7 @@ const MENU_ICON={
   'Editar tema e preâmbulo LaTeX…':'theme','Editar mestre':'master','Ocultar elementos do mestre neste slide':'eyeoff','Importar tema…':'upload','Alterar o tamanho da página…':'fit',
   'Ordem':'order','Trazer para a frente':'front','Avançar':'up','Recuar':'down','Enviar para trás':'back','Alinhar':'oC','Ao centro':'oC','Distribuir':'distH','Horizontalmente':'distH','Verticalmente':'distV','Centralizar na página':'centerPage',
   'Girar e virar':'rotate','Girar 90° no sentido horário':'rotCW','Girar 90° no sentido anti-horário':'rotCCW','Virar horizontalmente':'flipH','Virar verticalmente':'flipV','Remover rotação':'reset','Agrupar':'group','Desagrupar':'ungroup','Bloquear posição':'lock','Desbloquear posição':'lock',
-  'Verificação ortográfica':'spell','Prévia do LaTeX ao digitar':'eye','Ditar anotações do apresentador':'mic','Preferências…':'gear','Pesquisar nos menus':'find','Atalhos de teclado':'keyboard','Guia rápido':'help','Sobre o Lousa TeX':'info'
+  'Verificação ortográfica':'spell','Prévia do LaTeX ao digitar':'eye','Ditar anotações do apresentador':'mic','Preferências…':'gear','Pesquisar nos menus':'find','Atalhos de teclado':'keyboard','Guia rápido':'help','Página inicial':'info','Minhas apresentações':'grid4','Sobre o Lousa TeX':'info'
 };
 const MI=k=>{const p=MICON[k]||(typeof ICON!=='undefined'&&ICON[k]);return p?'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>':''};
 let SHAPE_BY_LABEL=null;
@@ -4910,8 +5130,152 @@ function installApp(){
 /* service worker: permite instalar e abrir mesmo com a conexão instável */
 if(standalone&&'serviceWorker' in navigator&&location.protocol==='https:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 
+/* ================= página inicial ================= */
+const landing=$('#landing');
+const landingOn=()=>!landing.hidden;
+function showLanding(){
+  landing.hidden=false;landing.scrollTop=0;closePop();
+  if(driveHosted()&&driveReady())driveLoad().catch(()=>{});
+  setTimeout(()=>{const b=landing.querySelector('[data-ld="google"]');if(b)b.focus({preventScroll:true})},60);
+}
+function hideLanding(){
+  landing.hidden=true;
+  try{if(location.hash!=='#editor')history.replaceState(null,'',location.pathname+location.search+'#editor')}catch(e){}
+  fit();
+}
+async function landingGoogle(btn){
+  if(!driveHosted()){hideLanding();driveInfoModal();return}
+  if(!driveReady()){hideLanding();driveSetupModal();return}
+  landing.querySelectorAll('[data-ld="google"]').forEach(b=>b.disabled=true);
+  try{await driveToken(true);showHome()}
+  catch(e){driveErr(e)}
+  finally{landing.querySelectorAll('[data-ld="google"]').forEach(b=>b.disabled=false)}
+}
+function googleStartModal(){
+  const linked=!!driveIdOf();
+  openModal('Conectado ao Google Drive','<p class="hint">Suas apresentações podem ficar no seu Google Drive. O que você quer fazer agora?</p>'+
+    '<div class="gstart"><button type="button" class="btn primary" data-g="open">Abrir uma apresentação do Drive</button>'+
+    '<button type="button" class="btn" data-g="new">Nova apresentação, salva no Drive</button>'+
+    '<button type="button" class="btn" data-g="cur">Continuar “'+esc(deck.title||'Apresentação')+'”'+(linked?'':' e salvar no Drive')+'</button></div>',
+    {mount:b=>b.addEventListener('click',ev=>{const t=ev.target.closest('[data-g]');if(!t)return;const g=t.dataset.g;closeModal();
+      if(g==='open')driveOpen();
+      else if(g==='new'){newDeck();driveSaveMenu(false)}
+      else if(!linked)driveSaveMenu(false)})});
+}
+landing.addEventListener('click',ev=>{
+  const t=ev.target.closest('[data-ld]');if(!t)return;const a=t.dataset.ld;
+  if(a!=='google')ev.preventDefault();
+  if(a==='google')landingGoogle(t);
+  else if(a==='local')showHome();
+  else if(a==='file'){hideLanding();openFileSmart()}
+});
+
+/* ================= tela de arquivos (depois de entrar) ================= */
+const home=$('#home');
+const homeOn=()=>!home.hidden;
+const THUMB_KEY='lousa-thumb-';
+function snapThumb(){
+  try{const n=thumbsEl.children[0]&&thumbsEl.children[0].querySelector('.slide');if(!n)return;
+    const html=n.outerHTML;if(html.length>450000)return;lsSet(THUMB_KEY+deck.id,JSON.stringify({w:W,h:H,html:html}))}catch(e){}
+}
+function thumbHTML(id){
+  let t=null;try{t=JSON.parse(lsGet(THUMB_KEY+id)||'null')}catch(e){}
+  if(!t||!t.html)return '<div class="hm-th ph"><span class="ld-logo">T<span>E</span>X</span></div>';
+  return '<div class="hm-th" data-w="'+(+t.w||1280)+'">'+t.html+'</div>';
+}
+function fitThumbs(root){root.querySelectorAll('.hm-th[data-w]').forEach(th=>{const w=th.clientWidth||210;th.style.setProperty('--k',w/(+th.dataset.w))})}
+const driveByLocal=()=>driveMap();
+function homeAccount(){
+  const acc=$('#hmAcc');
+  if(!driveHosted()||!driveReady()){acc.innerHTML='';return}
+  acc.innerHTML=driveOn()?'<span>Conectado ao Google Drive</span><button type="button" class="btn small" data-hm="logout">Sair</button>'
+    :'<button type="button" class="btn primary" data-hm="login">Entrar com Google</button>';
+}
+function localCards(q){
+  const map=driveByLocal(),list=libList().filter(x=>!q||(x.title||'').toLowerCase().includes(q));
+  if(!list.length)return '<div class="hm-empty">'+(q?'Nenhuma apresentação com esse nome neste navegador.':'Nenhuma apresentação salva neste navegador ainda.')+'</div>';
+  return '<div class="hm-grid">'+list.map(x=>'<div class="hm-card" role="button" tabindex="0" data-open="'+esc(x.id)+'">'+thumbHTML(x.id)+
+    '<div class="hm-meta"><div><b>'+esc(x.title||'Sem título')+(map[x.id]?'<span class="hm-badge">Drive</span>':'')+'</b><small>'+(x.slides||'?')+' slides · '+fmtDate(x.updated)+'</small></div></div>'+
+    '<button type="button" class="hm-del" data-del="'+esc(x.id)+'" aria-label="Excluir “'+esc(x.title||'Sem título')+'” deste navegador" title="Excluir deste navegador">'+MI('trash')+'</button></div>').join('')+'</div>';
+}
+let driveFiles=null,driveFilesErr='';
+async function loadDriveFiles(){
+  driveFilesErr='';
+  try{const q=encodeURIComponent("mimeType='"+DRIVE_MIME+"' and trashed=false");
+    const r=await dfetch('https://www.googleapis.com/drive/v3/files?q='+q+'&orderBy=modifiedTime%20desc&pageSize=100&fields=files(id,name,modifiedTime)');
+    driveFiles=(await r.json()).files||[]}
+  catch(e){driveFiles=null;driveFilesErr=String(e&&e.message||e)}
+}
+function driveCards(q){
+  if(!driveHosted()||!driveReady())return '<div class="hm-empty">O Google Drive ainda não está configurado neste endereço.</div>';
+  if(!driveOn())return '<div class="hm-empty">Entre com a sua conta Google para ver as apresentações salvas no seu Drive.<button type="button" class="btn primary" data-hm="login">Entrar com Google</button></div>';
+  if(driveFiles==null)return '<div class="hm-empty">'+(driveFilesErr?'Não consegui listar os arquivos do Drive ('+esc(driveFilesErr)+').':'Carregando arquivos do Drive…')+'</div>';
+  const local={};Object.entries(driveByLocal()).forEach(([lid,fid])=>{local[fid]=lid});
+  const list=driveFiles.filter(f=>!q||(f.name||'').toLowerCase().includes(q));
+  if(!list.length)return '<div class="hm-empty">'+(q?'Nenhum arquivo do Drive com esse nome.':'Você ainda não salvou nenhuma apresentação no Drive. Crie uma nova acima: ela é salva lá automaticamente.')+'</div>';
+  return '<div class="hm-grid">'+list.map(f=>'<div class="hm-card" role="button" tabindex="0" data-drive="'+esc(f.id)+'">'+(local[f.id]?thumbHTML(local[f.id]):thumbHTML(''))+
+    '<div class="hm-meta">'+MI('cloud')+'<div><b>'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'</b><small>Editada em '+fmtDate(f.modifiedTime)+'</small></div></div></div>').join('')+'</div>';
+}
+function renderHome(){
+  const q=($('#hmQ').value||'').trim().toLowerCase();
+  homeAccount();$('#hmDrive').innerHTML=driveCards(q);$('#hmLocal').innerHTML=localCards(q);
+  requestAnimationFrame(()=>fitThumbs(home));
+}
+function setRoute(h){try{if(location.hash!==h)history.replaceState(null,'',location.pathname+location.search+h)}catch(e){}}
+function showHome(){
+  if(editId)exitEdit(true);commitSoon.flush();saveSoon.flush();snapThumb();
+  if(!landing.hidden)landing.hidden=true;
+  home.hidden=false;home.scrollTop=0;prefs.homeSeen=true;savePrefs();setRoute('#arquivos');closePop();
+  driveFiles=null;renderHome();
+  if(driveOn())loadDriveFiles().then(renderHome);
+}
+function hideHome(){home.hidden=true;setRoute('#editor');fit();rerenderAll()}
+async function homeLogin(){
+  if(!driveHosted()){driveInfoModal();return}if(!driveReady()){driveSetupModal();return}
+  try{await driveToken(true);driveFiles=null;renderHome();await loadDriveFiles();renderHome()}catch(e){driveErr(e)}
+}
+async function homeNew(sample){
+  const d=sample?sampleDeck():null;
+  if(d){d.id=uid();openDeck(d,'Exemplo aberto. Edite à vontade.')}else newDeck();
+  hideHome();
+  if(driveOn()){try{await driveSave(true);toast('Nova apresentação criada no seu Google Drive. As alterações são salvas lá automaticamente.')}catch(e){driveErr(e)}}
+}
+function openLocalFromHome(id){
+  if(id!==deck.id){const d=loadDeckById(id);if(!d){toast('Não encontrei essa apresentação.');return}snapThumb();openDeck(d,'')}
+  hideHome();
+}
+async function openDriveFromHome(fid){
+  const lid=Object.entries(driveMap()).find(([l,f])=>f===fid);
+  try{snapThumb();await driveOpenId(fid);hideHome()}
+  catch(e){if(lid){openLocalFromHome(lid[0]);toast('Abri a cópia deste navegador: não consegui ler o arquivo do Drive.')}else driveErr(e)}
+}
+home.addEventListener('click',ev=>{
+  const del=ev.target.closest('[data-del]');
+  if(del){ev.stopPropagation();const id=del.dataset.del,it=libList().find(x=>x.id===id);
+    confirmBox('Excluir apresentação','Excluir “'+((it&&it.title)||'Sem título')+'” deste navegador? '+(driveMap()[id]?'A cópia no Google Drive continua lá.':'Essa ação não pode ser desfeita.'),'Excluir',()=>{
+      if(id===deck.id){const other=libList().find(x=>x.id!==id);deleteDeckFromLib(id);lsDel(THUMB_KEY+id);if(other){const d=loadDeckById(other.id);if(d)openDeck(d,'')}else newDeck()}
+      else{deleteDeckFromLib(id);lsDel(THUMB_KEY+id)}
+      renderHome();toast('Apresentação excluída deste navegador.')});return}
+  const c=ev.target.closest('[data-open],[data-drive],[data-hm]');if(!c)return;
+  if(c.dataset.open){openLocalFromHome(c.dataset.open);return}
+  if(c.dataset.drive){openDriveFromHome(c.dataset.drive);return}
+  switch(c.dataset.hm){
+    case 'new':homeNew(false);break;case 'sample':homeNew(true);break;
+    case 'file':hideHome();openFileSmart();break;
+    case 'login':homeLogin();break;
+    case 'logout':driveDisconnect();driveFiles=null;renderHome();break;
+    case 'landing':home.hidden=true;showLanding();break;
+  }
+});
+home.addEventListener('keydown',ev=>{if((ev.key==='Enter'||ev.key===' ')&&ev.target.matches('.hm-card')){ev.preventDefault();ev.target.click()}});
+$('#hmQ').addEventListener('input',renderHome);
+window.addEventListener('resize',()=>{if(homeOn())fitThumbs(home)});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&home.hidden)snapThumb()});
+
 /* ================= keyboard ================= */
 document.addEventListener('keydown',ev=>{
+  if(landingOn()){if(ev.key==='Escape'&&modal.hidden)showHome();return}
+  if(homeOn()){if(ev.key==='Escape'&&modal.hidden&&!(ev.target.closest&&ev.target.closest('input')))hideHome();return}
   if(P.on){if(P.presenter&&ev.target.closest&&ev.target.closest('select'))return;presKey(ev);return}
   if(!modal.hidden){if(ev.key==='Escape')closeModal();return}
   if(!pop.hidden&&ev.key==='Escape'){ev.preventDefault();closePop();return}
@@ -5016,6 +5380,8 @@ window.mathReady.then(()=>{if(window.__mjFailed)toast('O MathJax não carregou. 
 driveBoot();
 planSig=planSignature();
 setupLaunchQueue();
+if(standalone&&!window.__LOUSA_FROM_FILE&&!new URLSearchParams(location.search).get('state')){const h=location.hash;if(h==='#arquivos')showHome();else if(h!=='#editor'){if(prefs.homeSeen)showHome();else showLanding()}}
+$('#top .mark').style.cursor='pointer';$('#top .mark').title='Minhas apresentações';$('#top .mark').addEventListener('click',showHome);
 if(window.__LOUSA_FROM_FILE){FS.fromFile=true;FS.deckId=deck.id;FS.name=decodeURIComponent(location.pathname.split('/').pop()||'');setSaveState('Aberto de '+FS.name);toast('Apresentação aberta do arquivo. No primeiro Ctrl+S, escolha este mesmo arquivo para substituir; depois as mudanças vão direto para ele.',7000)}
 
 })();

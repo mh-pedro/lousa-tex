@@ -44,6 +44,8 @@ As fórmulas não viram imagem: continuam texto LaTeX que você pode editar a qu
 
 ## Primeiros passos
 
+Na primeira visita aparece a página inicial. **Entrar com Google** leva à tela **Minhas apresentações**, com os arquivos do seu Drive e os deste navegador; **Começar sem conta** leva à mesma tela só com os arquivos do navegador. Clique numa apresentação para editar. No editor, o **logo TeX** no canto superior esquerdo volta para a lista de arquivos.
+
 1. Abra https://mh-pedro.github.io/lousa-tex/. Na primeira vez aparece uma apresentação de exemplo; edite ou apague à vontade.
 2. **Novo slide:** botão `+` no canto superior esquerdo ou `Ctrl+M`. A setinha ao lado do `+` escolhe o layout.
 3. **Escrever:** clique duas vezes numa caixa de texto. Clicar duas vezes numa área vazia cria uma caixa nova.

@@ -44,7 +44,7 @@ function pasteSlides(json){
 document.addEventListener('copy',ev=>{if(P.on||isTyping(ev.target))return;if(inThumbs(ev.target)||(!selIds.length&&document.activeElement&&inThumbs(document.activeElement))){copySlides(ev);return}if(editId)return;copySel(false,ev)});
 document.addEventListener('cut',ev=>{if(P.on||isTyping(ev.target))return;if(inThumbs(ev.target)){copySlides(ev,true);return}if(editId)return;copySel(true,ev)});
 document.addEventListener('paste',ev=>{
-  if(P.on||!$('#modal').hidden)return;
+  if(P.on||!$('#modal').hidden||!$('#landing').hidden||!$('#home').hidden)return;
   const cd=ev.clipboardData;const items=cd?Array.from(cd.items):[];
   const t=cd?cd.getData('text/plain'):'';
   const imgs=t.indexOf('LOUSATEX')===0?null:clipImages(cd);void items;

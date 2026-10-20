@@ -269,7 +269,7 @@ const exportItems=()=>[{label:'Lousa TeX (.lousa)',act:exportJSON},{label:'LaTeX
 const fitItems=()=>[['none','Não ajustar automaticamente'],['shrink','Reduzir o texto ao transbordar'],['grow','Redimensionar a forma para caber o texto']].map(f=>({label:f[1],checked:propOf('fit')===f[0],act:()=>setProp('fit',f[0],['box'])}));
 const MENUS={
   arquivo:()=>[
-    {label:'Nova apresentação',act:newDeck},{label:'Abrir…',sc:MOD+'O',act:libraryModal},{label:'Abrir arquivo do computador…',act:openFileSmart},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
+    {label:'Nova apresentação',act:newDeck},{label:'Minhas apresentações',act:showHome},{label:'Abrir…',sc:MOD+'O',act:libraryModal},{label:'Abrir arquivo do computador…',act:openFileSmart},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
     {label:'Salvar no computador',sc:MOD+'S',act:()=>saveToFile(false)},{label:'Salvar como…',sc:MOD+'Shift+S',act:()=>saveToFile(true)},{label:'Instalar como aplicativo…',act:installApp},{sep:1},
     {label:'Fazer uma cópia',act:()=>copyDeck()},{label:'Renomear',act:()=>{const t=$('#deckTitle');t.focus();t.select()}},{sep:1},
     {label:'Histórico de versões',sub:[{label:'Ver histórico de versões',act:versionsModal},{label:'Nomear a versão atual',act:versionsModal}]},{sep:1},
@@ -359,7 +359,7 @@ const MENUS={
     {label:'Pacotes LaTeX…',act:pkgModal},{sep:1},
     {label:'Localizar e substituir',sc:MOD+'H',act:()=>openSide('find',true)},{label:'Preferências…',act:prefsModal}],
   ajuda:()=>[
-    {label:'Pesquisar nos menus',sc:ALT+'/',act:cmdPalette},{label:'Atalhos de teclado',sc:MOD+'/',act:()=>openSide('keys')},{label:'Guia rápido',act:()=>openSide('help')},{sep:1},{label:'Sobre o Lousa TeX',act:aboutModal}]
+    {label:'Pesquisar nos menus',sc:ALT+'/',act:cmdPalette},{label:'Atalhos de teclado',sc:MOD+'/',act:()=>openSide('keys')},{label:'Guia rápido',act:()=>openSide('help')},{sep:1},{label:'Página inicial',act:showLanding},{label:'Sobre o Lousa TeX',act:aboutModal}]
 };
 const maskItems=()=>[{label:'Sem máscara',act:()=>setProp('mask',null,['image'])}].concat(['ellipse','round','triangle','diamond','hexagon','star','heart','pentagon'].map(k=>({label:SHAPES[k],act:()=>setProp('mask',k,['image'])})));
 function elCtxItems(){const els=selEls(),one=els.length===1?els[0]:null;return[

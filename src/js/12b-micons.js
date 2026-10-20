@@ -108,7 +108,7 @@ const MENU_ICON={
   'Editar tema e preâmbulo LaTeX…':'theme','Editar mestre':'master','Ocultar elementos do mestre neste slide':'eyeoff','Importar tema…':'upload','Alterar o tamanho da página…':'fit',
   'Ordem':'order','Trazer para a frente':'front','Avançar':'up','Recuar':'down','Enviar para trás':'back','Alinhar':'oC','Ao centro':'oC','Distribuir':'distH','Horizontalmente':'distH','Verticalmente':'distV','Centralizar na página':'centerPage',
   'Girar e virar':'rotate','Girar 90° no sentido horário':'rotCW','Girar 90° no sentido anti-horário':'rotCCW','Virar horizontalmente':'flipH','Virar verticalmente':'flipV','Remover rotação':'reset','Agrupar':'group','Desagrupar':'ungroup','Bloquear posição':'lock','Desbloquear posição':'lock',
-  'Verificação ortográfica':'spell','Prévia do LaTeX ao digitar':'eye','Ditar anotações do apresentador':'mic','Preferências…':'gear','Pesquisar nos menus':'find','Atalhos de teclado':'keyboard','Guia rápido':'help','Sobre o Lousa TeX':'info'
+  'Verificação ortográfica':'spell','Prévia do LaTeX ao digitar':'eye','Ditar anotações do apresentador':'mic','Preferências…':'gear','Pesquisar nos menus':'find','Atalhos de teclado':'keyboard','Guia rápido':'help','Página inicial':'info','Minhas apresentações':'grid4','Sobre o Lousa TeX':'info'
 };
 const MI=k=>{const p=MICON[k]||(typeof ICON!=='undefined'&&ICON[k]);return p?'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>':''};
 let SHAPE_BY_LABEL=null;
