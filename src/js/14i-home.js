@@ -45,9 +45,25 @@ function driveCards(q){
     '<div class="hm-meta">'+MI('cloud')+'<div><b>'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'</b><small>Editada em '+fmtDate(f.modifiedTime)+'</small></div></div>'+
     '<button type="button" class="hm-del" data-ddel="'+esc(f.id)+'" data-name="'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'" aria-label="Mover para a lixeira do Drive" title="Mover para a lixeira do Drive">'+MI('trash')+'</button></div>').join('')+'</div>';
 }
+let trashFiles=null,trashOpen=false;
+async function loadTrash(){
+  try{const q=encodeURIComponent("mimeType='"+DRIVE_MIME+"' and trashed=true");
+    const r=await dfetch('https://www.googleapis.com/drive/v3/files?q='+q+'&orderBy=modifiedTime%20desc&pageSize=100&fields=files(id,name,trashedTime,modifiedTime)');
+    trashFiles=(await r.json()).files||[]}catch(e){trashFiles=[];driveErr(e)}
+}
+function daysLeft(t){const d=30-Math.floor((Date.now()-new Date(t).getTime())/864e5);return Math.max(0,d)}
+function trashHTML(){
+  if(!trashOpen)return '';
+  if(trashFiles==null)return '<div class="hm-empty">Carregando a lixeira…</div>';
+  if(!trashFiles.length)return '<div class="hm-empty">A lixeira está vazia.</div>';
+  return '<div class="hm-trl">'+trashFiles.map(f=>{const n=esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,'')),left=f.trashedTime?daysLeft(f.trashedTime):null;
+    return '<div class="hm-tri">'+MI('trash')+'<div><b>'+n+'</b><small>'+(f.trashedTime?'Excluída em '+fmtDate(f.trashedTime)+' · apagada para sempre em '+left+' dia'+(left===1?'':'s'):'Na lixeira do Drive')+'</small></div>'+
+      '<button type="button" class="btn small" data-trest="'+esc(f.id)+'">Restaurar</button><button type="button" class="btn small danger" data-tdel="'+esc(f.id)+'" data-name="'+n+'">Excluir para sempre</button></div>'}).join('')+'</div>';
+}
 function renderHome(){
   const q=($('#hmQ').value||'').trim().toLowerCase();
   homeAccount();$('#hmDrive').innerHTML=driveCards(q);
+  $('#hmTrashSec').hidden=!driveOn();$('#hmTrash').innerHTML=trashHTML();const tb=home.querySelector('[data-hm="trash"]');tb.textContent=trashOpen?'Ocultar':'Mostrar';tb.setAttribute('aria-expanded',String(trashOpen));
   requestAnimationFrame(()=>fitThumbs(home));
 }
 function setRoute(h){try{if(location.hash!==h)history.replaceState(null,'',location.pathname+location.search+h)}catch(e){}}
@@ -82,10 +98,20 @@ async function openDriveFromHome(fid){
 async function trashDriveFile(fid,name){
   try{await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({trashed:true})});
     const m=driveMap();Object.keys(m).forEach(l=>{if(m[l]===fid){if(l!==deck.id){deleteDeckFromLib(l);lsDel(THUMB_KEY+l)}delete m[l]}});try{lsSet('lousa-drive-map',JSON.stringify(m))}catch(e){}
-    if(driveFiles)driveFiles=driveFiles.filter(f=>f.id!==fid);renderHome();toast('“'+name+'” foi para a lixeira do Google Drive. Dá para recuperar por lá em até 30 dias.')}
+    if(driveFiles)driveFiles=driveFiles.filter(f=>f.id!==fid);trashFiles=null;if(trashOpen)loadTrash().then(renderHome);renderHome();toast('“'+name+'” foi para a Lixeira (no fim desta tela). Dá para restaurar por 30 dias.',6000)}
   catch(e){driveErr(e)}
 }
+async function restoreDrive(fid){
+  try{await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({trashed:false})});
+    trashFiles=(trashFiles||[]).filter(f=>f.id!==fid);await loadDriveFiles();renderHome();toast('Apresentação restaurada.')}catch(e){driveErr(e)}
+}
+async function purgeDrive(fid){
+  try{await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid),{method:'DELETE'});
+    trashFiles=(trashFiles||[]).filter(f=>f.id!==fid);renderHome();toast('Apresentação excluída para sempre.')}catch(e){driveErr(e)}
+}
 home.addEventListener('click',ev=>{
+  const tr=ev.target.closest('[data-trest]');if(tr){restoreDrive(tr.dataset.trest);return}
+  const td=ev.target.closest('[data-tdel]');if(td){const fid=td.dataset.tdel,name=td.dataset.name;confirmBox('Excluir para sempre','Excluir “'+name+'” para sempre? Essa ação não pode ser desfeita.','Excluir para sempre',()=>purgeDrive(fid));return}
   const dd=ev.target.closest('[data-ddel]');
   if(dd){ev.stopPropagation();const fid=dd.dataset.ddel,name=dd.dataset.name;confirmBox('Excluir do Google Drive','Mover “'+name+'” para a lixeira do seu Google Drive?','Mover para a lixeira',()=>trashDriveFile(fid,name));return}
   const del=ev.target.closest('[data-del]');
@@ -101,7 +127,8 @@ home.addEventListener('click',ev=>{
     case 'new':homeNew(false);break;case 'sample':homeNew(true);break;
     case 'file':hideHome();openFileSmart();break;
     case 'login':homeLogin();break;
-    case 'logout':driveDisconnect();driveFiles=null;renderHome();break;
+    case 'logout':driveDisconnect();driveFiles=null;trashFiles=null;trashOpen=false;renderHome();break;
+    case 'trash':trashOpen=!trashOpen;renderHome();if(trashOpen&&trashFiles==null)loadTrash().then(renderHome);break;
     case 'landing':home.hidden=true;showLanding();break;
   }
 });

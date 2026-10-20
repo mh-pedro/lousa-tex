@@ -580,3 +580,10 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 .hm-del:hover{color:var(--danger)}
 .hm-empty{padding:18px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .hm-badge{font-size:11px;padding:2px 7px;border-radius:999px;background:var(--sel-soft);color:var(--sel-ink);margin-left:6px;vertical-align:middle}
+.hm-trh{display:flex;align-items:center;gap:12px}.hm-trh h2{margin:6px 0}
+#hmTrashSec .hint{margin:4px 0 12px}
+.hm-trl{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--raise)}
+.hm-tri{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.hm-tri:first-child{border-top:0}
+.hm-tri>svg{width:18px;height:18px;color:var(--muted);flex:none}
+.hm-tri>div{flex:1 1 240px;min-width:0}.hm-tri b{display:block;font-weight:500;font-size:14px}.hm-tri small{color:var(--muted);font-size:12px}

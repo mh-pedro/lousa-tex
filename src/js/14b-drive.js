@@ -5,7 +5,8 @@ const DRIVE_DEFAULT=Object.assign({clientId:'',apiKey:'',appId:''},(window.LOUSA
 const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 const DRIVE_MIME='application/vnd.lousa-tex+json';
 const D={token:null,exp:0,tc:null,loaded:null,user:''};
-const driveCfg=()=>({clientId:(prefs.driveClientId||DRIVE_DEFAULT.clientId||'').trim(),apiKey:(prefs.driveApiKey||DRIVE_DEFAULT.apiKey||'').trim(),appId:(prefs.driveAppId||DRIVE_DEFAULT.appId||'').trim()});
+const driveCfg=()=>DRIVE_DEFAULT.clientId?{clientId:String(DRIVE_DEFAULT.clientId).trim(),apiKey:String(DRIVE_DEFAULT.apiKey||'').trim(),appId:String(DRIVE_DEFAULT.appId||'').trim()}
+  :{clientId:(prefs.driveClientId||'').trim(),apiKey:(prefs.driveApiKey||'').trim(),appId:(prefs.driveAppId||'').trim()};
 const driveHosted=()=>standalone&&/^https?:$/.test(location.protocol);
 const driveReady=()=>{const c=driveCfg();return !!(c.clientId&&c.apiKey)};
 const driveOn=()=>!!D.token&&Date.now()<D.exp-60000;
@@ -113,13 +114,14 @@ function driveItems(){
     {sep:1},
     {label:'Desvincular do arquivo do Drive',act:driveUnlink,disabled:!linked},
     {label:'Desconectar a conta',act:driveDisconnect,disabled:!driveOn()},
-    (!DRIVE_DEFAULT.clientId||/[?&]dev\b/.test(location.search))?{label:'Configurar…',act:driveSetupModal}:null];
+    !DRIVE_DEFAULT.clientId?{label:'Configurar…',act:driveSetupModal}:null];
 }
 function driveInfoModal(){
   openModal('Google Drive','<p class="hint">A conexão com o Google Drive só funciona quando o Lousa TeX está publicado num endereço da web (https), por exemplo no GitHub Pages ou no Netlify. '+
     (standalone?'Aberto como arquivo do computador, o Google não autoriza o login.':'Dentro do Claude, a página não pode carregar os scripts do Google.')+'</p><p class="hint">Depois de publicar, cadastre o endereço no Google Cloud e informe os dados em Arquivo › Google Drive › Configurar.</p>');
 }
 function driveSetupModal(){
+  if(DRIVE_DEFAULT.clientId){toast('O Google Drive deste site já está configurado.');return}
   const c=driveCfg();
   openModal('Configurar o Google Drive','<p class="hint">Crie um projeto em console.cloud.google.com, ative a <b>Google Drive API</b> e a <b>Google Picker API</b>, e crie: (1) um <b>ID do cliente OAuth</b> do tipo "Aplicativo da Web", com o endereço do seu site em "Origens JavaScript autorizadas"; (2) uma <b>chave de API</b>. O número do projeto aparece no painel inicial do projeto.</p>'+
     '<label class="lab">ID do cliente OAuth<input id="dcId" value="'+esc(c.clientId)+'" placeholder="…apps.googleusercontent.com"></label>'+

@@ -595,6 +595,13 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 .hm-del:hover{color:var(--danger)}
 .hm-empty{padding:18px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .hm-badge{font-size:11px;padding:2px 7px;border-radius:999px;background:var(--sel-soft);color:var(--sel-ink);margin-left:6px;vertical-align:middle}
+.hm-trh{display:flex;align-items:center;gap:12px}.hm-trh h2{margin:6px 0}
+#hmTrashSec .hint{margin:4px 0 12px}
+.hm-trl{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--raise)}
+.hm-tri{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.hm-tri:first-child{border-top:0}
+.hm-tri>svg{width:18px;height:18px;color:var(--muted);flex:none}
+.hm-tri>div{flex:1 1 240px;min-width:0}.hm-tri b{display:block;font-weight:500;font-size:14px}.hm-tri small{color:var(--muted);font-size:12px}
 
 </style>
 <script>
@@ -818,6 +825,7 @@ window.MathJax={
   </div>
   <div class="hm-wrap">
     <section class="hm-sec" id="hmDriveSec"><h2>No seu Google Drive</h2><div id="hmDrive"></div></section>
+    <section class="hm-sec" id="hmTrashSec" hidden><div class="hm-trh"><h2>Lixeira</h2><button type="button" class="btn small" data-hm="trash" aria-expanded="false">Mostrar</button></div><p class="hint">Apresentações excluídas ficam na lixeira do seu Google Drive por 30 dias. Depois disso, o Google apaga para sempre.</p><div id="hmTrash"></div></section>
   </div>
 </section>
 
@@ -4474,7 +4482,8 @@ const DRIVE_DEFAULT=Object.assign({clientId:'',apiKey:'',appId:''},(window.LOUSA
 const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 const DRIVE_MIME='application/vnd.lousa-tex+json';
 const D={token:null,exp:0,tc:null,loaded:null,user:''};
-const driveCfg=()=>({clientId:(prefs.driveClientId||DRIVE_DEFAULT.clientId||'').trim(),apiKey:(prefs.driveApiKey||DRIVE_DEFAULT.apiKey||'').trim(),appId:(prefs.driveAppId||DRIVE_DEFAULT.appId||'').trim()});
+const driveCfg=()=>DRIVE_DEFAULT.clientId?{clientId:String(DRIVE_DEFAULT.clientId).trim(),apiKey:String(DRIVE_DEFAULT.apiKey||'').trim(),appId:String(DRIVE_DEFAULT.appId||'').trim()}
+  :{clientId:(prefs.driveClientId||'').trim(),apiKey:(prefs.driveApiKey||'').trim(),appId:(prefs.driveAppId||'').trim()};
 const driveHosted=()=>standalone&&/^https?:$/.test(location.protocol);
 const driveReady=()=>{const c=driveCfg();return !!(c.clientId&&c.apiKey)};
 const driveOn=()=>!!D.token&&Date.now()<D.exp-60000;
@@ -4582,13 +4591,14 @@ function driveItems(){
     {sep:1},
     {label:'Desvincular do arquivo do Drive',act:driveUnlink,disabled:!linked},
     {label:'Desconectar a conta',act:driveDisconnect,disabled:!driveOn()},
-    (!DRIVE_DEFAULT.clientId||/[?&]dev\b/.test(location.search))?{label:'Configurar…',act:driveSetupModal}:null];
+    !DRIVE_DEFAULT.clientId?{label:'Configurar…',act:driveSetupModal}:null];
 }
 function driveInfoModal(){
   openModal('Google Drive','<p class="hint">A conexão com o Google Drive só funciona quando o Lousa TeX está publicado num endereço da web (https), por exemplo no GitHub Pages ou no Netlify. '+
     (standalone?'Aberto como arquivo do computador, o Google não autoriza o login.':'Dentro do Claude, a página não pode carregar os scripts do Google.')+'</p><p class="hint">Depois de publicar, cadastre o endereço no Google Cloud e informe os dados em Arquivo › Google Drive › Configurar.</p>');
 }
 function driveSetupModal(){
+  if(DRIVE_DEFAULT.clientId){toast('O Google Drive deste site já está configurado.');return}
   const c=driveCfg();
   openModal('Configurar o Google Drive','<p class="hint">Crie um projeto em console.cloud.google.com, ative a <b>Google Drive API</b> e a <b>Google Picker API</b>, e crie: (1) um <b>ID do cliente OAuth</b> do tipo "Aplicativo da Web", com o endereço do seu site em "Origens JavaScript autorizadas"; (2) uma <b>chave de API</b>. O número do projeto aparece no painel inicial do projeto.</p>'+
     '<label class="lab">ID do cliente OAuth<input id="dcId" value="'+esc(c.clientId)+'" placeholder="…apps.googleusercontent.com"></label>'+
@@ -5232,9 +5242,25 @@ function driveCards(q){
     '<div class="hm-meta">'+MI('cloud')+'<div><b>'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'</b><small>Editada em '+fmtDate(f.modifiedTime)+'</small></div></div>'+
     '<button type="button" class="hm-del" data-ddel="'+esc(f.id)+'" data-name="'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'" aria-label="Mover para a lixeira do Drive" title="Mover para a lixeira do Drive">'+MI('trash')+'</button></div>').join('')+'</div>';
 }
+let trashFiles=null,trashOpen=false;
+async function loadTrash(){
+  try{const q=encodeURIComponent("mimeType='"+DRIVE_MIME+"' and trashed=true");
+    const r=await dfetch('https://www.googleapis.com/drive/v3/files?q='+q+'&orderBy=modifiedTime%20desc&pageSize=100&fields=files(id,name,trashedTime,modifiedTime)');
+    trashFiles=(await r.json()).files||[]}catch(e){trashFiles=[];driveErr(e)}
+}
+function daysLeft(t){const d=30-Math.floor((Date.now()-new Date(t).getTime())/864e5);return Math.max(0,d)}
+function trashHTML(){
+  if(!trashOpen)return '';
+  if(trashFiles==null)return '<div class="hm-empty">Carregando a lixeira…</div>';
+  if(!trashFiles.length)return '<div class="hm-empty">A lixeira está vazia.</div>';
+  return '<div class="hm-trl">'+trashFiles.map(f=>{const n=esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,'')),left=f.trashedTime?daysLeft(f.trashedTime):null;
+    return '<div class="hm-tri">'+MI('trash')+'<div><b>'+n+'</b><small>'+(f.trashedTime?'Excluída em '+fmtDate(f.trashedTime)+' · apagada para sempre em '+left+' dia'+(left===1?'':'s'):'Na lixeira do Drive')+'</small></div>'+
+      '<button type="button" class="btn small" data-trest="'+esc(f.id)+'">Restaurar</button><button type="button" class="btn small danger" data-tdel="'+esc(f.id)+'" data-name="'+n+'">Excluir para sempre</button></div>'}).join('')+'</div>';
+}
 function renderHome(){
   const q=($('#hmQ').value||'').trim().toLowerCase();
   homeAccount();$('#hmDrive').innerHTML=driveCards(q);
+  $('#hmTrashSec').hidden=!driveOn();$('#hmTrash').innerHTML=trashHTML();const tb=home.querySelector('[data-hm="trash"]');tb.textContent=trashOpen?'Ocultar':'Mostrar';tb.setAttribute('aria-expanded',String(trashOpen));
   requestAnimationFrame(()=>fitThumbs(home));
 }
 function setRoute(h){try{if(location.hash!==h)history.replaceState(null,'',location.pathname+location.search+h)}catch(e){}}
@@ -5269,10 +5295,20 @@ async function openDriveFromHome(fid){
 async function trashDriveFile(fid,name){
   try{await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({trashed:true})});
     const m=driveMap();Object.keys(m).forEach(l=>{if(m[l]===fid){if(l!==deck.id){deleteDeckFromLib(l);lsDel(THUMB_KEY+l)}delete m[l]}});try{lsSet('lousa-drive-map',JSON.stringify(m))}catch(e){}
-    if(driveFiles)driveFiles=driveFiles.filter(f=>f.id!==fid);renderHome();toast('“'+name+'” foi para a lixeira do Google Drive. Dá para recuperar por lá em até 30 dias.')}
+    if(driveFiles)driveFiles=driveFiles.filter(f=>f.id!==fid);trashFiles=null;if(trashOpen)loadTrash().then(renderHome);renderHome();toast('“'+name+'” foi para a Lixeira (no fim desta tela). Dá para restaurar por 30 dias.',6000)}
   catch(e){driveErr(e)}
 }
+async function restoreDrive(fid){
+  try{await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({trashed:false})});
+    trashFiles=(trashFiles||[]).filter(f=>f.id!==fid);await loadDriveFiles();renderHome();toast('Apresentação restaurada.')}catch(e){driveErr(e)}
+}
+async function purgeDrive(fid){
+  try{await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid),{method:'DELETE'});
+    trashFiles=(trashFiles||[]).filter(f=>f.id!==fid);renderHome();toast('Apresentação excluída para sempre.')}catch(e){driveErr(e)}
+}
 home.addEventListener('click',ev=>{
+  const tr=ev.target.closest('[data-trest]');if(tr){restoreDrive(tr.dataset.trest);return}
+  const td=ev.target.closest('[data-tdel]');if(td){const fid=td.dataset.tdel,name=td.dataset.name;confirmBox('Excluir para sempre','Excluir “'+name+'” para sempre? Essa ação não pode ser desfeita.','Excluir para sempre',()=>purgeDrive(fid));return}
   const dd=ev.target.closest('[data-ddel]');
   if(dd){ev.stopPropagation();const fid=dd.dataset.ddel,name=dd.dataset.name;confirmBox('Excluir do Google Drive','Mover “'+name+'” para a lixeira do seu Google Drive?','Mover para a lixeira',()=>trashDriveFile(fid,name));return}
   const del=ev.target.closest('[data-del]');
@@ -5288,7 +5324,8 @@ home.addEventListener('click',ev=>{
     case 'new':homeNew(false);break;case 'sample':homeNew(true);break;
     case 'file':hideHome();openFileSmart();break;
     case 'login':homeLogin();break;
-    case 'logout':driveDisconnect();driveFiles=null;renderHome();break;
+    case 'logout':driveDisconnect();driveFiles=null;trashFiles=null;trashOpen=false;renderHome();break;
+    case 'trash':trashOpen=!trashOpen;renderHome();if(trashOpen&&trashFiles==null)loadTrash().then(renderHome);break;
     case 'landing':home.hidden=true;showLanding();break;
   }
 });
