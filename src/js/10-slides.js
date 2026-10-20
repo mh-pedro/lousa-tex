@@ -105,7 +105,7 @@ function openDeck(d,msg){
   if(editId)exitEdit(true);commitSoon.flush();saveSoon.flush();
   FS.handle=null;FS.deckId=null;
   try{d=normalize(d)}catch(e){toast('Não reconheci esse conteúdo como uma apresentação do Lousa TeX.');return}
-  deck=d;cur=0;selIds=[];masterMode=false;slideSel.clear();slideSel.add(deck.slides[0].id);setSizeGlobals();
+  deck=d;invalidatePlan();cur=0;selIds=[];masterMode=false;slideSel.clear();slideSel.add(deck.slides[0].id);setSizeGlobals();
   $('#deckTitle').value=deck.title;applyPreamble();rerenderAll();renderToolbar();renderSide();updateCommentCount();resetHistory();saveDeckNow();addVersion('',true);
   closeModal();if(msg)toast(msg);
 }

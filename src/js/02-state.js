@@ -82,7 +82,7 @@ function commit(){
 const commitSoon=debounce(commit,450);
 function undoUI(){const u=toolbar.querySelector('[data-cmd="undo"]'),r=toolbar.querySelector('[data-cmd="redo"]');if(u)u.disabled=hi<=0;if(r)r.disabled=hi>=hist.length-1}
 function restore(){invalidatePlan();
-  const prevPre=deck.preamble,prevSize=deck.size.w+'x'+deck.size.h;deck=JSON.parse(hist[hi]);
+  const prevPre=deck.preamble,prevSize=deck.size.w+'x'+deck.size.h;deck=JSON.parse(hist[hi]);invalidatePlan();
   cur=Math.min(cur,deck.slides.length-1);
   if(deck.size.w+'x'+deck.size.h!==prevSize)setSizeGlobals();
   if(deck.preamble!==prevPre)applyPreamble();

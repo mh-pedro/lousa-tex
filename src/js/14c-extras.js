@@ -75,9 +75,9 @@ function slideCites(s){const out=[];s.els.forEach(e=>{const hs=e.type==='box'?[e
   return out.sort((a,b)=>(plan().nums[a]||0)-(plan().nums[b]||0))}
 const citeNum=k=>plan().nums[k]||'?';
 const refByKey=k=>deck.refs.find(r=>r.key===k)||null;
-function surname(a){a=String(a).trim();if(!a)return '';if(a.indexOf(',')>=0)return a.split(',')[0].trim();const p=a.split(/\s+/);return p[p.length-1]}
+function surname(a){a=String(a).trim();if(!a)return '';if(a.indexOf(',')>=0)return a.split(',')[0].trim();if(/\b(collaboration|colabora[cç][aã]o|team|group|consortium)\b/i.test(a))return a;const p=a.split(/\s+/);return p[p.length-1]}
 function authorList(r){return String(r.authors||'').split(/\s+and\s+/i).map(s=>s.trim()).filter(Boolean)}
-function refShort(r){const au=authorList(r);let a=au.length?surname(au[0])+(au.length>1?(au.length===2?' e '+surname(au[1]):' et al.'):''):'';
+function refShort(r){const au=authorList(r);let a=au.length?surname(au[0])+(au.length>1?(au.length===2?(LANG==='en'?' and ':' e ')+surname(au[1]):' et al.'):''):'';
   let src=r.journal?r.journal+(r.volume?' '+r.volume:'')+(r.pages?', '+r.pages:''):(r.arxiv?'arXiv:'+r.arxiv:'');
   return [a,src].filter(Boolean).join(', ')+(r.year?' ('+r.year+')':'')}
 function refFull(r){const au=authorList(r).map(x=>x.indexOf(',')>=0?x.split(',').slice(1).join(' ').trim()+' '+x.split(',')[0].trim():x);

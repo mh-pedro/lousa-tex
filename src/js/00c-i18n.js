@@ -9,7 +9,7 @@ function trEN(s){
   if(!s||!/[A-Za-zÀ-ÿ]/.test(s))return s;
   let r=i18nCache.get(s);if(r!=null)return r;
   const t=s.trim();
-  r=I18N_EN[t]!=null?s.replace(t,I18N_EN[t]):s.replace(I18N_RE,m=>I18N_EN[m]);
+  r=I18N_EN[t]!=null?s.replace(t,()=>I18N_EN[t]):s.replace(I18N_RE,m=>I18N_EN[m]);
   if(i18nCache.size>5000)i18nCache.clear();i18nCache.set(s,r);return r;
 }
 function i18n(s){return LANG==='en'?trEN(s):s}

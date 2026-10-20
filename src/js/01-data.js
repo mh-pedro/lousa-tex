@@ -168,18 +168,18 @@ function sampleDeck(){
   s1.notes=L('Apresentação de exemplo do Lousa TeX. Edite ou apague à vontade.');
   const s2=makeSlide('titleBody',size);
   s2.els[0].html=md(L('Relação de dispersão modificada'));
-  Object.assign(s2.els[1],{w:620,html:md(L('- Termo de ordem $n$ suprimido pela escala de Planck:\n$$E^2 = p^2 + m^2 + \\xi_n\\,\\frac{p^{\\,n+2}}{\\Mpl^{\\,n}}$$\n- Para $n=1$, a correção relativa cresce linearmente com $E$\n- Neutrinos de PeV tornam acessíveis valores $\\xi_1 \\lesssim 10^{-2}$')),anim:anim({fx:'fade',byPara:true,order:1})});
+  Object.assign(s2.els[1],{w:620,html:md(L('- Termo de ordem $n$ suprimido pela escala de Planck \\cite{Mattingly2005}:\n$$E^2 = p^2 + m^2 + \\xi_n\\,\\frac{p^{\\,n+2}}{\\Mpl^{\\,n}} \\label{eq:mdr}$$\n- Para $n=1$, a correção relativa cresce linearmente com $E$\n- Neutrinos de PeV tornam acessíveis valores $\\xi_1 \\lesssim 10^{-2}$')),anim:anim({fx:'fade',byPara:true,order:1})});
   s2.els.push(shapeEl('round',{x:730,y:176,w:480,h:250,fill:'accent',fillOpacity:.08,stroke:'accent',strokeW:2,size:22,color:'fg',pad:18,
     html:md(L('**Velocidade de grupo**\n$$v_g = \\frac{\\partial E}{\\partial p} \\simeq 1 - \\frac{m^2}{2p^2} + \\frac{(n+1)\\,\\xi_n}{2}\\left(\\frac{E}{\\Mpl}\\right)^{\\!n}$$')),anim:anim({fx:'rise',order:2})}));
-  s2.notes=L('Os tópicos aparecem um a um (animação por parágrafo). O quadro da direita sobe por último.');
+  s2.notes=L('Os tópicos aparecem um a um (animação por parágrafo). O quadro da direita sobe por último. A equação da esquerda tem \\label{eq:mdr} e por isso ganha o número (1); a do quadro não tem label e fica sem número.');
   const s3=makeSlide('equation',size);
   s3.els[0].html=md(L('Probabilidade de oscilação'));
-  s3.els[1].html=md('$$P_{\\nu_\\mu\\to\\nu_\\tau} = \\sin^2 2\\theta\\;\\sin^2\\!\\left(\\frac{\\Delta m^2 L}{4E} + \\frac{\\delta\\xi_1\\,E^{2} L}{2\\Mpl}\\right)$$');
-  s3.els[2].html=md(L('O termo de massa cai como $L/E$; o termo de violação cresce como $E^2 L$.'));
+  s3.els[1].html=md('$$P_{\\nu_\\mu\\to\\nu_\\tau} = \\sin^2 2\\theta\\;\\sin^2\\!\\left(\\frac{\\Delta m^2 L}{4E} + \\frac{\\delta\\xi_1\\,E^{2} L}{2\\Mpl}\\right) \\label{eq:osc}$$');
+  s3.els[2].html=md(L('O termo de massa cai como $L/E$; o termo de violação, que vem de \\eqref{eq:mdr}, cresce como $E^2 L$ \\cite{IceCube2018}.'));
   const s4=makeSlide('titleOnly',size);
   s4.els[0].html=md(L('Observáveis para $n = 1$'));
   const tb=tableEl(4,2,{x:140,y:170,w:1000,colW:[.42,.58],rowH:[52,70,70,70],size:24});
-  [[L('Observável'),L('Expressão')],[L('Velocidade de grupo'),'$v_g \\simeq 1 + \\xi_1\\, E/\\Mpl$'],[L('Atraso de chegada'),'$\\Delta t \\simeq \\xi_1\\,\\dfrac{E}{\\Mpl}\\,\\dfrac{L}{c}$'],[L('Fase extra na oscilação'),'$\\dfrac{\\delta\\xi_1\\,E^{2} L}{2\\Mpl}$']]
+  [[L('Observável'),L('Expressão')],[L('Velocidade de grupo'),'$v_g \\simeq 1 + \\xi_1\\, E/\\Mpl$'],[L('Atraso de chegada \\cite{Jacob2007}'),'$\\Delta t \\simeq \\xi_1\\,\\dfrac{E}{\\Mpl}\\,\\dfrac{L}{c}$'],[L('Fase extra na oscilação'),'$\\dfrac{\\delta\\xi_1\\,E^{2} L}{2\\Mpl}$']]
     .forEach((row,r)=>row.forEach((t,c)=>{tb.cells[r][c].html=md(t)}));
   s4.els.push(tb);
   s4.els.push(box({x:140,y:520,w:1000,h:60,size:20,color:'muted',html:md(L('Tabelas aceitam LaTeX em cada célula. Clique numa célula da tabela selecionada para escrever.'))}));
@@ -192,9 +192,21 @@ function sampleDeck(){
   s6.els[0].html=md(L('Como usar'));
   s6.els[1].html=md(L('- **Clique duas vezes** numa caixa para escrever direto no slide\n- \\$E=mc^2\\$ vira $E=mc^2$ quando você sai da caixa\n- \\$\\$ … \\$\\$ cria uma equação destacada\n- Uma prévia mostra o LaTeX enquanto você digita\n- O botão $\\Sigma$ insere símbolos e estruturas\n- **Ajuda › Pesquisar nos menus** encontra qualquer comando'));
   Object.assign(s6.els[2],{shape:'round',fill:'accent',fillOpacity:.07,pad:20,html:md(L('**Macros do preâmbulo** (Slide › Editar tema)\n$$\\Mpl \\approx 1{,}22\\times 10^{19}\\ \\mathrm{GeV}$$\n**Ambientes do AMS**\n$$\\begin{aligned} \\nabla\\cdot\\mathbf{E} &= \\rho/\\varepsilon_0 \\\\ \\nabla\\times\\mathbf{B} - \\tfrac{1}{c^2}\\,\\partial_t\\mathbf{E} &= \\mu_0\\mathbf{J} \\end{aligned}$$'))});
-  return normalize({version:3,id:uid(),title:L('Violação de Lorentz em neutrinos'),size:size,
+  const s7=makeSlide('twoCol',size);
+  s7.els[0].html=md(L('Equações e citações'));
+  s7.els[1].html=md(L('- **Em linha**, entre \\$…\\$: a constante $\\alpha \\approx 1/137$ fica no meio da frase\n- **Destacada sem número**, entre \\$\\$…\\$\\$:\n$$\\nabla\\cdot\\mathbf{B} = 0$$\n- **Destacada e numerada**: acrescente \\\u2060label{eq:gauss} dentro dela\n$$\\nabla\\cdot\\mathbf{E} = \\frac{\\rho}{\\varepsilon_0} \\label{eq:gauss}$$\n- **Citar o número**: \\\u2060eqref{eq:gauss} vira \\eqref{eq:gauss}'));
+  Object.assign(s7.els[2],{size:22,shape:'round',fill:'accent',fillOpacity:.07,pad:20,html:md(L('**Referências**\n- \\\u2060cite{chave} vira o número do artigo: \\cite{Mattingly2005}, \\cite{AmelinoCamelia1998,Jacob2007}\n- Os números seguem a ordem em que as citações aparecem nos slides\n- **Inserir › Citação e referências** busca no INSPIRE-HEP ou importa BibTeX\n- **Inserir › Slide de referências** monta a lista do último slide\n- **Painel Tema**: numerar todas as equações destacadas (\\\u2060notag tira o número de uma) e mostrar as referências no rodapé'))});
+  s7.notes=L('Equações e citações se renumeram sozinhas quando você muda os slides de lugar. As referências deste exemplo estão na biblioteca da apresentação (Inserir › Citação e referências).');
+  const s8=makeSlide('titleBody',size);
+  s8.els[0].html='<div>'+esc(L('Referências'))+'</div>';Object.assign(s8.els[1],{role:'refs',size:20,fit:'shrink'});
+  const refs=[
+    {key:'Mattingly2005',type:'article',authors:'Mattingly, David',title:'Modern Tests of Lorentz Invariance',journal:'Living Rev. Rel.',volume:'8',pages:'5',year:'2005',arxiv:'gr-qc/0502097',doi:'10.12942/lrr-2005-5'},
+    {key:'AmelinoCamelia1998',type:'article',authors:'Amelino-Camelia, G. and Ellis, John R. and Mavromatos, N. E. and Nanopoulos, Dimitri V. and Sarkar, Subir',title:'Tests of quantum gravity from observations of gamma-ray bursts',journal:'Nature',volume:'393',pages:'763',year:'1998',arxiv:'astro-ph/9712103',doi:'10.1038/31647'},
+    {key:'Jacob2007',type:'article',authors:'Jacob, Uri and Piran, Tsvi',title:'Neutrinos from gamma-ray bursts as a tool to explore quantum-gravity-induced Lorentz violation',journal:'Nature Phys.',volume:'3',pages:'87',year:'2007',arxiv:'hep-ph/0607145',doi:'10.1038/nphys506'},
+    {key:'IceCube2018',type:'article',authors:'IceCube Collaboration',title:'Neutrino interferometry for high-precision tests of Lorentz symmetry with IceCube',journal:'Nature Phys.',volume:'14',pages:'961',year:'2018',arxiv:'1709.03434',doi:'10.1038/s41567-018-0172-2'}];
+  return normalize({version:3,id:uid(),title:L('Violação de Lorentz em neutrinos'),size:size,refs:refs,
     theme:{bg:th.bg,fg:th.fg,title:th.title,accent:th.accent,titleFont:th.titleFont,bodyFont:th.bodyFont,transition:'fade',transDur:.5,showNumbers:true},
-    preamble:'\\newcommand{\\Mpl}{M_{\\mathrm{Pl}}}\n\\newcommand{\\dd}{\\mathrm{d}}',slides:[s1,s2,s3,s4,s5,s6]});
+    preamble:'\\newcommand{\\Mpl}{M_{\\mathrm{Pl}}}\n\\newcommand{\\dd}{\\mathrm{d}}',slides:[s1,s2,s3,s4,s5,s6,s7,s8]});
 }
 
 /* ================= old files ================= */
