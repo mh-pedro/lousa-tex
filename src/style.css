@@ -591,3 +591,11 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 .ld-eq .ld-mj svg{margin:0 auto}
 .ld-fy{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;color:#1b211e;padding:4px 10px}.ld-fy svg{height:100%;width:auto;max-width:100%}
 .hm-tplbox.ex .ld-mj{color:#1b211e}
+/* seletor de idioma (página inicial e lista de apresentações) */
+.lang-sw{display:inline-flex;border:1px solid currentColor;border-radius:999px;overflow:hidden;opacity:.85;flex:none}
+.lang-sw button{all:unset;cursor:pointer;font:600 12px/1 var(--ui,system-ui,sans-serif);letter-spacing:.06em;padding:6px 10px;color:inherit}
+.lang-sw button.on{background:currentColor}
+.lang-sw button.on{color:inherit}
+#landing .lang-sw{color:#b8c3bc}#landing .lang-sw button.on{background:#b8c3bc;color:#14201a}
+.hm-head .lang-sw{color:var(--muted)}.hm-head .lang-sw button.on{background:var(--muted);color:var(--panel)}
+.lang-sw button:focus-visible{outline:2px solid var(--accent,#b25c1c);outline-offset:-2px}

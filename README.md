@@ -6,6 +6,8 @@
 
 As fórmulas não viram imagem: continuam texto LaTeX que você pode editar a qualquer momento, inclusive dentro de tabelas, gráficos e diagramas. Não precisa instalar nada nem criar conta. Tudo roda no seu navegador.
 
+> 🇬🇧 **English:** the whole site (home page, file list, editor and privacy page) is also available in English. It follows your browser's language, and you can switch with the PT · EN buttons or in View › Language.
+
 ---
 
 ## Sumário
@@ -272,6 +274,7 @@ Esses valores não são senhas: ficam visíveis no site, e a proteção vem da r
 
 ## Aparência
 
+- **Exibir › Idioma (Language):** Automático (segue o idioma do navegador), Português ou English. Também dá para trocar pelos botões PT · EN na página inicial e na lista de apresentações, ou em Ferramentas › Preferências.
 - **Exibir › Aparência do programa:** Automático (segue o sistema), Padrão, Claro, Cinza, Sépia, Noturno, Azul noturno e Preto.
 - **Exibir › Fundo da área de trabalho:** a cor em volta do slide (branco, cinza claro, cinza médio, grafite, preto).
 - **Exibir › Mostrar conteúdo fora do slide:** o que passa da borda aparece esmaecido, com uma linha marcando o limite. Na apresentação, fica cortado.
@@ -350,6 +353,8 @@ O site é um único `index.html`, gerado a partir do código em `src/`:
 | `src/style.css` | Estilos da interface e dos slides |
 | `src/body.html` | Estrutura da página |
 | `src/js/*.js` | Código, em partes numeradas e juntadas em ordem alfabética |
+| `src/js/00b-i18n-en.js` | Dicionário português → inglês da interface |
+| `src/js/16-i18n.js` | Tradutor: troca os textos da interface conforme o idioma |
 | `build.py` | Junta tudo em `index.html` |
 | `config.js` | Configuração do Google Drive, lida pelo site ao carregar |
 | `manifest.webmanifest`, `sw.js`, `icons/` | Instalação como aplicativo (opcional) |
@@ -359,6 +364,8 @@ Depois de editar algo em `src/`, rode:
 ```bash
 python3 build.py
 ```
+
+A interface é escrita em português. Ao criar um texto novo na interface, acrescente a tradução em `src/js/00b-i18n-en.js` (chave: o texto em português, sem espaços nas pontas). O conteúdo dos slides, anotações e comentários nunca é traduzido.
 
 Faça commit do `src/` e do `index.html` juntos. O GitHub Pages publica o `main` automaticamente em um ou dois minutos.
 

@@ -2,8 +2,10 @@
 let deck,cur=0,selIds=[],editId=null,editCell=null,tool=null,scale=1,zoom='fit',stageNode=null,overlay=null,sideMode=null,masterMode=false,gridView=false;
 let hist=[],hi=-1,preErr='',clip=null,savedRange=null,pendingSize=null,replaceTarget=null,drag=null,activeMenu=null,cropId=null,cellSel=null,painter=null;
 const slideSel=new Set();
-const prefs={showNotes:true,showRail:true,showRulers:false,showGuides:true,showGrid:false,snapGrid:false,snapObjects:true,gridSize:40,unit:'px',spell:false,livePreview:true,autoVersionMin:10,presenterFont:16,uiTheme:'auto',stageBg:'',pasteboard:true};
+const prefs={showNotes:true,showRail:true,showRulers:false,showGuides:true,showGrid:false,snapGrid:false,snapObjects:true,gridSize:40,unit:'px',spell:false,livePreview:true,autoVersionMin:10,presenterFont:16,uiTheme:'auto',stageBg:'',pasteboard:true,lang:'auto'};
 try{Object.assign(prefs,JSON.parse(lsGet(UIKEY)||'{}'))}catch(e){}
+const browserLang=()=>{const l=(navigator.languages&&navigator.languages[0])||navigator.language||'pt';return /^pt/i.test(l)?'pt':'en'};
+LANG=(prefs.lang==='pt'||prefs.lang==='en')?prefs.lang:browserLang();document.documentElement.lang=LANG==='en'?'en':'pt-BR';
 function savePrefs(){try{lsSet(UIKEY,JSON.stringify(prefs))}catch(e){}}
 
 const frame=$('#frame'),stageWrap=$('#stageWrap'),stageArea=$('#stageArea'),thumbsEl=$('#thumbs'),toolbar=$('#toolbar'),pop=$('#pop'),pres=$('#pres'),side=$('#side'),sideBody=$('#sideBody');

@@ -1,6 +1,7 @@
 /* ================= ícones dos menus ================= */
 const GLY=(t,o)=>'<text x="10" y="'+((o&&o.y)||15)+'" text-anchor="middle" font-size="'+((o&&o.s)||14)+'" font-weight="'+((o&&o.w)||700)+'"'+(o&&o.i?' font-style="italic"':'')+' font-family="'+((o&&o.f)||'Georgia,serif')+'" fill="currentColor" stroke="none">'+t+'</text>';
 const MICON={
+  globe:'<circle cx="10" cy="10" r="7"/><path d="M3 10h14M10 3c2.2 2 3 4.4 3 7s-.8 5-3 7c-2.2-2-3-4.4-3-7s.8-5 3-7z"/>',
   cut:'<circle cx="6" cy="15" r="2.5"/><circle cx="14" cy="15" r="2.5"/><path d="M7.6 13L15 3M12.4 13L5 3"/>',
   copy:'<rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M13 7V4.5A1.5 1.5 0 0011.5 3h-7A1.5 1.5 0 003 4.5v7A1.5 1.5 0 004.5 13H7"/>',
   paste:'<rect x="4" y="4" width="12" height="13" rx="1.5"/><path d="M7.5 4V2.8h5V4M7 9h6M7 12h4"/>',

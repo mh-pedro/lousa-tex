@@ -121,7 +121,7 @@ function tableEl(rows,cols,o){
     borderColor:'muted',borderW:1,size:22,color:null,font:null,pad:8,header:true,headerFill:'accent',band:false},o);
 }
 function chartEl(kind,o){return Object.assign({id:uid(),type:'chart',x:320,y:150,w:640,h:420},BASE,{kind:kind||'bar',title:'',xTitle:'',yTitle:'',legend:true,grid:true,logY:false,logX:false,size:18,colors:null,fns:'sin(x)/x | $\\operatorname{sinc}(x)$\ncos(x)*exp(-x^2/40) | $\\cos x\\; e^{-x^2/40}$',xMin:'-12',xMax:'12',yMin:'',yMax:'',samples:400,
-  data:'Categoria\tSérie 1\tSérie 2\nA\t4\t2,5\nB\t3\t4,4\nC\t5\t1,8\nD\t2\t3,1'},o)}
+  data:LANG==='en'?'Category\tSeries 1\tSeries 2\nA\t4\t2.5\nB\t3\t4.4\nC\t5\t1.8\nD\t2\t3.1':'Categoria\tSérie 1\tSérie 2\nA\t4\t2,5\nB\t3\t4,4\nC\t5\t1,8\nD\t2\t3,1'},o)}
 function mediaEl(o){return Object.assign({id:uid(),type:'media',x:320,y:150,w:640,h:360},BASE,{kind:'video',url:'',src:'',title:'',start:0,end:0,autoplay:false,muted:false,loop:false},o)}
 function T44(){return box({role:'title',x:80,y:36,w:1120,h:100,size:44,bold:true,valign:'middle',font:'title',fit:'grow'})}
 const LAYOUTS={
@@ -159,39 +159,40 @@ function md(src){
 function anim(o){return Object.assign({kind:'in',fx:'fade',start:'click',dur:.5,delay:0,byPara:false,order:0},o)}
 
 function sampleDeck(){
+  const L=i18n;
   const th=THEMES.quadro,size={w:1280,h:720,name:'16:9'};
   const s1=makeSlide('title',size);
-  s1.els[0].html=md('Violação de Lorentz em neutrinos');
-  s1.els[1].html=md('Relações de dispersão modificadas e sinais em telescópios de neutrinos');
+  s1.els[0].html=md(L('Violação de Lorentz em neutrinos'));
+  s1.els[1].html=md(L('Relações de dispersão modificadas e sinais em telescópios de neutrinos'));
   s1.els.push(shapeEl('rect',{x:580,y:478,w:120,h:4,fill:'accent',fillOpacity:1,strokeW:0}));
-  s1.notes='Apresentação de exemplo do Lousa TeX. Edite ou apague à vontade.';
+  s1.notes=L('Apresentação de exemplo do Lousa TeX. Edite ou apague à vontade.');
   const s2=makeSlide('titleBody',size);
-  s2.els[0].html=md('Relação de dispersão modificada');
-  Object.assign(s2.els[1],{w:620,html:md('- Termo de ordem $n$ suprimido pela escala de Planck:\n$$E^2 = p^2 + m^2 + \\xi_n\\,\\frac{p^{\\,n+2}}{\\Mpl^{\\,n}}$$\n- Para $n=1$, a correção relativa cresce linearmente com $E$\n- Neutrinos de PeV tornam acessíveis valores $\\xi_1 \\lesssim 10^{-2}$'),anim:anim({fx:'fade',byPara:true,order:1})});
+  s2.els[0].html=md(L('Relação de dispersão modificada'));
+  Object.assign(s2.els[1],{w:620,html:md(L('- Termo de ordem $n$ suprimido pela escala de Planck:\n$$E^2 = p^2 + m^2 + \\xi_n\\,\\frac{p^{\\,n+2}}{\\Mpl^{\\,n}}$$\n- Para $n=1$, a correção relativa cresce linearmente com $E$\n- Neutrinos de PeV tornam acessíveis valores $\\xi_1 \\lesssim 10^{-2}$')),anim:anim({fx:'fade',byPara:true,order:1})});
   s2.els.push(shapeEl('round',{x:730,y:176,w:480,h:250,fill:'accent',fillOpacity:.08,stroke:'accent',strokeW:2,size:22,color:'fg',pad:18,
-    html:md('**Velocidade de grupo**\n$$v_g = \\frac{\\partial E}{\\partial p} \\simeq 1 - \\frac{m^2}{2p^2} + \\frac{(n+1)\\,\\xi_n}{2}\\left(\\frac{E}{\\Mpl}\\right)^{\\!n}$$'),anim:anim({fx:'rise',order:2})}));
-  s2.notes='Os tópicos aparecem um a um (animação por parágrafo). O quadro da direita sobe por último.';
+    html:md(L('**Velocidade de grupo**\n$$v_g = \\frac{\\partial E}{\\partial p} \\simeq 1 - \\frac{m^2}{2p^2} + \\frac{(n+1)\\,\\xi_n}{2}\\left(\\frac{E}{\\Mpl}\\right)^{\\!n}$$')),anim:anim({fx:'rise',order:2})}));
+  s2.notes=L('Os tópicos aparecem um a um (animação por parágrafo). O quadro da direita sobe por último.');
   const s3=makeSlide('equation',size);
-  s3.els[0].html=md('Probabilidade de oscilação');
+  s3.els[0].html=md(L('Probabilidade de oscilação'));
   s3.els[1].html=md('$$P_{\\nu_\\mu\\to\\nu_\\tau} = \\sin^2 2\\theta\\;\\sin^2\\!\\left(\\frac{\\Delta m^2 L}{4E} + \\frac{\\delta\\xi_1\\,E^{2} L}{2\\Mpl}\\right)$$');
-  s3.els[2].html=md('O termo de massa cai como $L/E$; o termo de violação cresce como $E^2 L$.');
+  s3.els[2].html=md(L('O termo de massa cai como $L/E$; o termo de violação cresce como $E^2 L$.'));
   const s4=makeSlide('titleOnly',size);
-  s4.els[0].html=md('Observáveis para $n = 1$');
+  s4.els[0].html=md(L('Observáveis para $n = 1$'));
   const tb=tableEl(4,2,{x:140,y:170,w:1000,colW:[.42,.58],rowH:[52,70,70,70],size:24});
-  [['Observável','Expressão'],['Velocidade de grupo','$v_g \\simeq 1 + \\xi_1\\, E/\\Mpl$'],['Atraso de chegada','$\\Delta t \\simeq \\xi_1\\,\\dfrac{E}{\\Mpl}\\,\\dfrac{L}{c}$'],['Fase extra na oscilação','$\\dfrac{\\delta\\xi_1\\,E^{2} L}{2\\Mpl}$']]
+  [[L('Observável'),L('Expressão')],[L('Velocidade de grupo'),'$v_g \\simeq 1 + \\xi_1\\, E/\\Mpl$'],[L('Atraso de chegada'),'$\\Delta t \\simeq \\xi_1\\,\\dfrac{E}{\\Mpl}\\,\\dfrac{L}{c}$'],[L('Fase extra na oscilação'),'$\\dfrac{\\delta\\xi_1\\,E^{2} L}{2\\Mpl}$']]
     .forEach((row,r)=>row.forEach((t,c)=>{tb.cells[r][c].html=md(t)}));
   s4.els.push(tb);
-  s4.els.push(box({x:140,y:520,w:1000,h:60,size:20,color:'muted',html:md('Tabelas aceitam LaTeX em cada célula. Clique numa célula da tabela selecionada para escrever.')}));
+  s4.els.push(box({x:140,y:520,w:1000,h:60,size:20,color:'muted',html:md(L('Tabelas aceitam LaTeX em cada célula. Clique numa célula da tabela selecionada para escrever.'))}));
   const s5=makeSlide('titleOnly',size);
-  s5.els[0].html=md('Gráficos editáveis');
-  s5.els.push(chartEl('line',{x:90,y:150,w:700,h:470,title:'Atraso relativo (dados ilustrativos)',xTitle:'Energia (TeV)',yTitle:'Atraso (unid. arb.)',legend:false,
-    data:'Energia\tAtraso\n10\t0,1\n50\t0,52\n100\t0,98\n200\t2,05\n400\t3,96'}));
-  s5.els.push(box({x:830,y:180,w:370,h:300,size:22,html:md('- Colunas, barras, linhas, área, dispersão e pizza\n- Cole os dados direto do Planilhas ou do Excel em **Opções de formato**\n- As cores seguem o tema')}));
+  s5.els[0].html=md(L('Gráficos editáveis'));
+  s5.els.push(chartEl('line',{x:90,y:150,w:700,h:470,title:L('Atraso relativo (dados ilustrativos)'),xTitle:L('Energia (TeV)'),yTitle:L('Atraso (unid. arb.)'),legend:false,
+    data:L('Energia\tAtraso\n10\t0,1\n50\t0,52\n100\t0,98\n200\t2,05\n400\t3,96')}));
+  s5.els.push(box({x:830,y:180,w:370,h:300,size:22,html:md(L('- Colunas, barras, linhas, área, dispersão e pizza\n- Cole os dados direto do Planilhas ou do Excel em **Opções de formato**\n- As cores seguem o tema'))}));
   const s6=makeSlide('twoCol',size);
-  s6.els[0].html=md('Como usar');
-  s6.els[1].html=md('- **Clique duas vezes** numa caixa para escrever direto no slide\n- \\$E=mc^2\\$ vira $E=mc^2$ quando você sai da caixa\n- \\$\\$ … \\$\\$ cria uma equação destacada\n- Uma prévia mostra o LaTeX enquanto você digita\n- O botão $\\Sigma$ insere símbolos e estruturas\n- **Ajuda › Pesquisar nos menus** encontra qualquer comando');
-  Object.assign(s6.els[2],{shape:'round',fill:'accent',fillOpacity:.07,pad:20,html:md('**Macros do preâmbulo** (Slide › Editar tema)\n$$\\Mpl \\approx 1{,}22\\times 10^{19}\\ \\mathrm{GeV}$$\n**Ambientes do AMS**\n$$\\begin{aligned} \\nabla\\cdot\\mathbf{E} &= \\rho/\\varepsilon_0 \\\\ \\nabla\\times\\mathbf{B} - \\tfrac{1}{c^2}\\,\\partial_t\\mathbf{E} &= \\mu_0\\mathbf{J} \\end{aligned}$$')});
-  return normalize({version:3,id:uid(),title:'Violação de Lorentz em neutrinos',size:size,
+  s6.els[0].html=md(L('Como usar'));
+  s6.els[1].html=md(L('- **Clique duas vezes** numa caixa para escrever direto no slide\n- \\$E=mc^2\\$ vira $E=mc^2$ quando você sai da caixa\n- \\$\\$ … \\$\\$ cria uma equação destacada\n- Uma prévia mostra o LaTeX enquanto você digita\n- O botão $\\Sigma$ insere símbolos e estruturas\n- **Ajuda › Pesquisar nos menus** encontra qualquer comando'));
+  Object.assign(s6.els[2],{shape:'round',fill:'accent',fillOpacity:.07,pad:20,html:md(L('**Macros do preâmbulo** (Slide › Editar tema)\n$$\\Mpl \\approx 1{,}22\\times 10^{19}\\ \\mathrm{GeV}$$\n**Ambientes do AMS**\n$$\\begin{aligned} \\nabla\\cdot\\mathbf{E} &= \\rho/\\varepsilon_0 \\\\ \\nabla\\times\\mathbf{B} - \\tfrac{1}{c^2}\\,\\partial_t\\mathbf{E} &= \\mu_0\\mathbf{J} \\end{aligned}$$'))});
+  return normalize({version:3,id:uid(),title:L('Violação de Lorentz em neutrinos'),size:size,
     theme:{bg:th.bg,fg:th.fg,title:th.title,accent:th.accent,titleFont:th.titleFont,bodyFont:th.bodyFont,transition:'fade',transDur:.5,showNumbers:true},
     preamble:'\\newcommand{\\Mpl}{M_{\\mathrm{Pl}}}\n\\newcommand{\\dd}{\\mathrm{d}}',slides:[s1,s2,s3,s4,s5,s6]});
 }
@@ -268,7 +269,7 @@ function normEl(e){
 function normalize(d){
   if(!d||typeof d!=='object')d={};
   if(!d.version||d.version<2)d=migrateV1(d);
-  d.version=3;d.id=d.id||uid();d.title=d.title||'Sem título';
+  d.version=3;d.id=d.id||uid();d.title=d.title||i18n('Sem título');
   d.size=d.size&&d.size.w>=200&&d.size.h>=200?{w:Math.round(d.size.w),h:Math.round(d.size.h),name:d.size.name||''}:{w:1280,h:720,name:'Widescreen 16:9'};
   d.theme=Object.assign({bg:'#ffffff',fg:'#1f252d',title:'#11161c',accent:'#b4532a',titleFont:'STIX Two Text',bodyFont:'STIX Two Text',transition:'none',transDur:.5,showNumbers:false,bgImage:null,bgFit:'cover',progress:'none',refFooter:true,eqAuto:false},d.theme||{});
   if(!FONTS[d.theme.titleFont])d.theme.titleFont='STIX Two Text';if(!FONTS[d.theme.bodyFont])d.theme.bodyFont='STIX Two Text';

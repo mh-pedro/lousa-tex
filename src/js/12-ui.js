@@ -220,8 +220,9 @@ function prefsModal(){
     '<label class="chk"><input type="checkbox" data-pf="snapObjects"'+(prefs.snapObjects?' checked':'')+'> Ajustar a guias, página e outros objetos</label>'+
     '<label class="chk"><input type="checkbox" data-pf="snapGrid"'+(prefs.snapGrid?' checked':'')+'> Ajustar à grade</label>'+
     '<div class="g2"><label class="lab">Tamanho da grade (px)<input type="number" min="5" max="200" data-pf="gridSize" value="'+prefs.gridSize+'"></label><label class="lab">Unidade das réguas<select data-pf="unit"><option value="px"'+(prefs.unit==='px'?' selected':'')+'>Pixels</option><option value="cm"'+(prefs.unit==='cm'?' selected':'')+'>Centímetros</option></select></label></div></div>'+
+    '<div class="sec"><div class="ih">Idioma (Language)</div><label class="lab"><select data-lang aria-label="Idioma">'+LANG_OPTS.map(o=>'<option value="'+o[0]+'"'+((prefs.lang||'auto')===o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select></label></div>'+
     '<div class="sec"><div class="ih">Versões</div><label class="lab">Guardar uma versão automática a cada (minutos)<input type="number" min="1" max="240" data-pf="autoVersionMin" value="'+prefs.autoVersionMin+'"></label></div>',
-    {mount:b=>b.addEventListener('input',ev=>{const t=ev.target;if(!t.dataset.pf)return;const k=t.dataset.pf;prefs[k]=t.type==='checkbox'?t.checked:(t.type==='number'?clamp(+t.value||1,1,1000):t.value);savePrefs();drawGrid();drawRulers();fit()})});
+    {mount:b=>b.addEventListener('input',ev=>{const t=ev.target;if(t.dataset.lang!=null){setLang(t.value);return}if(!t.dataset.pf)return;const k=t.dataset.pf;prefs[k]=t.type==='checkbox'?t.checked:(t.type==='number'?clamp(+t.value||1,1,1000):t.value);savePrefs();drawGrid();drawRulers();fit()})});
 }
 function detailsModal(){
   const els=deck.slides.reduce((a,s)=>a+s.els.length,0),bytes=JSON.stringify(deck).length,n=k=>deck.slides.reduce((a,s)=>a+s.els.filter(e=>e.type===k).length,0);
@@ -234,7 +235,7 @@ function printModal(){openModal('Imprimir ou salvar em PDF','<p class="hint">Na 
   {mount:b=>b.addEventListener('click',ev=>{const x=ev.target.closest('[data-w]');if(!x)return;closeModal();printDeck(x.dataset.w==='1')})})}
 function aboutModal(){openModal('Sobre o Lousa TeX','<p class="hint">Editor de slides com LaTeX nativo e editável, renderizado pelo MathJax 3. Tudo fica salvo no seu navegador; nada é enviado a servidores.</p><dl class="keys"><dt>Versão</dt><dd>3</dd><dt>Modo</dt><dd>'+(standalone?'Arquivo local':'Página do Claude')+'</dd><dt>LaTeX</dt><dd>MathJax 3.2.2 com amsmath, amssymb, braket, cancel, mhchem</dd></dl>')}
 function cmdPalette(){
-  const all=[];(function walk(items,path){items.forEach(it=>{if(!it||it.sep)return;const p=path?path+' › '+it.label:it.label;if(it.sub)walk(typeof it.sub==='function'?it.sub():it.sub,p);else if(!it.disabled&&it.act)all.push({p:p,sc:it.sc||'',act:it.act})})})(
+  const all=[];(function walk(items,path){items.forEach(it=>{if(!it||it.sep)return;const lb=i18n(it.label),p=path?path+' › '+lb:lb;if(it.sub)walk(typeof it.sub==='function'?it.sub():it.sub,p);else if(!it.disabled&&it.act)all.push({p:p,sc:it.sc||'',act:it.act})})})(
     Object.keys(MENUS).map(k=>({label:{arquivo:'Arquivo',editar:'Editar',exibir:'Exibir',inserir:'Inserir',formatar:'Formatar',slide:'Slide',organizar:'Organizar',ferramentas:'Ferramentas',ajuda:'Ajuda'}[k],sub:MENUS[k]()})),'');
   const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();let hits=all,k=0;
   openModal('Pesquisar nos menus','<input class="cmdin" id="cmdQ" placeholder="Digite um comando: tabela, ignorar slide, preâmbulo…" autocomplete="off"><div class="cmdlist" id="cmdL"></div>',{mount:b=>{
@@ -297,6 +298,7 @@ const MENUS={
     {label:'Ajustar a',sub:()=>[{label:'Grade',checked:prefs.snapGrid,act:()=>{prefs.snapGrid=!prefs.snapGrid;savePrefs()}},{label:'Guias, página e objetos',checked:prefs.snapObjects,act:()=>{prefs.snapObjects=!prefs.snapObjects;savePrefs()}}]},{sep:1},
     {label:'Mostrar conteúdo fora do slide',checked:prefs.pasteboard,act:()=>{prefs.pasteboard=!prefs.pasteboard;savePrefs();updatePasteboard();toast(prefs.pasteboard?'O que passa da borda aparece esmaecido em volta do slide.':'O que passa da borda fica cortado, como na apresentação.')}},
     {label:'Aparência do programa',sub:()=>Object.keys(UI_THEMES).map(k=>({label:UI_THEMES[k],checked:(prefs.uiTheme||'auto')===k,act:()=>setUiTheme(k)}))},
+    {label:'Idioma (Language)',icon:'globe',sub:()=>langItems()},
     {label:'Fundo da área de trabalho',sub:()=>Object.keys(STAGE_BGS).map(k=>({label:STAGE_BGS[k],checked:(prefs.stageBg||'')===k,act:()=>setStageBg(k)}))},{sep:1},
     {label:'Zoom',sub:zoomItems},{label:'Tela cheia',act:()=>{const de=document.documentElement;if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else if(de.requestFullscreen)de.requestFullscreen().catch(()=>toast('Tela cheia não disponível aqui.'))}},{sep:1},
     {label:'Mestre',checked:masterMode,act:()=>masterMode?exitMaster():enterMaster()},

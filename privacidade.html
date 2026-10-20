@@ -16,11 +16,14 @@ p,li{color:var(--ink)}
 .sub{color:var(--muted);margin:0 0 28px}
 a{color:var(--accent)}
 code{font-size:.9em;background:color-mix(in srgb,var(--line) 60%,transparent);padding:1px 5px;border-radius:4px}
+nav.lang{text-align:right;font-size:14px;margin-bottom:12px}
 footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:15px}
 </style>
 </head>
 <body>
 <main>
+<nav class="lang" aria-label="Idioma / Language"><a href="#pt" data-l="pt">Português</a> · <a href="#en" data-l="en">English</a></nav>
+<div lang="pt-BR" data-l="pt">
 <h1>Política de privacidade</h1>
 <p class="sub">Lousa TeX · <a href="./">mh-pedro.github.io/lousa-tex</a> · atualizada em 19 de outubro de 2026</p>
 
@@ -29,7 +32,7 @@ footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:v
 <h2>Onde ficam as suas apresentações</h2>
 <ul>
 <li><b>No seu navegador</b>, salvas automaticamente no armazenamento local do próprio navegador. Só você, naquele navegador, tem acesso.</li>
-<li><b>No seu computador</b>, quando você salva um arquivo <code>.lousa.html</code> ou <code>.lousa</code>.</li>
+<li><b>No seu computador</b>, quando você salva um arquivo <code>.lousa</code>.</li>
 <li><b>No seu Google Drive</b>, se você escolher conectar a sua conta Google.</li>
 </ul>
 
@@ -48,6 +51,42 @@ footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:v
 <p>Pedro Henrique Morais · <a href="https://github.com/mh-pedro/lousa-tex">github.com/mh-pedro/lousa-tex</a></p>
 
 <footer>Código aberto em <a href="https://github.com/mh-pedro/lousa-tex">GitHub</a>.</footer>
+</div>
+<div lang="en" data-l="en" hidden>
+<h1>Privacy policy</h1>
+<p class="sub">Lousa TeX · <a href="./">mh-pedro.github.io/lousa-tex</a> · updated October 20, 2026</p>
+
+<p>Lousa TeX is a presentation editor that runs entirely in your browser. There is no Lousa TeX server receiving, storing or analyzing what you create.</p>
+
+<h2>Where your presentations live</h2>
+<ul>
+<li><b>In your browser</b>, saved automatically in the browser's own local storage. Only you, in that browser, can access them.</li>
+<li><b>On your computer</b>, when you save a <code>.lousa</code> file.</li>
+<li><b>In your Google Drive</b>, if you choose to connect your Google account.</li>
+</ul>
+
+<h2>Google Drive</h2>
+<p>When you connect Google Drive, Lousa TeX asks only for the <code>drive.file</code> permission. With it, the app can only see and change the files it created itself or that you opened with Google's file picker. The rest of your Drive is inaccessible to the app.</p>
+<p>Communication happens directly between your browser and Google. The access token stays only in the browser's memory while you use the app and is not sent anywhere else. You can disconnect at any time with File › Google Drive › Disconnect the account, or revoke access at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</p>
+<p>Use of information received from Google APIs follows the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+<h2>External services used by the page</h2>
+<p>To work, the page loads libraries from public content delivery networks (cdnjs, jsDelivr) and fonts from Google Fonts, and queries INSPIRE-HEP when you search for a bibliographic reference. These services receive the normal technical requests of any website (such as your IP address), but none of the content of your presentations.</p>
+
+<h2>Data collected</h2>
+<p>None. Lousa TeX uses no tracking cookies, analytics or advertising, and does not sell or share data.</p>
+
+<h2>Contact</h2>
+<p>Pedro Henrique Morais · <a href="https://github.com/mh-pedro/lousa-tex">github.com/mh-pedro/lousa-tex</a></p>
+
+<footer>Open source on <a href="https://github.com/mh-pedro/lousa-tex">GitHub</a>.</footer>
+</div>
 </main>
+<script>
+(function(){var l="pt";try{var p=JSON.parse(localStorage.getItem("lousa-tex-ui")||"{}").lang;l=(p==="pt"||p==="en")?p:(/^pt/i.test((navigator.languages&&navigator.languages[0])||navigator.language||"pt")?"pt":"en")}catch(e){}
+if(location.hash==="#en"||location.hash==="#pt")l=location.hash.slice(1);
+function show(x){document.querySelectorAll("div[data-l]").forEach(function(d){d.hidden=d.dataset.l!==x});document.documentElement.lang=x==="en"?"en":"pt-BR";document.title=x==="en"?"Privacy · Lousa TeX":"Privacidade · Lousa TeX"}
+show(l);document.querySelectorAll("nav.lang a").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();show(a.dataset.l)})})})();
+</script>
 </body>
 </html>

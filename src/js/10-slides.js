@@ -109,8 +109,8 @@ function openDeck(d,msg){
   $('#deckTitle').value=deck.title;applyPreamble();rerenderAll();renderToolbar();renderSide();updateCommentCount();resetHistory();saveDeckNow();addVersion('',true);
   closeModal();if(msg)toast(msg);
 }
-function newDeck(){openDeck({version:3,id:uid(),title:'Apresentação sem título',size:Object.assign({},deck.size),theme:Object.assign({},deck.theme),preamble:deck.preamble,slides:[makeSlide('title')]},'Nova apresentação criada.')}
-function copyDeck(src){const d=JSON.parse(JSON.stringify(src||deck));d.id=uid();d.title='Cópia de '+(d.title||'apresentação');d.comments=[];openDeck(d,'Cópia criada e aberta.')}
+function newDeck(){openDeck({version:3,id:uid(),title:i18n('Apresentação sem título'),size:Object.assign({},deck.size),theme:Object.assign({},deck.theme),preamble:deck.preamble,slides:[makeSlide('title')]},'Nova apresentação criada.')}
+function copyDeck(src){const d=JSON.parse(JSON.stringify(src||deck));d.id=uid();d.title=i18n('Cópia de')+' '+(d.title||i18n('apresentação'));d.comments=[];openDeck(d,'Cópia criada e aberta.')}
 function deleteDeckFromLib(id){lsDel(KEY_DECK+id);lsDel(KEY_VER+id);libSave(libList().filter(x=>x.id!==id))}
 function parseDeckText(text){let d;text=String(text||'');
   if(/^\s*</.test(text)){const m=/<script type="application\/json" id="lousa-deck">([\s\S]*?)<\/script>/.exec(text);if(!m)return null;text=m[1]}
@@ -170,7 +170,7 @@ function fnToPgf(e){const lines=String(e.fns||'').split('\n').map(l=>l.trim()).f
 function exportBeamer(){
   if(editId)exitEdit();
   const ratio=Math.abs(W/H-16/9)<.05?'169':Math.abs(W/H-16/10)<.05?'1610':Math.abs(W/H-4/3)<.05?'43':'169';
-  let s='% Exportado do Lousa TeX em '+new Date().toLocaleString('pt-BR')+'\n\\documentclass[aspectratio='+ratio+']{beamer}\n\\usepackage[brazil]{babel}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n'+
+  let s='% Exportado do Lousa TeX em '+new Date().toLocaleString('pt-BR')+'\n\\documentclass[aspectratio='+ratio+']{beamer}\n\\usepackage['+(LANG==='en'?'english':'brazil')+']{babel}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n'+
     '\\usepackage{amsmath,amssymb,braket,cancel,multirow,xcolor,hyperref'+((deck.packages||[]).length?','+deck.packages.join(','):'')+'}\n\\usetheme{default}\n\\setbeamertemplate{navigation symbols}{}\n'+(deck.theme.showNumbers?'\\setbeamertemplate{footline}[frame number]\n':'')+
     beamerTikzPreamble()+(deck.preamble?'% Preâmbulo do Lousa TeX\n'+deck.preamble+'\n':'')+'\\title{'+htmlToLatex(esc(deck.title))+'}\n\\date{}\n\n\\begin{document}\n';
   deck.slides.forEach((sl,i)=>{

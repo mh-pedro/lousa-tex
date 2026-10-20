@@ -19,7 +19,8 @@ function mixHex(a,b,t){const x=hexRgb(a),y=hexRgb(b);return '#'+x.map((v,i)=>Mat
 function toHex(css){css=String(css||'');if(/^#[0-9a-f]{3,8}$/i.test(css))return '#'+hexRgb(css).map(v=>v.toString(16).padStart(2,'0')).join('');
   const m=css.match(/\d+(\.\d+)?/g);if(!m||m.length<3)return '#000000';return '#'+m.slice(0,3).map(v=>Math.round(+v).toString(16).padStart(2,'0')).join('')}
 function lum(hex){const v=hexRgb(toHex(hex)).map(x=>{x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)});return .2126*v[0]+.7152*v[1]+.0722*v[2]}
-function fmtDate(t){try{return new Date(t).toLocaleString('pt-BR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return ''}}
+let LANG='pt';
+function fmtDate(t){try{return new Date(t).toLocaleString(LANG==='en'?'en-US':'pt-BR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return ''}}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function lsSet(k,v){localStorage.setItem(k,v)}
 function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}

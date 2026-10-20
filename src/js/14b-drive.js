@@ -98,7 +98,7 @@ async function driveSaveMenu(asCopy){
   if(!driveGuard())return;
   try{await driveToken(true);
     if(driveIdOf()&&!asCopy){await driveSave();toast('Salvo no Google Drive.');return}
-    if(asCopy){const d=JSON.parse(JSON.stringify(deck));d.id=uid();d.title='Cópia de '+deck.title;openDeck(d,'')}
+    if(asCopy){const d=JSON.parse(JSON.stringify(deck));d.id=uid();d.title=i18n('Cópia de')+' '+deck.title;openDeck(d,'')}
     await driveSaveNew();toast('Salvo no seu Google Drive, na pasta “Lousa TeX”. As próximas alterações vão para lá automaticamente.',6000);
   }catch(e){driveErr(e)}
 }
