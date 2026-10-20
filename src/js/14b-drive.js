@@ -60,7 +60,7 @@ driveHook=()=>{if(driveIdOf())driveAuto()};
 async function driveOpenId(fid){
   setSaveState('Abrindo do Drive…');
   const r=await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid)+'?alt=media');
-  const d=parseDeckText(await r.text());if(!d){setSaveState('Salvo neste navegador');toast('Esse arquivo não é uma apresentação do Lousa TeX.');return}
+  const d=parseDeckText(await r.text());if(!d){setSaveState(draftState());toast('Esse arquivo não é uma apresentação do Lousa TeX.');return}
   openDeck(d,'Aberta do Google Drive. As alterações são salvas lá automaticamente.');setDriveId(fid);setSaveState('Salvo no Drive');
 }
 function picker(view,title,cb){
@@ -92,7 +92,7 @@ async function driveSaveMenu(asCopy){
       await driveSave(true,f.id);toast('Salvo em "'+(f.name||'pasta do Drive')+'". As próximas alterações vão para lá automaticamente.')}catch(e){driveErr(e)}});
   }catch(e){driveErr(e)}
 }
-function driveUnlink(){setDriveId(null);setSaveState('Salvo neste navegador');toast('Esta apresentação não está mais ligada ao arquivo do Drive. O arquivo continua lá.')}
+function driveUnlink(){setDriveId(null);setSaveState(draftState());toast('Esta apresentação não está mais ligada ao arquivo do Drive. O arquivo continua lá.')}
 function driveDisconnect(){if(D.token&&window.google&&google.accounts)try{google.accounts.oauth2.revoke(D.token,()=>{})}catch(e){}D.token=null;D.exp=0;toast('Google Drive desconectado.')}
 function driveItems(){
   const linked=!!driveIdOf();

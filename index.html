@@ -485,7 +485,7 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 #overlay .axb.v{transform:translate(calc(10px * var(--inv)),-50%) scale(var(--inv));transform-origin:0 50%}
 
 /* ================= página inicial ================= */
-#landing{position:fixed;inset:0;z-index:200;overflow-y:auto;overflow-x:hidden;background:#121715;color:#e7ece8;font-family:'IBM Plex Sans',system-ui,sans-serif;padding-bottom:64px;-webkit-user-select:text;user-select:text;color-scheme:dark}
+#landing{position:fixed;inset:0;z-index:72;overflow-y:auto;overflow-x:hidden;background:#121715;color:#e7ece8;font-family:'IBM Plex Sans',system-ui,sans-serif;padding-bottom:64px;-webkit-user-select:text;user-select:text;color-scheme:dark}
 #landing a{color:#e8a866}#landing a:hover{color:#f5c897}
 .ld-bg{position:absolute;left:0;right:0;top:0;min-height:100%;height:1960px;pointer-events:none;color:#dfe7e2;opacity:.1;font-family:'STIX Two Text',serif;font-style:italic;z-index:0}
 .ld-m{position:absolute;white-space:nowrap}.ld-m sub,.ld-m sup{font-size:.6em}
@@ -559,7 +559,7 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 .gstart{display:flex;flex-direction:column;gap:10px;margin-top:14px}.gstart .btn{justify-content:center;min-height:44px}
 
 /* ================= tela de arquivos ================= */
-#home{position:fixed;inset:0;z-index:190;overflow-y:auto;background:var(--panel);color:var(--ink);font-family:var(--ui)}
+#home{position:fixed;inset:0;z-index:70;overflow-y:auto;background:var(--panel);color:var(--ink);font-family:var(--ui)}
 .hm-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 24px;background:var(--panel);border-bottom:1px solid var(--line)}
 .hm-brand{display:flex;align-items:center;gap:10px;border:0;background:none;color:var(--ink);font:600 21px/1 var(--brand);cursor:pointer;padding:4px;border-radius:10px}
 .hm-brand:hover{background:var(--hover)}
@@ -588,7 +588,8 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 .hm-meta div{flex:1;min-width:0}
 .hm-meta b{display:block;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hm-meta small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
-.hm-meta svg{flex:none}
+.hm-meta svg{flex:none;width:16px;height:16px;color:var(--muted)}
+.hm-del svg{width:18px;height:18px}
 .hm-del{position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:0;background:var(--raise);color:var(--muted);display:none;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .hm-card:hover .hm-del,.hm-del:focus-visible{display:grid}
 .hm-del:hover{color:var(--danger)}
@@ -817,7 +818,6 @@ window.MathJax={
   </div>
   <div class="hm-wrap">
     <section class="hm-sec" id="hmDriveSec"><h2>No seu Google Drive</h2><div id="hmDrive"></div></section>
-    <section class="hm-sec"><h2>Neste navegador</h2><div id="hmLocal"></div></section>
   </div>
 </section>
 
@@ -1183,10 +1183,15 @@ function addVersion(name,force){
 }
 let saveWarned=false;
 function setSaveState(t){$('#saveState').textContent=t}
+function draftState(){
+  if(typeof driveIdOf==='function'&&driveIdOf())return 'Salvando no Drive…';
+  if(typeof FS!=='undefined'&&FS.deckId===deck.id&&(FS.handle||FS.fromFile))return FS.canWrite?'Salvo em '+FS.name:'Aberto de '+FS.name+' · Ctrl+S salva';
+  return 'Não salvo · Ctrl+S salva no computador';
+}
 function saveDeckNow(){
   const data=JSON.stringify(deck);
   for(let tries=0;tries<2;tries++){
-    try{lsSet(KEY_DECK+deck.id,data);lsSet(KEY_CUR,deck.id);libTouch(deck);setSaveState('Salvo neste navegador');saveWarned=false;return true}
+    try{lsSet(KEY_DECK+deck.id,data);lsSet(KEY_CUR,deck.id);libTouch(deck);setSaveState(draftState());saveWarned=false;return true}
     catch(e){const l=verList(deck.id).filter(v=>v.name);try{lsSet(KEY_VER+deck.id,JSON.stringify(l))}catch(e2){lsDel(KEY_VER+deck.id)}}
   }
   setSaveState('Não salvo');
@@ -3727,7 +3732,7 @@ const exportItems=()=>[{label:'Lousa TeX (.lousa)',act:exportJSON},{label:'LaTeX
 const fitItems=()=>[['none','Não ajustar automaticamente'],['shrink','Reduzir o texto ao transbordar'],['grow','Redimensionar a forma para caber o texto']].map(f=>({label:f[1],checked:propOf('fit')===f[0],act:()=>setProp('fit',f[0],['box'])}));
 const MENUS={
   arquivo:()=>[
-    {label:'Nova apresentação',act:newDeck},{label:'Minhas apresentações',act:showHome},{label:'Abrir…',sc:MOD+'O',act:libraryModal},{label:'Abrir arquivo do computador…',act:openFileSmart},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
+    {label:'Nova apresentação',act:newDeck},{label:'Minhas apresentações',act:showHome},{label:'Abrir arquivo do computador…',sc:MOD+'O',act:openFileSmart},{label:'Importar slides…',act:()=>openImportModal(false)},{label:'Google Drive',sub:driveItems},{sep:1},
     {label:'Salvar no computador',sc:MOD+'S',act:()=>saveToFile(false)},{label:'Salvar como…',sc:MOD+'Shift+S',act:()=>saveToFile(true)},{label:'Instalar como aplicativo…',act:installApp},{sep:1},
     {label:'Fazer uma cópia',act:()=>copyDeck()},{label:'Renomear',act:()=>{const t=$('#deckTitle');t.focus();t.select()}},{sep:1},
     {label:'Histórico de versões',sub:[{label:'Ver histórico de versões',act:versionsModal},{label:'Nomear a versão atual',act:versionsModal}]},{sep:1},
@@ -4524,7 +4529,7 @@ driveHook=()=>{if(driveIdOf())driveAuto()};
 async function driveOpenId(fid){
   setSaveState('Abrindo do Drive…');
   const r=await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid)+'?alt=media');
-  const d=parseDeckText(await r.text());if(!d){setSaveState('Salvo neste navegador');toast('Esse arquivo não é uma apresentação do Lousa TeX.');return}
+  const d=parseDeckText(await r.text());if(!d){setSaveState(draftState());toast('Esse arquivo não é uma apresentação do Lousa TeX.');return}
   openDeck(d,'Aberta do Google Drive. As alterações são salvas lá automaticamente.');setDriveId(fid);setSaveState('Salvo no Drive');
 }
 function picker(view,title,cb){
@@ -4556,7 +4561,7 @@ async function driveSaveMenu(asCopy){
       await driveSave(true,f.id);toast('Salvo em "'+(f.name||'pasta do Drive')+'". As próximas alterações vão para lá automaticamente.')}catch(e){driveErr(e)}});
   }catch(e){driveErr(e)}
 }
-function driveUnlink(){setDriveId(null);setSaveState('Salvo neste navegador');toast('Esta apresentação não está mais ligada ao arquivo do Drive. O arquivo continua lá.')}
+function driveUnlink(){setDriveId(null);setSaveState(draftState());toast('Esta apresentação não está mais ligada ao arquivo do Drive. O arquivo continua lá.')}
 function driveDisconnect(){if(D.token&&window.google&&google.accounts)try{google.accounts.oauth2.revoke(D.token,()=>{})}catch(e){}D.token=null;D.exp=0;toast('Google Drive desconectado.')}
 function driveItems(){
   const linked=!!driveIdOf();
@@ -5208,17 +5213,18 @@ async function loadDriveFiles(){
 }
 function driveCards(q){
   if(!driveHosted()||!driveReady())return '<div class="hm-empty">O Google Drive ainda não está configurado neste endereço.</div>';
-  if(!driveOn())return '<div class="hm-empty">Entre com a sua conta Google para ver as apresentações salvas no seu Drive.<button type="button" class="btn primary" data-hm="login">Entrar com Google</button></div>';
+  if(!driveOn())return '<div class="hm-empty">Entre com a sua conta Google para ver e salvar apresentações no seu Drive. Sem conta, salve no computador com Ctrl+S e abra depois por “Abrir do computador” ou com duplo clique no arquivo.<button type="button" class="btn primary" data-hm="login">Entrar com Google</button></div>';
   if(driveFiles==null)return '<div class="hm-empty">'+(driveFilesErr?'Não consegui listar os arquivos do Drive ('+esc(driveFilesErr)+').':'Carregando arquivos do Drive…')+'</div>';
   const local={};Object.entries(driveByLocal()).forEach(([lid,fid])=>{local[fid]=lid});
   const list=driveFiles.filter(f=>!q||(f.name||'').toLowerCase().includes(q));
   if(!list.length)return '<div class="hm-empty">'+(q?'Nenhum arquivo do Drive com esse nome.':'Você ainda não salvou nenhuma apresentação no Drive. Crie uma nova acima: ela é salva lá automaticamente.')+'</div>';
   return '<div class="hm-grid">'+list.map(f=>'<div class="hm-card" role="button" tabindex="0" data-drive="'+esc(f.id)+'">'+(local[f.id]?thumbHTML(local[f.id]):thumbHTML(''))+
-    '<div class="hm-meta">'+MI('cloud')+'<div><b>'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'</b><small>Editada em '+fmtDate(f.modifiedTime)+'</small></div></div></div>').join('')+'</div>';
+    '<div class="hm-meta">'+MI('cloud')+'<div><b>'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'</b><small>Editada em '+fmtDate(f.modifiedTime)+'</small></div></div>'+
+    '<button type="button" class="hm-del" data-ddel="'+esc(f.id)+'" data-name="'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'" aria-label="Mover para a lixeira do Drive" title="Mover para a lixeira do Drive">'+MI('trash')+'</button></div>').join('')+'</div>';
 }
 function renderHome(){
   const q=($('#hmQ').value||'').trim().toLowerCase();
-  homeAccount();$('#hmDrive').innerHTML=driveCards(q);$('#hmLocal').innerHTML=localCards(q);
+  homeAccount();$('#hmDrive').innerHTML=driveCards(q);
   requestAnimationFrame(()=>fitThumbs(home));
 }
 function setRoute(h){try{if(location.hash!==h)history.replaceState(null,'',location.pathname+location.search+h)}catch(e){}}
@@ -5239,6 +5245,7 @@ async function homeNew(sample){
   if(d){d.id=uid();openDeck(d,'Exemplo aberto. Edite à vontade.')}else newDeck();
   hideHome();
   if(driveOn()){try{await driveSave(true);toast('Nova apresentação criada no seu Google Drive. As alterações são salvas lá automaticamente.')}catch(e){driveErr(e)}}
+  else toast('Sem conta, use Ctrl+S para salvar a apresentação num arquivo do computador.',6000);
 }
 function openLocalFromHome(id){
   if(id!==deck.id){const d=loadDeckById(id);if(!d){toast('Não encontrei essa apresentação.');return}snapThumb();openDeck(d,'')}
@@ -5249,7 +5256,15 @@ async function openDriveFromHome(fid){
   try{snapThumb();await driveOpenId(fid);hideHome()}
   catch(e){if(lid){openLocalFromHome(lid[0]);toast('Abri a cópia deste navegador: não consegui ler o arquivo do Drive.')}else driveErr(e)}
 }
+async function trashDriveFile(fid,name){
+  try{await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({trashed:true})});
+    const m=driveMap();Object.keys(m).forEach(l=>{if(m[l]===fid){if(l!==deck.id){deleteDeckFromLib(l);lsDel(THUMB_KEY+l)}delete m[l]}});try{lsSet('lousa-drive-map',JSON.stringify(m))}catch(e){}
+    if(driveFiles)driveFiles=driveFiles.filter(f=>f.id!==fid);renderHome();toast('“'+name+'” foi para a lixeira do Google Drive. Dá para recuperar por lá em até 30 dias.')}
+  catch(e){driveErr(e)}
+}
 home.addEventListener('click',ev=>{
+  const dd=ev.target.closest('[data-ddel]');
+  if(dd){ev.stopPropagation();const fid=dd.dataset.ddel,name=dd.dataset.name;confirmBox('Excluir do Google Drive','Mover “'+name+'” para a lixeira do seu Google Drive?','Mover para a lixeira',()=>trashDriveFile(fid,name));return}
   const del=ev.target.closest('[data-del]');
   if(del){ev.stopPropagation();const id=del.dataset.del,it=libList().find(x=>x.id===id);
     confirmBox('Excluir apresentação','Excluir “'+((it&&it.title)||'Sem título')+'” deste navegador? '+(driveMap()[id]?'A cópia no Google Drive continua lá.':'Essa ação não pode ser desfeita.'),'Excluir',()=>{
@@ -5288,7 +5303,7 @@ document.addEventListener('keydown',ev=>{
   if(alt&&(k==='/'||ev.code==='Slash')&&!mod){ev.preventDefault();cmdPalette();return}
   if(mod&&(k==='/'||ev.code==='Slash')){ev.preventDefault();openSide('keys');return}
   if(mod&&lk==='s'){ev.preventDefault();commitSoon.flush();saveSoon.flush();if(driveIdOf()&&driveOn()){driveSave().then(()=>toast('Salvo no Google Drive.')).catch(driveErr)}else if(standalone)saveToFile(ev.shiftKey);else toast('Salvo automaticamente neste navegador.');return}
-  if(mod&&lk==='o'){ev.preventDefault();libraryModal();return}
+  if(mod&&lk==='o'){ev.preventDefault();openFileSmart();return}
   if(mod&&lk==='p'&&!alt){ev.preventDefault();if(standalone)printModal();else toast('Imprimir e PDF estão disponíveis na versão local.');return}
   if(mod&&alt&&ev.shiftKey&&lk==='h'){ev.preventDefault();versionsModal();return}
   if(mod&&(lk==='h'||(lk==='f'&&!typing))){ev.preventDefault();openSide('find',true);return}

@@ -53,10 +53,15 @@ function addVersion(name,force){
 }
 let saveWarned=false;
 function setSaveState(t){$('#saveState').textContent=t}
+function draftState(){
+  if(typeof driveIdOf==='function'&&driveIdOf())return 'Salvando no Drive…';
+  if(typeof FS!=='undefined'&&FS.deckId===deck.id&&(FS.handle||FS.fromFile))return FS.canWrite?'Salvo em '+FS.name:'Aberto de '+FS.name+' · Ctrl+S salva';
+  return 'Não salvo · Ctrl+S salva no computador';
+}
 function saveDeckNow(){
   const data=JSON.stringify(deck);
   for(let tries=0;tries<2;tries++){
-    try{lsSet(KEY_DECK+deck.id,data);lsSet(KEY_CUR,deck.id);libTouch(deck);setSaveState('Salvo neste navegador');saveWarned=false;return true}
+    try{lsSet(KEY_DECK+deck.id,data);lsSet(KEY_CUR,deck.id);libTouch(deck);setSaveState(draftState());saveWarned=false;return true}
     catch(e){const l=verList(deck.id).filter(v=>v.name);try{lsSet(KEY_VER+deck.id,JSON.stringify(l))}catch(e2){lsDel(KEY_VER+deck.id)}}
   }
   setSaveState('Não salvo');

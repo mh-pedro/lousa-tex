@@ -470,7 +470,7 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 #overlay .axb.v{transform:translate(calc(10px * var(--inv)),-50%) scale(var(--inv));transform-origin:0 50%}
 
 /* ================= página inicial ================= */
-#landing{position:fixed;inset:0;z-index:200;overflow-y:auto;overflow-x:hidden;background:#121715;color:#e7ece8;font-family:'IBM Plex Sans',system-ui,sans-serif;padding-bottom:64px;-webkit-user-select:text;user-select:text;color-scheme:dark}
+#landing{position:fixed;inset:0;z-index:72;overflow-y:auto;overflow-x:hidden;background:#121715;color:#e7ece8;font-family:'IBM Plex Sans',system-ui,sans-serif;padding-bottom:64px;-webkit-user-select:text;user-select:text;color-scheme:dark}
 #landing a{color:#e8a866}#landing a:hover{color:#f5c897}
 .ld-bg{position:absolute;left:0;right:0;top:0;min-height:100%;height:1960px;pointer-events:none;color:#dfe7e2;opacity:.1;font-family:'STIX Two Text',serif;font-style:italic;z-index:0}
 .ld-m{position:absolute;white-space:nowrap}.ld-m sub,.ld-m sup{font-size:.6em}
@@ -544,7 +544,7 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 .gstart{display:flex;flex-direction:column;gap:10px;margin-top:14px}.gstart .btn{justify-content:center;min-height:44px}
 
 /* ================= tela de arquivos ================= */
-#home{position:fixed;inset:0;z-index:190;overflow-y:auto;background:var(--panel);color:var(--ink);font-family:var(--ui)}
+#home{position:fixed;inset:0;z-index:70;overflow-y:auto;background:var(--panel);color:var(--ink);font-family:var(--ui)}
 .hm-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 24px;background:var(--panel);border-bottom:1px solid var(--line)}
 .hm-brand{display:flex;align-items:center;gap:10px;border:0;background:none;color:var(--ink);font:600 21px/1 var(--brand);cursor:pointer;padding:4px;border-radius:10px}
 .hm-brand:hover{background:var(--hover)}
@@ -573,7 +573,8 @@ body.pb #frame::after{content:"";position:absolute;inset:0;pointer-events:none;z
 .hm-meta div{flex:1;min-width:0}
 .hm-meta b{display:block;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hm-meta small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
-.hm-meta svg{flex:none}
+.hm-meta svg{flex:none;width:16px;height:16px;color:var(--muted)}
+.hm-del svg{width:18px;height:18px}
 .hm-del{position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:0;background:var(--raise);color:var(--muted);display:none;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .hm-card:hover .hm-del,.hm-del:focus-visible{display:grid}
 .hm-del:hover{color:var(--danger)}

@@ -36,17 +36,18 @@ async function loadDriveFiles(){
 }
 function driveCards(q){
   if(!driveHosted()||!driveReady())return '<div class="hm-empty">O Google Drive ainda não está configurado neste endereço.</div>';
-  if(!driveOn())return '<div class="hm-empty">Entre com a sua conta Google para ver as apresentações salvas no seu Drive.<button type="button" class="btn primary" data-hm="login">Entrar com Google</button></div>';
+  if(!driveOn())return '<div class="hm-empty">Entre com a sua conta Google para ver e salvar apresentações no seu Drive. Sem conta, salve no computador com Ctrl+S e abra depois por “Abrir do computador” ou com duplo clique no arquivo.<button type="button" class="btn primary" data-hm="login">Entrar com Google</button></div>';
   if(driveFiles==null)return '<div class="hm-empty">'+(driveFilesErr?'Não consegui listar os arquivos do Drive ('+esc(driveFilesErr)+').':'Carregando arquivos do Drive…')+'</div>';
   const local={};Object.entries(driveByLocal()).forEach(([lid,fid])=>{local[fid]=lid});
   const list=driveFiles.filter(f=>!q||(f.name||'').toLowerCase().includes(q));
   if(!list.length)return '<div class="hm-empty">'+(q?'Nenhum arquivo do Drive com esse nome.':'Você ainda não salvou nenhuma apresentação no Drive. Crie uma nova acima: ela é salva lá automaticamente.')+'</div>';
   return '<div class="hm-grid">'+list.map(f=>'<div class="hm-card" role="button" tabindex="0" data-drive="'+esc(f.id)+'">'+(local[f.id]?thumbHTML(local[f.id]):thumbHTML(''))+
-    '<div class="hm-meta">'+MI('cloud')+'<div><b>'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'</b><small>Editada em '+fmtDate(f.modifiedTime)+'</small></div></div></div>').join('')+'</div>';
+    '<div class="hm-meta">'+MI('cloud')+'<div><b>'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'</b><small>Editada em '+fmtDate(f.modifiedTime)+'</small></div></div>'+
+    '<button type="button" class="hm-del" data-ddel="'+esc(f.id)+'" data-name="'+esc((f.name||'Sem título').replace(/\.lousa(\.json)?$/,''))+'" aria-label="Mover para a lixeira do Drive" title="Mover para a lixeira do Drive">'+MI('trash')+'</button></div>').join('')+'</div>';
 }
 function renderHome(){
   const q=($('#hmQ').value||'').trim().toLowerCase();
-  homeAccount();$('#hmDrive').innerHTML=driveCards(q);$('#hmLocal').innerHTML=localCards(q);
+  homeAccount();$('#hmDrive').innerHTML=driveCards(q);
   requestAnimationFrame(()=>fitThumbs(home));
 }
 function setRoute(h){try{if(location.hash!==h)history.replaceState(null,'',location.pathname+location.search+h)}catch(e){}}
@@ -67,6 +68,7 @@ async function homeNew(sample){
   if(d){d.id=uid();openDeck(d,'Exemplo aberto. Edite à vontade.')}else newDeck();
   hideHome();
   if(driveOn()){try{await driveSave(true);toast('Nova apresentação criada no seu Google Drive. As alterações são salvas lá automaticamente.')}catch(e){driveErr(e)}}
+  else toast('Sem conta, use Ctrl+S para salvar a apresentação num arquivo do computador.',6000);
 }
 function openLocalFromHome(id){
   if(id!==deck.id){const d=loadDeckById(id);if(!d){toast('Não encontrei essa apresentação.');return}snapThumb();openDeck(d,'')}
@@ -77,7 +79,15 @@ async function openDriveFromHome(fid){
   try{snapThumb();await driveOpenId(fid);hideHome()}
   catch(e){if(lid){openLocalFromHome(lid[0]);toast('Abri a cópia deste navegador: não consegui ler o arquivo do Drive.')}else driveErr(e)}
 }
+async function trashDriveFile(fid,name){
+  try{await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fid),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({trashed:true})});
+    const m=driveMap();Object.keys(m).forEach(l=>{if(m[l]===fid){if(l!==deck.id){deleteDeckFromLib(l);lsDel(THUMB_KEY+l)}delete m[l]}});try{lsSet('lousa-drive-map',JSON.stringify(m))}catch(e){}
+    if(driveFiles)driveFiles=driveFiles.filter(f=>f.id!==fid);renderHome();toast('“'+name+'” foi para a lixeira do Google Drive. Dá para recuperar por lá em até 30 dias.')}
+  catch(e){driveErr(e)}
+}
 home.addEventListener('click',ev=>{
+  const dd=ev.target.closest('[data-ddel]');
+  if(dd){ev.stopPropagation();const fid=dd.dataset.ddel,name=dd.dataset.name;confirmBox('Excluir do Google Drive','Mover “'+name+'” para a lixeira do seu Google Drive?','Mover para a lixeira',()=>trashDriveFile(fid,name));return}
   const del=ev.target.closest('[data-del]');
   if(del){ev.stopPropagation();const id=del.dataset.del,it=libList().find(x=>x.id===id);
     confirmBox('Excluir apresentação','Excluir “'+((it&&it.title)||'Sem título')+'” deste navegador? '+(driveMap()[id]?'A cópia no Google Drive continua lá.':'Essa ação não pode ser desfeita.'),'Excluir',()=>{
