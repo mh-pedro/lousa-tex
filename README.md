@@ -368,3 +368,7 @@ Faça commit do `src/` e do `index.html` juntos. O GitHub Pages publica o `main`
 - [TikZJax](https://github.com/drgrice1/tikzjax): TikZ no navegador
 - [PptxGenJS](https://gitbrent.github.io/PptxGenJS/): exportação para PowerPoint
 - APIs do Google (Identity Services, Picker e Drive): integração com o Drive
+
+### Figuras da página inicial
+
+Os desenhos e equações da página inicial são gerados de verdade com TikZ e LaTeX a partir de `src/art/` (`*.tex` para os diagramas TikZ e `equacoes.tex` para as fórmulas). Depois de editar, rode `node tools/gerar-arte.mjs <página de teste> <TikZJax local>` para recompilar os `.svg` e o `fontes.css`, e em seguida `python3 build.py`.

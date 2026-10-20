@@ -1,0 +1,13 @@
+% bibliotecas: arrows.meta
+\begin{tikzpicture}[>=Stealth, line width=0.8pt]
+  \draw[->] (-2.7,0) -- (2.7,0) node[right] {$x$};
+  \draw[->] (0,-2.6) -- (0,2.8) node[above] {$ct$};
+  \draw (-2,-2) -- (2,2);
+  \draw (2,-2) -- (-2,2);
+  \draw (0,2) ellipse (2 and 0.45);
+  \draw (-2,-2) arc (180:360:2 and 0.45);
+  \draw[dashed] (2,-2) arc (0:180:2 and 0.45);
+  \fill (0,0) circle (1.6pt);
+  \node at (1.25,1.25) [right] {futuro};
+  \node at (1.25,-1.25) [right] {passado};
+\end{tikzpicture}

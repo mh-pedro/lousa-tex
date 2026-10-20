@@ -1,0 +1,13 @@
+% bibliotecas: arrows.meta
+\begin{tikzpicture}[>=Stealth, line width=0.8pt]
+  \draw (0,0) -- (5,0) -- (5,2.887) -- cycle;
+  \draw (1.1,0) arc (0:30:1.1);
+  \node at (1.45,0.32) {$\theta$};
+  \begin{scope}[shift={(2.6,1.501)}, rotate=30]
+    \draw (-0.55,0) rectangle (0.55,0.75);
+    \coordinate (C) at (0,0.375);
+    \draw[->, thick] (C) -- (0,1.75) node[above] {$\vec N$};
+    \draw[->, thick] (0.55,0.2) -- (1.7,0.2) node[right] {$\vec f$};
+  \end{scope}
+  \draw[->, thick] (C) -- ++(0,-1.8) node[below] {$m\vec g$};
+\end{tikzpicture}

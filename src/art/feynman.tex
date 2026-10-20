@@ -1,0 +1,16 @@
+% pacotes: tikz-feynman
+\begin{tikzpicture}
+\begin{feynman}
+  \vertex (a) at (0,0) {\(e^-\)};
+  \vertex (b) at (0,-2.4) {\(e^+\)};
+  \vertex (v1) at (1.6,-1.2);
+  \vertex (v2) at (3.6,-1.2);
+  \vertex (c) at (5.2,0) {\(\mu^-\)};
+  \vertex (d) at (5.2,-2.4) {\(\mu^+\)};
+  \diagram* {
+    (a) -- [fermion] (v1) -- [fermion] (b),
+    (v1) -- [photon, edge label=\(\gamma\)] (v2),
+    (c) -- [anti fermion] (v2) -- [anti fermion] (d),
+  };
+\end{feynman}
+\end{tikzpicture}

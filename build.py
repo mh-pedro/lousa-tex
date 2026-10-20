@@ -2,6 +2,14 @@ import glob,sys,os
 ROOT=os.path.dirname(os.path.abspath(__file__))
 css=open(os.path.join(ROOT,'src/style.css')).read()
 body=open(os.path.join(ROOT,'src/body.html')).read()
+ART=os.path.join(ROOT,'src','art')
+def _art(m):
+    f=os.path.join(ART,m.group(1)+'.svg')
+    return open(f).read() if os.path.exists(f) else ''
+import re as _re
+body=_re.sub(r'<!--ART:([\w-]+)-->',_art,body)
+if os.path.exists(os.path.join(ART,'fontes.css')):
+    css=css+'\n'+open(os.path.join(ART,'fontes.css')).read()
 js='\n'.join(open(f).read() for f in sorted(glob.glob(os.path.join(ROOT,'src/js/*.js'))))
 FONTS='https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,700;1,400;1,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=STIX+Two+Text:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&family=Source+Serif+4:ital,wght@0,400;0,700;1,400;1,700&display=swap'
 MJ='https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg-full.js'

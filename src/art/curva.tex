@@ -1,0 +1,9 @@
+% bibliotecas: arrows.meta
+\begin{tikzpicture}[>=Stealth, line width=0.8pt]
+  \draw[->] (0,0) -- (4.6,0) node[right] {$p$};
+  \draw[->] (0,0) -- (0,3.8) node[above] {$E$};
+  \draw[domain=0:3.4, samples=60] plot (\x, {sqrt(\x*\x + 0.36)});
+  \draw[dashed, domain=0:2.45, samples=60] plot (\x, {sqrt(\x*\x + 0.36 + 0.25*\x*\x*\x)});
+  \node[right] at (3.45,3.45) {$E^2 = p^2 + m^2$};
+  \node[left] at (2.35,3.3) {$+\,\xi\,p^3/M_{\mathrm{Pl}}$};
+\end{tikzpicture}
