@@ -37,7 +37,7 @@ As fórmulas não viram imagem: continuam texto LaTeX que você pode editar a qu
 | **Diagramas** | TikZ compilado no próprio navegador, com modelos de Feynman (tikz-feynman), pgfplots, tikz-cd e 3D |
 | **Ciência** | Gráficos de funções com legendas em LaTeX, citações do INSPIRE-HEP ou BibTeX, numeração automática de equações, blocos no estilo Beamer, sumário automático |
 | **Apresentação** | Tela cheia, visualização do apresentador com cronômetro e anotações, laser com rastro, caneta, marca-texto, texto sobre o slide, lupa, câmera, gravação em vídeo |
-| **Exportação** | LaTeX Beamer, PowerPoint (.pptx), PDF pela impressão, arquivo próprio `.lousa.html` (abre com duplo clique) |
+| **Exportação** | LaTeX Beamer, PowerPoint (.pptx), PDF pela impressão, arquivo próprio `.lousa` |
 | **Armazenamento** | Salvamento automático no navegador, histórico de versões e Google Drive (opcional) |
 
 ---
@@ -208,23 +208,23 @@ As anotações feitas durante a apresentação podem ser salvas nos slides ao te
 | Ação | Onde |
 |---|---|
 | Salvar no navegador | Automático, enquanto você edita |
-| Salvar no computador | **Arquivo › Salvar no computador** (`Ctrl+S`): gera `nome.lousa.html`, que abre com duplo clique |
+| Salvar no computador | **Arquivo › Salvar no computador** (`Ctrl+S`): gera `nome.lousa` |
 | Salvar como | **Arquivo › Salvar como…** (`Ctrl+Shift+S`) |
-| Abrir um arquivo salvo | Duplo clique no `.lousa.html`, ou **Arquivo › Abrir arquivo do computador…** (aceita `.lousa.html`, `.lousa` e `.lousa.json`) |
+| Abrir um arquivo salvo | **Arquivo › Abrir arquivo do computador…** (`Ctrl+O`) |
 | Abrir outra apresentação | **Arquivo › Abrir** (`Ctrl+O`) |
 | Histórico de versões | **Arquivo › Histórico de versões** (`Ctrl+Alt+Shift+H`) |
 | LaTeX Beamer | **Arquivo › Fazer download › LaTeX Beamer (.tex)** (equações, TikZ, citações e pacotes incluídos) |
 | PowerPoint | **Arquivo › Fazer download › PowerPoint (.pptx)** |
 | PDF | **Arquivo › Imprimir** (`Ctrl+P`) e escolha "Salvar como PDF" |
 
-### Abrir com duplo clique
+### Formato .lousa
 
-`Ctrl+S` salva a apresentação como **`nome.lousa.html`**. Como todo sistema abre arquivos `.html` no navegador, um **duplo clique** nesse arquivo abre a apresentação direto no Lousa TeX, pronta para continuar editando. Funciona no Windows, no Mac e no Linux, em qualquer navegador.
+As apresentações salvas no computador usam o formato **`.lousa`**: um arquivo só de dados (texto, LaTeX, imagens e diagramas), que não executa nada. Para abrir, use **Arquivo › Abrir arquivo do computador…** (`Ctrl+O`) ou **Abrir do computador** na tela Minhas apresentações.
 
-- O arquivo guarda a apresentação inteira (textos, LaTeX, imagens, diagramas). Ao ser aberto, ele carrega a versão mais recente do Lousa TeX pela internet.
-- No **Chrome** e no **Edge**, depois do primeiro `Ctrl+S` as mudanças vão sozinhas para o mesmo arquivo. Na primeira vez, escolha o próprio arquivo para substituí-lo.
-- No **Firefox** e no **Safari**, `Ctrl+S` baixa uma cópia atualizada do arquivo.
-- Também dá para mandar o arquivo por e-mail: quem receber abre com duplo clique, sem instalar nada.
+- No **Chrome** e no **Edge**, depois do primeiro `Ctrl+S` as mudanças vão sozinhas para o mesmo arquivo.
+- No **Firefox** e no **Safari**, `Ctrl+S` baixa uma cópia atualizada.
+- Com o Lousa TeX instalado como aplicativo (Chrome ou Edge no Windows e no Mac), o duplo clique num `.lousa` abre direto no programa.
+- Arquivos antigos `.lousa.html` e `.lousa.json` continuam abrindo pelo menu; salve de novo para convertê-los.
 
 > ⚠️ **Importante:** as apresentações ficam guardadas **no navegador** onde foram criadas. Se você limpar os dados do navegador ou trocar de computador, elas não vão junto. Salve no computador (`Ctrl+S`) ou use o Google Drive.
 

@@ -108,4 +108,4 @@ planSig=planSignature();
 setupLaunchQueue();
 if(standalone&&!window.__LOUSA_FROM_FILE&&!new URLSearchParams(location.search).get('state')){const h=location.hash;if(h==='#arquivos')showHome();else if(h!=='#editor'){if(prefs.homeSeen)showHome();else showLanding()}}
 $('#top .mark').style.cursor='pointer';$('#top .mark').title='Minhas apresentações';$('#top .mark').addEventListener('click',showHome);
-if(window.__LOUSA_FROM_FILE){FS.fromFile=true;FS.deckId=deck.id;FS.name=decodeURIComponent(location.pathname.split('/').pop()||'');setSaveState('Aberto de '+FS.name);toast('Apresentação aberta do arquivo. No primeiro Ctrl+S, escolha este mesmo arquivo para substituir; depois as mudanças vão direto para ele.',7000)}
+if(window.__LOUSA_FROM_FILE){FS.fromFile=true;FS.deckId=deck.id;FS.name=decodeURIComponent(location.pathname.split('/').pop()||'');setSaveState('Aberto de '+FS.name);toast('Arquivo antigo (.lousa.html) aberto. Use Ctrl+S para salvar no formato atual, .lousa.',7000)}

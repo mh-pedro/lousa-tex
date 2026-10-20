@@ -36,7 +36,7 @@ async function loadDriveFiles(){
 }
 function driveCards(q){
   if(!driveHosted()||!driveReady())return '<div class="hm-empty">O Google Drive ainda não está configurado neste endereço.</div>';
-  if(!driveOn())return '<div class="hm-empty">Entre com a sua conta Google para ver e salvar apresentações no seu Drive. Sem conta, salve no computador com Ctrl+S e abra depois por “Abrir do computador” ou com duplo clique no arquivo.<button type="button" class="btn primary" data-hm="login">Entrar com Google</button></div>';
+  if(!driveOn())return '<div class="hm-empty">Entre com a sua conta Google para ver e salvar apresentações no seu Drive. Sem conta, salve no computador com Ctrl+S (arquivo .lousa) e abra depois por “Abrir do computador”.<button type="button" class="btn primary" data-hm="login">Entrar com Google</button></div>';
   if(driveFiles==null)return '<div class="hm-empty">'+(driveFilesErr?'Não consegui listar os arquivos do Drive ('+esc(driveFilesErr)+').':'Carregando arquivos do Drive…')+'</div>';
   const local={};Object.entries(driveByLocal()).forEach(([lid,fid])=>{local[fid]=lid});
   const list=driveFiles.filter(f=>!q||(f.name||'').toLowerCase().includes(q));

@@ -6,21 +6,9 @@ const FS={handle:null,deckId:null,name:'',canWrite:false,busy:null};
 const LOUSA_EXT='.lousa';
 const fsApi=()=>standalone&&window.isSecureContext&&'showSaveFilePicker' in window&&'showOpenFilePicker' in window;
 const LOUSA_TYPES=[{description:'Apresentação do Lousa TeX',accept:{'application/json':['.lousa','.json'],'text/html':['.html']}}];
-const HTML_TYPES=[{description:'Apresentação do Lousa TeX (abre no navegador)',accept:{'text/html':['.html']}}];
 const SITE_URL=()=>{const b=document.baseURI||location.href;return /^https?:/.test(b)?b.split(/[?#]/)[0].replace(/[^/]*$/,''):'https://mh-pedro.github.io/lousa-tex/'};
-/* arquivo .lousa.html: abre no navegador com duplo clique, em qualquer sistema, e carrega o Lousa TeX com a apresentação */
-function deckFileHtml(){
-  const site=SITE_URL(),title=esc(deck.title||'Apresentação');
-  const json=JSON.stringify(deck).replace(/</g,'\\u003c');
-  return '<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<meta name="generator" content="Lousa TeX">\n<title>'+title+' · Lousa TeX</title>\n</head>\n<body style="margin:0;display:grid;place-items:center;height:100vh;font:16px system-ui,sans-serif;color:#333;background:#f1f3f4">\n'+
-  '<div id="lousa-msg" style="max-width:520px;text-align:center;padding:24px"><p style="font-size:22px;margin:0 0 8px"><b>'+title+'</b></p><p>Abrindo no Lousa TeX…</p></div>\n'+
-  '<script type="application/json" id="lousa-deck">'+json+'<\/script>\n'+
-  '<script>\n(function(){\n  var SITE='+JSON.stringify(site)+';\n  var deck=JSON.parse(document.getElementById("lousa-deck").textContent);\n'+
-  '  fetch(SITE+"index.html",{cache:"no-cache"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}).then(function(h){\n'+
-  '    window.__LOUSA_DECK=deck;\n    h=h.replace("<head>","<head>\\n<base href=\\""+SITE+"\\">\\n<script>window.__LOUSA_FROM_FILE=true<\\/script>");\n'+
-  '    document.open();document.write(h);document.close();\n'+
-  '  }).catch(function(e){document.getElementById("lousa-msg").innerHTML="<p><b>Não consegui carregar o Lousa TeX.</b></p><p>Verifique a conexão com a internet e abra o arquivo de novo. Se preferir, acesse <a href=\\""+SITE+"\\">"+SITE+"</a> e use Arquivo › Abrir arquivo do computador.</p>"});\n})();\n<\/script>\n</body>\n</html>\n';
-}
+const SAVE_TYPES=[{description:'Apresentação do Lousa TeX',accept:{'application/json':['.lousa']}}];
+const isOldHtml=h=>/\.html?$/i.test((h&&h.name)||'');
 const fileLinked=()=>!!(FS.handle&&FS.deckId===deck.id);
 function fileStatus(){if(FS.fromFile&&!FS.handle){setSaveState('Aberto de '+FS.name);return}if(fileLinked())setSaveState((FS.canWrite?'Salvo em ':'Aberto de ')+FS.name)}
 async function filePerm(h,ask){
@@ -34,20 +22,20 @@ async function openFromHandle(h){
   }catch(e){toast('Não consegui abrir o arquivo: '+(e.message||e))}
 }
 async function writeFile(h){
-  const data=/\.html?$/i.test(h.name||'')?deckFileHtml():JSON.stringify(deck);const w=await h.createWritable();await w.write(data);await w.close();
+  const data=JSON.stringify(deck);const w=await h.createWritable();await w.write(data);await w.close();
 }
 async function saveToFile(saveAs){
   if(editId)exitEdit();commitSoon.flush();
-  const nm=(FS.fromFile&&FS.name)||slug(deck.title)+'.lousa.html';
-  if(!fsApi()){saveFile(nm,deckFileHtml(),'text/html');return}
-  let h=!saveAs&&fileLinked()?FS.handle:null;
-  if(!h){try{h=await window.showSaveFilePicker({id:'lousa-arquivos',suggestedName:nm,types:HTML_TYPES})}catch(e){return}}
+  const nm=(FS.name?FS.name.replace(/\.lousa\.html?$|\.html?$|\.lousa\.json$|\.json$/i,''):slug(deck.title)).replace(/\.lousa$/i,'')+'.lousa';
+  if(!fsApi()){saveFile(nm,JSON.stringify(deck),'application/json');return}
+  let h=!saveAs&&fileLinked()&&!isOldHtml(FS.handle)?FS.handle:null;
+  if(!h){try{h=await window.showSaveFilePicker({id:'lousa-arquivos',suggestedName:nm,types:SAVE_TYPES})}catch(e){return}}
   if(!await filePerm(h,true)){toast('Sem permissão para gravar nesse arquivo. Use Arquivo › Salvar como…');return}
-  try{await writeFile(h);FS.handle=h;FS.deckId=deck.id;FS.name=h.name;FS.canWrite=true;fileStatus();FS.fromFile=false;toast('Salvo em '+h.name+'. As próximas mudanças vão direto para esse arquivo; um duplo clique nele abre a apresentação.')}
+  try{await writeFile(h);FS.handle=h;FS.deckId=deck.id;FS.name=h.name;FS.canWrite=true;fileStatus();FS.fromFile=false;toast('Salvo em '+h.name+'. As próximas mudanças vão direto para esse arquivo.')}
   catch(e){toast('Não consegui gravar: '+(e.message||e))}
 }
 const fileSaveSoon=debounce(()=>{
-  if(!fileLinked()||!FS.canWrite)return;
+  if(!fileLinked()||!FS.canWrite||isOldHtml(FS.handle))return;
   FS.busy=(FS.busy||Promise.resolve()).then(()=>writeFile(FS.handle)).then(fileStatus).catch(()=>{FS.canWrite=false;setSaveState('Não salvo no arquivo');toast('Não consegui gravar em '+FS.name+'. Use Ctrl+S para tentar de novo.')});
 },1500);
 async function openFileSmart(){
