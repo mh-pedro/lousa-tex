@@ -24,7 +24,7 @@ const SPANSTY=['color','background-color','font-size','font-family','font-weight
 const BLOCKSTY=['text-align','margin-left'],LISTSTY=['list-style-type','margin-left','--mk-c','--mk-s'];
 function safeHref(h){h=String(h||'').trim();return /^(https?:\/\/|mailto:|#slide:)/i.test(h)?h:null}
 function sanitizeHTML(html){
-  const src=document.createElement('div');src.innerHTML=html;const out=document.createElement('div');
+  const tpl=document.createElement('template');tpl.innerHTML=String(html||'');const src=tpl.content;const out=document.createElement('div');
   (function walk(from,to){
     Array.from(from.childNodes).forEach(n=>{
       if(n.nodeType===3){to.appendChild(document.createTextNode(n.nodeValue));return}

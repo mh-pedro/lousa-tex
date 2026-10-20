@@ -18,6 +18,7 @@ def page(mj):
 window.mathReady=new Promise(function(r){{window.__mjResolve=r}});
 window.__mjFail=function(){{window.__mjFailed=true;window.__mjResolve()}};
 window.MathJax={{
+  loader:{{load:['ui/safe']}},
   tex:{{inlineMath:[['$','$'],['\\\\(','\\\\)']],displayMath:[['$$','$$'],['\\\\[','\\\\]']],processEscapes:true}},
   svg:{{fontCache:'local'}},
   options:{{enableMenu:false,ignoreHtmlClass:'tex2jax_ignore'}},

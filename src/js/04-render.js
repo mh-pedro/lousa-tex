@@ -286,7 +286,7 @@ function styleInk(d,e){styleCommon(d,e);const svg=d.querySelector('svg');svg.set
   svg.style.transform=flipT(e);svg.style.filter=e.shadow?'drop-shadow(0 3px 5px rgba(0,0,0,.35))':'';
   svg.innerHTML=(e.strokes||[]).map(s=>'<path d="'+s.d+'" fill="none" stroke="'+resolveColor(s.c)+'" stroke-width="'+s.w+'" stroke-linecap="round" stroke-linejoin="round"'+(s.op<1?' stroke-opacity="'+s.op+'"':'')+'/>').join('')}
 function styleTikz(d,e){styleCommon(d,e);d.style.color=e.themeInk?resolveColor('fg'):'#000000';const w=d.querySelector('.tkw');w.style.transform=flipT(e)}
-function fillTikz(d,e){d.classList.toggle('compiling',tikzBusy.has(e.id));d.querySelector('.tkw').innerHTML=e.svg||'<div class="tk-ph"><b>TikZ</b><span>'+(e.err?'Erro: '+esc(e.err.slice(0,160)):'Clique duas vezes para escrever o código')+'</span></div>'}
+function fillTikz(d,e){d.classList.toggle('compiling',tikzBusy.has(e.id));d.querySelector('.tkw').innerHTML=(e.svg?sanitizeSVG(e.svg):'')||'<div class="tk-ph"><b>TikZ</b><span>'+(e.err?'Erro: '+esc(e.err.slice(0,160)):'Clique duas vezes para escrever o código')+'</span></div>'}
 /* ---------- dispatch ---------- */
 function styleEl(d,e){
   switch(e.type){case 'box':styleBox(d,e);break;case 'image':styleImage(d,e);break;case 'line':styleLine(d,e);break;
