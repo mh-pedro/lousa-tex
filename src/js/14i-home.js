@@ -67,7 +67,7 @@ async function homeNew(sample){
   const d=sample?sampleDeck():null;
   if(d){d.id=uid();openDeck(d,'Exemplo aberto. Edite à vontade.')}else newDeck();
   hideHome();
-  if(driveOn()){try{await driveSave(true);toast('Nova apresentação criada no seu Google Drive. As alterações são salvas lá automaticamente.')}catch(e){driveErr(e)}}
+  if(driveOn()){try{await driveSaveNew();toast('Nova apresentação criada no seu Google Drive. As alterações são salvas lá automaticamente.')}catch(e){driveErr(e)}}
   else toast('Sem conta, use Ctrl+S para salvar a apresentação num arquivo do computador.',6000);
 }
 function openLocalFromHome(id){

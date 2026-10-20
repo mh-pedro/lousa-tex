@@ -82,14 +82,23 @@ async function driveOpen(){
     picker(v,'Abrir apresentação do Lousa TeX',f=>driveOpenId(f.id).catch(driveErr));
   }catch(e){driveErr(e)}
 }
+/* pasta "Lousa TeX" no Meu Drive (criada pelo próprio app, sem usar o seletor do Google) */
+const DRIVE_FOLDER='application/vnd.google-apps.folder';
+async function driveFolder(){
+  const saved=lsGet('lousa-drive-folder');
+  if(saved){try{const r=await dfetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(saved)+'?fields=id,trashed');const j=await r.json();if(j&&j.id&&!j.trashed)return j.id}catch(e){}}
+  const q=encodeURIComponent("mimeType='"+DRIVE_FOLDER+"' and name='Lousa TeX' and trashed=false");
+  let id=null;try{const r=await dfetch('https://www.googleapis.com/drive/v3/files?q='+q+'&fields=files(id)&pageSize=1');id=((await r.json()).files||[])[0];id=id&&id.id}catch(e){}
+  if(!id){const r=await dfetch('https://www.googleapis.com/drive/v3/files?fields=id',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Lousa TeX',mimeType:DRIVE_FOLDER})});id=(await r.json()).id}
+  try{lsSet('lousa-drive-folder',id)}catch(e){}return id;
+}
+async function driveSaveNew(){const f=await driveFolder();return driveSave(true,f)}
 async function driveSaveMenu(asCopy){
   if(!driveGuard())return;
   try{await driveToken(true);
     if(driveIdOf()&&!asCopy){await driveSave();toast('Salvo no Google Drive.');return}
-    await driveLoad();
-    const v=new google.picker.DocsView(google.picker.ViewId.FOLDERS).setSelectFolderEnabled(true).setIncludeFolders(true).setMimeTypes('application/vnd.google-apps.folder');
-    picker(v,'Escolha a pasta do Drive',async f=>{try{if(asCopy){const d=JSON.parse(JSON.stringify(deck));d.id=uid();d.title='Cópia de '+deck.title;openDeck(d,'')}
-      await driveSave(true,f.id);toast('Salvo em "'+(f.name||'pasta do Drive')+'". As próximas alterações vão para lá automaticamente.')}catch(e){driveErr(e)}});
+    if(asCopy){const d=JSON.parse(JSON.stringify(deck));d.id=uid();d.title='Cópia de '+deck.title;openDeck(d,'')}
+    await driveSaveNew();toast('Salvo no seu Google Drive, na pasta “Lousa TeX”. As próximas alterações vão para lá automaticamente.',6000);
   }catch(e){driveErr(e)}
 }
 function driveUnlink(){setDriveId(null);setSaveState(draftState());toast('Esta apresentação não está mais ligada ao arquivo do Drive. O arquivo continua lá.')}
@@ -97,13 +106,14 @@ function driveDisconnect(){if(D.token&&window.google&&google.accounts)try{google
 function driveItems(){
   const linked=!!driveIdOf();
   return[{label:driveOn()?'Conectado':'Conectar ao Google Drive',checked:driveOn(),act:driveConnect,disabled:driveOn()},
-    {label:'Abrir do Drive…',act:driveOpen},
+    {label:'Abrir do Drive…',act:async()=>{if(!driveGuard())return;try{await driveToken(true);showHome()}catch(e){driveErr(e)}}},
+    {label:'Procurar outro arquivo no Drive…',act:driveOpen},
     {label:linked?'Salvar no Drive agora':'Salvar no Drive…',act:()=>driveSaveMenu(false)},
     {label:'Salvar uma cópia no Drive…',act:()=>driveSaveMenu(true)},
     {sep:1},
     {label:'Desvincular do arquivo do Drive',act:driveUnlink,disabled:!linked},
     {label:'Desconectar a conta',act:driveDisconnect,disabled:!driveOn()},
-    {label:'Configurar…',act:driveSetupModal}];
+    (!DRIVE_DEFAULT.clientId||/[?&]dev\b/.test(location.search))?{label:'Configurar…',act:driveSetupModal}:null];
 }
 function driveInfoModal(){
   openModal('Google Drive','<p class="hint">A conexão com o Google Drive só funciona quando o Lousa TeX está publicado num endereço da web (https), por exemplo no GitHub Pages ou no Netlify. '+
