@@ -8,5 +8,8 @@ window.LOUSA_CONFIG = {
     clientId: '161474325729-a0f1vg9eo0l0tr9vdavf8ij0i8i7iamj.apps.googleusercontent.com',
     apiKey: 'AIzaSyACBGaRUZYvmYUe0MUMMnUsGnUREAJ7mMg',
     appId: '161474325729'
-  }
+  },
+  /* Contador de visitas GoatCounter (sem cookies e sem dados pessoais).
+     Só conta no site publicado. Deixe '' para desligar. */
+  stats: 'https://lousa-tex.goatcounter.com/count'
 };

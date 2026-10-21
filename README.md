@@ -27,6 +27,7 @@ As fórmulas não viram imagem: continuam texto LaTeX que você pode editar a qu
 - [Atalhos](#atalhos)
 - [Perguntas frequentes](#perguntas-frequentes)
 - [Para desenvolvedores](#para-desenvolvedores)
+- [Licença](#licença)
 
 ---
 
@@ -376,6 +377,16 @@ Faça commit do `src/` e do `index.html` juntos. O GitHub Pages publica o `main`
 - [PptxGenJS](https://gitbrent.github.io/PptxGenJS/): exportação para PowerPoint
 - APIs do Google (Identity Services, Picker e Drive): integração com o Drive
 
+### Contador de visitas
+
+O site publicado conta visitas com o [GoatCounter](https://www.goatcounter.com/), sem cookies e sem identificar ninguém. O endereço fica em `config.js` (`stats`); deixe `''` para desligar. O contador só funciona no endereço `*.github.io`, nunca em cópias locais. Os números ficam em https://lousa-tex.goatcounter.com.
+
 ### Figuras da página inicial
 
 Os desenhos e equações da página inicial são gerados de verdade com TikZ e LaTeX a partir de `src/art/` (`*.tex` para os diagramas TikZ e `equacoes.tex` para as fórmulas). Depois de editar, rode `node tools/gerar-arte.mjs <página de teste> <TikZJax local>` para recompilar os `.svg` e o `fontes.css`, e em seguida `python3 build.py`.
+
+---
+
+## Licença
+
+[MIT](LICENSE) © 2026 Pedro Henrique Morais. Pode usar, copiar, modificar e distribuir, inclusive para fins comerciais, mantendo o aviso de copyright e a licença.
